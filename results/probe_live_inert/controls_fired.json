@@ -1,0 +1,163 @@
+{
+ "heldout_E1": {
+  "probe_mre": 0.946,
+  "probe_note": 0.94,
+  "text_note": 0.809,
+  "text_user_note": 0.835,
+  "text_full": 0.89,
+  "case_baseline": 0.862,
+  "template5_indicator": 0.723
+ },
+ "heldout_E2": {
+  "probe_mre": 0.927,
+  "probe_note": 0.905,
+  "text_note": 0.89,
+  "text_user_note": 0.88,
+  "text_full": 0.901,
+  "template_baseline": 0.869
+ },
+ "within_case_E1": {
+  "probe_mre": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "probe_note": [
+   0.636,
+   0.184,
+   0.952
+  ],
+  "text_note": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "text_user_note": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "text_full": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "within_template_E1": {
+  "probe_mre": [
+   0.917,
+   0.829,
+   0.973
+  ],
+  "probe_note": [
+   0.933,
+   0.88,
+   0.98
+  ],
+  "text_note": [
+   0.884,
+   0.785,
+   0.959
+  ],
+  "text_user_note": [
+   0.913,
+   0.818,
+   0.982
+  ],
+  "text_full": [
+   0.933,
+   0.871,
+   0.983
+  ]
+ },
+ "within_template_E2": {
+  "probe_mre": [
+   0.82,
+   0.643,
+   0.956
+  ],
+  "probe_note": [
+   0.739,
+   0.486,
+   0.909
+  ],
+  "text_note": [
+   0.647,
+   0.334,
+   0.904
+  ],
+  "text_user_note": [
+   0.588,
+   0.337,
+   0.793
+  ],
+  "text_full": [
+   0.678,
+   0.402,
+   0.874
+  ]
+ },
+ "cv_train": {
+  "template_baseline": 0.89,
+  "probe_mre": {
+   "overall": 0.965,
+   "within_template": [
+    0.876,
+    0.818,
+    0.92
+   ]
+  },
+  "probe_note": {
+   "overall": 0.963,
+   "within_template": [
+    0.869,
+    0.809,
+    0.916
+   ]
+  },
+  "text_note": {
+   "overall": 0.95,
+   "within_template": [
+    0.781,
+    0.708,
+    0.846
+   ]
+  },
+  "text_user_note": {
+   "overall": 0.946,
+   "within_template": [
+    0.779,
+    0.698,
+    0.853
+   ]
+  },
+  "text_full": {
+   "overall": 0.952,
+   "within_template": [
+    0.814,
+    0.747,
+    0.876
+   ]
+  }
+ },
+ "cv_diff_probe_mre_text_note": [
+  0.09555013715330696,
+  0.007888519542149279,
+  0.18533480101683147
+ ],
+ "cv_diff_probe_mre_text_full": [
+  0.06232855836635176,
+  -0.016175076141282115,
+  0.14065354134849967
+ ],
+ "cv_diff_probe_note_text_note": [
+  0.08854007924413287,
+  0.01500352227892052,
+  0.15824651135356696
+ ],
+ "cv_diff_probe_note_text_full": [
+  0.05531850045717768,
+  -0.009010858952555012,
+  0.1257245683469957
+ ]
+}
