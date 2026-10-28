@@ -668,10 +668,338 @@
       font-size: 14px;
       color: var(--muted);
     }
-  </style>
+  
+    /* --- STICKY NAV BAR --- */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+      margin: -32px -16px 24px -16px;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      backdrop-filter: blur(8px);
+    }
+    .site-nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+    }
+    .site-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      font-size: 13.5px;
+    }
+    .site-nav-links a {
+      color: var(--muted);
+      white-space: nowrap;
+      transition: color 0.15s ease;
+    }
+    .site-nav-links a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* --- SLIDES CAROUSEL --- */
+    .deck-container {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .deck-viewer-frame {
+      position: relative;
+      background: #0d121c;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 380px;
+      border: 1px solid var(--rule);
+    }
+    .deck-slide-img {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.2s ease;
+    }
+    .deck-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(19, 41, 75, 0.88);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      z-index: 5;
+    }
+    .deck-nav-btn:hover {
+      background: var(--accent);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .deck-nav-btn.prev { left: 16px; }
+    .deck-nav-btn.next { right: 16px; }
+    .deck-tabs-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .deck-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 4px;
+      background: var(--surface-subtle);
+      border-radius: 8px;
+      border: 1px solid var(--rule);
+    }
+    .deck-tab-btn {
+      padding: 6px 11px;
+      border-radius: 5px;
+      font: 500 12px var(--mono);
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .deck-tab-btn:hover {
+      border-color: var(--accent);
+      color: var(--ink);
+    }
+    .deck-tab-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* --- JEV BENCHMARK STYLES --- */
+    .benchmark-container {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .task-toggle-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .task-toggle-btn {
+      padding: 9px 18px;
+      border-radius: 6px;
+      font: 500 14px var(--sans);
+      border: 1px solid var(--rule);
+      background: var(--surface-subtle);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .task-toggle-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+    .split-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .split-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 8px;
+    }
+    .split-card-title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .metric-bar-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .metric-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .metric-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .metric-track {
+      height: 10px;
+      background: var(--rule);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    .metric-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+    .metric-fill-probe { background: var(--clean); }
+    .metric-fill-jev { background: var(--accent); }
+    .metric-fill-danger { background: var(--flagged); }
+    .callout-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* --- REALISM LADDER STYLES --- */
+    .ladder-container {
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .ladder-steps {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .ladder-step-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--rule);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .ladder-step-btn:hover {
+      border-color: var(--accent);
+    }
+    .ladder-step-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .ladder-step-tag {
+      font: 600 11px var(--mono);
+      text-transform: uppercase;
+    }
+    .ladder-step-title {
+      font: 600 13px var(--sans);
+    }
+    .ladder-detail-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .ladder-detail-card { grid-template-columns: 1fr; }
+    }
+
+    /* --- OPERATIONAL MATRIX STYLES --- */
+    .op-matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .op-matrix-table th, .op-matrix-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--rule);
+      text-align: left;
+    }
+    .op-matrix-table th {
+      background: var(--surface-subtle);
+      font: 600 12px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+</style>
 </head>
 <body>
   <div class="wrap">
+    <!-- STICKY NAVIGATION -->
+    <header class="site-nav">
+      <div class="site-nav-brand">
+        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--clean);"></span>
+        <span>Sleeper Detection</span>
+        <span class="badge badge-subtle" style="font-size:11px; padding:2px 6px;">Oct 2026</span>
+      </div>
+      <nav class="site-nav-links">
+        <a href="#hero">Overview</a>
+        <a href="#midpoint-slides">Fellowship Slides</a>
+        <a href="#jev-benchmark">LLM Guard Benchmark</a>
+        <a href="#realism-ladder">Realism Ladder</a>
+        <a href="#how-it-works">Mechanism</a>
+        <a href="#example">Inspector</a>
+        <a href="#results">Results</a>
+        <a href="#downloads">Downloads</a>
+      </nav>
+    </header>
+
 
     <!-- 1. HERO -->
     <section id="hero">
@@ -735,9 +1063,178 @@
         </div>
       </div>
     </section>
+    <!-- 1.5 MIDPOINT PRESENTATION SLIDES (AIA @ ILLINOIS) -->
+    <section id="midpoint-slides">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+        <div>
+          <div class="badge badge-subtle" style="color: #FF5F05; font-weight:600; border-color: rgba(255,95,5,0.3);">AI ALIGNMENT @ ILLINOIS &middot; MIDPOINT CHECKPOINT</div>
+          <h2 style="margin-top: 6px;">Fellowship Research Progress Deck</h2>
+        </div>
+        <div class="btn-row">
+          <a href="downloads/AIA_Illinois_Midpoint_Checkpoint_Raghav_Agarwal.pptx" download class="btn btn-primary btn-sm">
+            &darr; PowerPoint (.pptx)
+          </a>
+          <a href="downloads/AIA_Illinois_Midpoint_Checkpoint_Raghav_Agarwal.pdf" download class="btn btn-secondary btn-sm">
+            &darr; PDF (.pdf)
+          </a>
+        </div>
+      </div>
+      <p style="color: var(--muted);">
+        Interactive 12-slide checkpoint presentation detailing mechanistic findings, baseline comparisons against frontier text judges, and causal roadmap.
+      </p>
+
+      <div class="deck-container">
+        <!-- Main Slide Frame -->
+        <div class="deck-viewer-frame">
+          <button class="deck-nav-btn prev" onclick="prevSlide()" aria-label="Previous slide">&#10094;</button>
+          <img id="active-slide-img" class="deck-slide-img" src="slides/slide-01.png" alt="AIA Illinois Midpoint Checkpoint Slide">
+          <button class="deck-nav-btn next" onclick="nextSlide()" aria-label="Next slide">&#10095;</button>
+        </div>
+
+        <!-- Slide Selector & Controls -->
+        <div class="deck-tabs-wrapper">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--muted);">
+            <span>Select Slide (or use &larr; / &rarr; arrow keys):</span>
+            <span class="mono" id="deck-slide-counter">Slide 1 of 12</span>
+          </div>
+          <div class="deck-tabs" id="deck-tabs-container">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <!-- 2. MECHANISM DIAGRAM (7.2) -->
-    <section id="how-it-works">
+    
+    <!-- 3.5 FRONTIER LLM GUARD BENCHMARK (JEV VS PROBE) -->
+    <section id="jev-benchmark">
+      <div>
+        <div class="badge badge-subtle">Frontier Baseline Benchmark</div>
+        <h2 style="margin-top: 6px;">Internal Probes vs. Frontier LLM Guards (TypeSafe Jev)</h2>
+      </div>
+      <p style="color: var(--muted);">
+        Evaluated on <code>behavior_v1</code> (1,924 agent interactions across held-out splits) using <code>~typesafe/jev-latest</code> via OpenRouter Decisions API with injected enterprise security policy.
+      </p>
+
+      <div class="benchmark-container">
+        <!-- Task Toggle -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div class="task-toggle-row">
+            <button class="task-toggle-btn active" id="btn-task-live" onclick="switchJevTask('live_inert')">
+              Task 1: Live vs. Inert Discrimination
+            </button>
+            <button class="task-toggle-btn" id="btn-task-fired" onclick="switchJevTask('fired')">
+              Task 2: Execution Prediction (Will It Fire?)
+            </button>
+          </div>
+          <span class="mono" style="font-size:12px; color:var(--muted);" id="task-metric-summary">
+            SLA: TPR @ 5% False Positive Rate
+          </span>
+        </div>
+
+        <p id="task-description-text" style="font-size:13.5px; color:var(--muted);">
+          Separating active pending malicious instructions from inert past audit records of the same action across held-out splits.
+        </p>
+
+        <!-- 3 Splits Cards -->
+        <div class="split-grid" id="split-cards-container">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- The False Alarm Trap Callout -->
+        <div class="callout-box">
+          <strong style="color:var(--ink); font-size:14px;">The False Alarm Trap: Why External Text Guards Struggle</strong>
+          <span>
+            In enterprise agent workflows, benign audit logs frequently contain sensitive commands (e.g., <em>"User unblocked domain evil.com at 14:02 UTC"</em>). 
+            Because textual guardrails (like Jev) evaluate surface vocabulary, they assign an average threat score of <strong>0.62–0.68</strong> to inert benign records. 
+            When constrained to a production SLA of <strong>5% False Positive Rate</strong>, Jev's recall plummets to <strong>30% on E1</strong>.
+          </span>
+          <span>
+            In contrast, the <strong>Internal Activation Probe</strong> achieves <strong>100% Recall (1.000 AUROC)</strong> because the transformer's self-attention has already bound inert logs into descriptive memory while routing real injections into active executive subspace.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3.6 THE REALISM LADDER -->
+    <section id="realism-ladder">
+      <div>
+        <div class="badge badge-subtle">Attack Camouflage Experiment</div>
+        <h2 style="margin-top: 6px;">The Realism Ladder: Why Text Judges Collapse on Disguised Attacks</h2>
+      </div>
+      <p style="color: var(--muted);">
+        Measuring how external LLM judges (<code>gpt-4o-mini</code> / guardrails) perform as attack payloads move from raw syntax overrides to realistic standing preferences.
+      </p>
+
+      <div class="ladder-container">
+        <!-- 5-Step Selector -->
+        <div class="ladder-steps" id="ladder-steps-nav">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Selected Level Detail Card -->
+        <div class="ladder-detail-card" id="ladder-detail-view">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Realism Takeaway Bar -->
+        <div class="honest-status" style="border-left-color: var(--accent); background: var(--accent-soft);">
+          <strong>Key Takeaway:</strong> Across realistic disguises (L2&ndash;L4), textual judges collapse from 100% recall down to <strong>10%&ndash;20%</strong> (overall AUROC 0.605, essentially a coin flip). Activation probes bypass surface camouflage by reading the model's decoded intent after 20B parameters of self-attention.
+        </div>
+      </div>
+    </section>
+
+    <!-- 3.7 OPERATIONAL DEFENSE & RUNTIME PREEMPTION -->
+    <section id="operational-defense">
+      <div>
+        <div class="badge badge-subtle">Deployment Engineering</div>
+        <h2 style="margin-top: 6px;">Internal Probes vs. External Text Guards: Operational Matrix</h2>
+      </div>
+      <p style="color: var(--muted);">
+        Comparison of runtime performance, latency, and cost for production AI agent monitoring:
+      </p>
+
+      <div class="card" style="padding: 0; overflow-x: auto;">
+        <table class="op-matrix-table">
+          <thead>
+            <tr>
+              <th>Evaluation Dimension</th>
+              <th>Internal Activation Probe (Ours)</th>
+              <th>Frontier Text Guard (Jev / LLaMA-Guard)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Inference Latency</strong></td>
+              <td><span style="color:var(--clean); font-weight:600;">&lt; 0.1 ms</span> (matrix dot product on GPU VRAM)</td>
+              <td><span style="color:var(--flagged); font-weight:600;">300 &ndash; 1,500 ms</span> (external API network roundtrip)</td>
+            </tr>
+            <tr>
+              <td><strong>Token Cost Overhead</strong></td>
+              <td><span style="color:var(--clean); font-weight:600;">$0.00</span> (computed on forward pass activations)</td>
+              <td><span style="color:var(--flagged); font-weight:600;">2x Token Cost</span> (screens every memory retrieval)</td>
+            </tr>
+            <tr>
+              <td><strong>Camouflage Resistance</strong></td>
+              <td><span style="color:var(--clean); font-weight:600;">High (1.000 AUROC)</span> reads model's decoded intent</td>
+              <td><span style="color:var(--flagged); font-weight:600;">Collapses to 10% Recall</span> on realistic carryovers (L4)</td>
+            </tr>
+            <tr>
+              <td><strong>Benign Audit Log Safety</strong></td>
+              <td><span style="color:var(--clean); font-weight:600;">0% False Alarms</span> (passive context routed separately)</td>
+              <td><span style="color:var(--flagged); font-weight:600;">50%+ Alert Fatigue</span> (panics over sensitive keywords)</td>
+            </tr>
+            <tr>
+              <td><strong>Causal Preemption</strong></td>
+              <td><span style="color:var(--clean); font-weight:600;">In-Flight Steering</span> (clamp vector before generation)</td>
+              <td><span style="color:var(--muted);">Post-Hoc Blocking</span> (cannot repair agent state)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+<section id="how-it-works">
       <h2>Mechanism: Zero-Token Residual Stream Probe</h2>
       <div class="mech-container">
         <div class="svg-wrapper">
@@ -1056,7 +1553,41 @@
     </section>
 
     <!-- 6. CONTACT -->
-    <section id="contact">
+    
+    <!-- DOWNLOADS SECTION -->
+    <section id="downloads">
+      <h2>Resources &amp; Downloads</h2>
+      <p style="color: var(--muted);">
+        All presentation decks, reproducible benchmark artifacts, and codebase links:
+      </p>
+      <div class="split-grid">
+        <div class="split-card">
+          <strong style="font-size:14px;">Fellowship Midpoint Checkpoint Deck</strong>
+          <span style="font-size:13px; color:var(--muted);">Complete 12-slide presentation in PowerPoint and PDF formats.</span>
+          <div class="btn-row" style="margin-top:auto;">
+            <a href="downloads/AIA_Illinois_Midpoint_Checkpoint_Raghav_Agarwal.pptx" download class="btn btn-primary btn-sm">PowerPoint (.pptx)</a>
+            <a href="downloads/AIA_Illinois_Midpoint_Checkpoint_Raghav_Agarwal.pdf" download class="btn btn-secondary btn-sm">PDF (.pdf)</a>
+          </div>
+        </div>
+        <div class="split-card">
+          <strong style="font-size:14px;">Open-Source Codebase</strong>
+          <span style="font-size:13px; color:var(--muted);">Repository branch containing probing harness, Jev baseline, and datasets.</span>
+          <div class="btn-row" style="margin-top:auto;">
+            <a href="https://github.com/RaghavAgarwal08/sleeper_detection/tree/raghav/probe-live-inert" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">GitHub Branch</a>
+            <a href="https://github.com/pndh/sleeper_detection" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">GitHub Pages Fork</a>
+          </div>
+        </div>
+        <div class="split-card">
+          <strong style="font-size:14px;">Key Figure &amp; Reports</strong>
+          <span style="font-size:13px; color:var(--muted);">High-resolution layerwise AUROC plot and baseline evaluation logs.</span>
+          <div class="btn-row" style="margin-top:auto;">
+            <a href="data/results.json" target="_blank" class="btn btn-secondary btn-sm">results.json</a>
+            <a href="data/jev_comparison.json" target="_blank" class="btn btn-secondary btn-sm">jev_comparison.json</a>
+          </div>
+        </div>
+      </div>
+    </section>
+<section id="contact">
       <h2>Contact &amp; Code</h2>
       <p style="color: var(--muted);">
         For research inquiries, replication questions, or access to the live sandbox:
@@ -1103,7 +1634,285 @@
     };
     Chart.register(shadeWindowPlugin);
 
+    async 
+    // ================================= SLIDES CAROUSEL =================================
+    let currentSlideIdx = 1;
+    const totalSlides = 12;
+    const slideTitles = [
+      "01 Title",
+      "02 Midpoint Evidence",
+      "03 Why It Matters",
+      "04 Approach & Method",
+      "05 Milestones Plan",
+      "06 Benchmark Data",
+      "07 Preliminary Results",
+      "08 Robustness Checks",
+      "09 Unresolved & Risks",
+      "10 Fellowship Plan",
+      "11 Mentor Feedback",
+      "12 Appendix & Setup"
+    ];
+
+    function initSlideDeck() {
+      const container = document.getElementById('deck-tabs-container');
+      if (!container) return;
+      container.innerHTML = '';
+      for (let i = 1; i <= totalSlides; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'deck-tab-btn' + (i === currentSlideIdx ? ' active' : '');
+        btn.id = 'deck-tab-' + i;
+        btn.textContent = slideTitles[i - 1];
+        btn.onclick = () => setSlide(i);
+        container.appendChild(btn);
+      }
+      updateSlideDisplay();
+    }
+
+    function setSlide(idx) {
+      if (idx < 1) idx = 1;
+      if (idx > totalSlides) idx = totalSlides;
+      currentSlideIdx = idx;
+      updateSlideDisplay();
+    }
+
+    function prevSlide() {
+      setSlide(currentSlideIdx > 1 ? currentSlideIdx - 1 : totalSlides);
+    }
+
+    function nextSlide() {
+      setSlide(currentSlideIdx < totalSlides ? currentSlideIdx + 1 : 1);
+    }
+
+    function updateSlideDisplay() {
+      const img = document.getElementById('active-slide-img');
+      const counter = document.getElementById('deck-slide-counter');
+      if (!img) return;
+      const numStr = currentSlideIdx < 10 ? '0' + currentSlideIdx : '' + currentSlideIdx;
+      img.src = 'slides/slide-' + numStr + '.png';
+      if (counter) counter.textContent = 'Slide ' + currentSlideIdx + ' of ' + totalSlides;
+
+      // Update tabs
+      for (let i = 1; i <= totalSlides; i++) {
+        const tab = document.getElementById('deck-tab-' + i);
+        if (tab) {
+          if (i === currentSlideIdx) tab.classList.add('active');
+          else tab.classList.remove('active');
+        }
+      }
+    }
+
+    // Keyboard navigation for slides
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+    });
+
+    // ================================= JEV BENCHMARK DATA =================================
+    let jevData = null;
+    let currentJevTask = 'live_inert';
+
+    async function loadJevData() {
+      try {
+        const res = await fetch('data/jev_comparison.json');
+        if (res.ok) {
+          jevData = await res.json();
+          renderJevBenchmark(currentJevTask);
+        }
+      } catch (err) {
+        console.warn('Could not load jev_comparison.json', err);
+      }
+    }
+
+    function switchJevTask(task) {
+      currentJevTask = task;
+      const btnLive = document.getElementById('btn-task-live');
+      const btnFired = document.getElementById('btn-task-fired');
+      if (task === 'live_inert') {
+        btnLive.classList.add('active');
+        btnFired.classList.remove('active');
+      } else {
+        btnLive.classList.remove('active');
+        btnFired.classList.add('active');
+      }
+      renderJevBenchmark(task);
+    }
+
+    function renderJevBenchmark(task) {
+      if (!jevData || !jevData.tasks || !jevData.tasks[task]) return;
+      const t = jevData.tasks[task];
+      const descEl = document.getElementById('task-description-text');
+      if (descEl) descEl.textContent = t.description;
+
+      const container = document.getElementById('split-cards-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      t.splits.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'split-card';
+        card.innerHTML = `
+          <div class="split-card-header">
+            <span class="split-card-title">${s.split}</span>
+            <span class="mono" style="font-size:11px; color:var(--muted);">N = ${s.n} (${s.positives} pos)</span>
+          </div>
+          <div class="metric-bar-group">
+            <div class="metric-bar-row">
+              <div class="metric-label-row">
+                <span><strong>Internal Activation Probe</strong></span>
+                <span class="mono"><strong>${s.probe_auroc.toFixed(3)} AUROC</strong> &middot; ${(s.probe_tpr_5fpr*100).toFixed(0)}% TPR@5%FPR</span>
+              </div>
+              <div class="metric-track">
+                <div class="metric-fill metric-fill-probe" style="width: ${s.probe_auroc*100}%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-bar-row">
+              <div class="metric-label-row">
+                <span>TypeSafe Jev (Frontier LLM)</span>
+                <span class="mono">${s.jev_auroc.toFixed(3)} AUROC &middot; ${(s.jev_tpr_5fpr*100).toFixed(0)}% TPR@5%FPR</span>
+              </div>
+              <div class="metric-track">
+                <div class="metric-fill ${s.jev_auroc < 0.6 ? 'metric-fill-danger' : 'metric-fill-jev'}" style="width: ${Math.max(s.jev_auroc*100, 5)}%;"></div>
+              </div>
+            </div>
+
+            ${s.tfidf_auroc !== undefined ? `
+            <div class="metric-bar-row">
+              <div class="metric-label-row">
+                <span>TF-IDF Text Baseline</span>
+                <span class="mono">${s.tfidf_auroc.toFixed(3)} AUROC</span>
+              </div>
+              <div class="metric-track">
+                <div class="metric-fill" style="background:var(--muted); width: ${s.tfidf_auroc*100}%;"></div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+            Jev mean scores: Pos = <strong>${s.jev_pos_score.toFixed(2)}</strong>, Neg = <strong>${s.jev_neg_score.toFixed(2)}</strong>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ================================= REALISM LADDER DATA =================================
+    let realismData = null;
+    let currentLadderLevel = 'L0';
+
+    async function loadRealismData() {
+      try {
+        const res = await fetch('data/realism_ladder.json');
+        if (res.ok) {
+          realismData = await res.json();
+          initRealismLadder();
+        }
+      } catch (err) {
+        console.warn('Could not load realism_ladder.json', err);
+      }
+    }
+
+    function initRealismLadder() {
+      if (!realismData || !realismData.levels) return;
+      const nav = document.getElementById('ladder-steps-nav');
+      if (!nav) return;
+      nav.innerHTML = '';
+
+      realismData.levels.forEach((lvl, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'ladder-step-btn' + (lvl.level === currentLadderLevel ? ' active' : '');
+        btn.id = 'ladder-btn-' + lvl.level;
+        btn.innerHTML = `
+          <span class="ladder-step-tag">${lvl.level}</span>
+          <span class="ladder-step-title">${lvl.name}</span>
+        `;
+        btn.onclick = () => selectLadderLevel(lvl.level);
+        nav.appendChild(btn);
+      });
+
+      renderLadderDetail(currentLadderLevel);
+    }
+
+    function selectLadderLevel(lvl) {
+      currentLadderLevel = lvl;
+      if (realismData && realismData.levels) {
+        realismData.levels.forEach(l => {
+          const btn = document.getElementById('ladder-btn-' + l.level);
+          if (btn) {
+            if (l.level === lvl) btn.classList.add('active');
+            else btn.classList.remove('active');
+          }
+        });
+      }
+      renderLadderDetail(lvl);
+    }
+
+    function renderLadderDetail(lvl) {
+      if (!realismData || !realismData.levels) return;
+      const d = realismData.levels.find(l => l.level === lvl);
+      if (!d) return;
+
+      const container = document.getElementById('ladder-detail-view');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div>
+            <div class="badge badge-subtle" style="font-size:11px;">${d.level} &middot; Attack Phrasing Style</div>
+            <h3 style="margin-top:6px; font-size:16px;">${d.name}</h3>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">${d.description}</p>
+          <div style="margin-top:auto; font-size:12.5px; border-top:1px solid var(--rule); padding-top:8px;">
+            <strong>Verdict:</strong> <span>${d.verdict}</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <span style="font:600 12px var(--mono); text-transform:uppercase; color:var(--muted);">Text Judge Evaluation (gpt-4o-mini / guards)</span>
+          
+          <div class="metric-bar-row">
+            <div class="metric-label-row">
+              <span>Attack Detection Rate (Flagged @ 0.5)</span>
+              <span class="mono"><strong>${d.harmful_flag_rate.toFixed(0)}%</strong></span>
+            </div>
+            <div class="metric-track">
+              <div class="metric-fill ${d.harmful_flag_rate <= 20 ? 'metric-fill-danger' : 'metric-fill-probe'}" style="width: ${Math.max(d.harmful_flag_rate, 4)}%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-bar-row">
+            <div class="metric-label-row">
+              <span>Benign False Positive Rate</span>
+              <span class="mono">${d.benign_fp_rate.toFixed(0)}%</span>
+            </div>
+            <div class="metric-track">
+              <div class="metric-fill ${d.benign_fp_rate > 30 ? 'metric-fill-danger' : 'metric-fill-jev'}" style="width: ${Math.max(d.benign_fp_rate, 2)}%;"></div>
+            </div>
+          </div>
+
+          <div class="metric-bar-row">
+            <div class="metric-label-row">
+              <span>Separation AUROC</span>
+              <span class="mono"><strong>${d.auroc.toFixed(2)}</strong></span>
+            </div>
+            <div class="metric-track">
+              <div class="metric-fill ${d.auroc < 0.65 ? 'metric-fill-danger' : 'metric-fill-probe'}" style="width: ${d.auroc*100}%;"></div>
+            </div>
+          </div>
+
+          <div style="font-size:12px; color:var(--muted); padding-top:4px;">
+            Harmful mean score = <strong>${d.harmful_mean_score.toFixed(2)}</strong> &middot; Benign mean score = <strong>${d.benign_mean_score.toFixed(2)}</strong>
+          </div>
+        </div>
+      `;
+    }
+
     async function init() {
+      initSlideDeck();
+      loadJevData();
+      loadRealismData();
+
       try {
         const [exRes, resRes, distRes, twinsRes] = await Promise.all([
           fetch('data/examples.json'),
