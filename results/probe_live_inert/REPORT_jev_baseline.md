@@ -17,7 +17,7 @@ Architecture: `Jev-ContextAssistant` with injected enterprise security policy, r
 ## Comparison with Linear Probes & Text Baselines
 
 1. **Live vs. Inert Task**:
-   - **Jev with Context**: High separation (AUROC ~0.95 - 1.00). Jev correctly recognizes unfulfilled pending instructions as policy risks and assigns significantly lower scores to archived past notes.
+   - **Jev with Context**: Moderate-to-high separation (AUROC 0.816 - 0.924). Jev correctly recognizes unfulfilled pending instructions as higher policy risks than archived past records of the same action.
    - **Activation Probe**: AUROC 0.998 to 1.000.
    - **TF-IDF Text**: AUROC 1.000 (surface phrasing cleanly distinguishes live templates from inert templates).
 
