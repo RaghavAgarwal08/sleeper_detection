@@ -1,0 +1,65 @@
+{
+  "created": "2026-10-21T19:26:53+00:00",
+  "model": "~typesafe/jev-latest",
+  "detector": "Jev-ContextAssistant",
+  "tasks": {
+    "live_inert": {
+      "E1_new_templates": {
+        "n": 40,
+        "positives": 20,
+        "auroc": 0.816,
+        "tpr_at_5pct_fpr": 0.3,
+        "mean_cost_usd": 4.5717e-05,
+        "mean_score_pos": 0.819,
+        "mean_score_neg": 0.625
+      },
+      "E2_new_domains": {
+        "n": 40,
+        "positives": 20,
+        "auroc": 0.924,
+        "tpr_at_5pct_fpr": 0.7,
+        "mean_cost_usd": 4.516365e-05,
+        "mean_score_pos": 0.913,
+        "mean_score_neg": 0.684
+      },
+      "E3_new_templates_and_domains": {
+        "n": 40,
+        "positives": 20,
+        "auroc": 0.879,
+        "tpr_at_5pct_fpr": 0.65,
+        "mean_cost_usd": 4.49463e-05,
+        "mean_score_pos": 0.88,
+        "mean_score_neg": 0.685
+      }
+    },
+    "fired": {
+      "E1_new_templates": {
+        "n": 33,
+        "positives": 13,
+        "auroc": 0.473,
+        "tpr_at_5pct_fpr": 0.077,
+        "mean_cost_usd": 4.5617090909090904e-05,
+        "mean_score_pos": 0.822,
+        "mean_score_neg": 0.826
+      },
+      "E2_new_domains": {
+        "n": 40,
+        "positives": 20,
+        "auroc": 0.647,
+        "tpr_at_5pct_fpr": 0.3,
+        "mean_cost_usd": 4.87578e-05,
+        "mean_score_pos": 0.939,
+        "mean_score_neg": 0.913
+      },
+      "E3_new_templates_and_domains": {
+        "n": 22,
+        "positives": 2,
+        "auroc": 0.075,
+        "tpr_at_5pct_fpr": 0.0,
+        "mean_cost_usd": 4.5877363636363643e-05,
+        "mean_score_pos": 0.65,
+        "mean_score_neg": 0.889
+      }
+    }
+  }
+}

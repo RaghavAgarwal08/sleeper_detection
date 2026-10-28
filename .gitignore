@@ -23,6 +23,7 @@ vllm.log
 
 # Interpretability activation caches
 interp/cache/
+interp/data/behavior_v1/behavior.jsonl
 
 # OS / Editor files
 .DS_Store
