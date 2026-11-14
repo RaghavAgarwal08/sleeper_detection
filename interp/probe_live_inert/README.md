@@ -85,3 +85,22 @@ python interp/probe_live_inert/controls.py
 Notes. `VLLM_SYSTEM_START_DATE` matters: vLLM writes the date into every gpt-oss prompt, and the dataset was rendered
 with the manifest's date. The memory guard in `interp/run_guarded.sh` reads cgroup files that may not exist on cloud
 pods, so the commands above call Python directly. The MXFP4 warning from transformers (dequantizing to bf16) is expected.
+
+## Phase 2 additions (November 2026)
+
+| File | Where it runs | What it does |
+| --- | --- | --- |
+| `phase2_analysis.py` | CPU, about 15 minutes | Leave one domain out and held out case analyses within wording, fire rate as the target, nested C. Writes `PHASE2_ANALYSIS.md` |
+| `jev_baseline.py` | CPU plus OpenRouter key | Fair Jev guard baseline (full or random sets, saved scores, neutral policy, will_execute question, few shot and train fitted variants). `--mock` for a dry run |
+| `attention_capture.py` | GPU, about 25 minutes | Attention mass per head to each prompt span, system prompt attention, final hidden state, Attention Tracker head calibration |
+| `attention_baselines.py` | CPU | Attention Tracker, AttnDA, AttentionDefense and the FC baseline on those features. Writes `ATTENTION_BASELINES.md` |
+| `test_attention_baselines.py` | CPU | Span checks on all 1,924 prompts and synthetic signal tests (`--e2e` runs the full analysis) |
+| `neuronpedia_collect.js` | browser, on neuronpedia.org | Collects SAE latents and Jacobian lens readouts for a sample |
+| `sae_jlens_analysis.py` | CPU | Analyses that export. Writes `SAE_JLENS.md` |
+
+GPU run for the attention baselines, after the steps above:
+
+```bash
+cd interp && python probe_live_inert/attention_capture.py --limit 4 && python probe_live_inert/attention_capture.py && cd ..
+python interp/probe_live_inert/attention_baselines.py --attn interp/cache/behavior_v1_attn/attn_features.npz
+```

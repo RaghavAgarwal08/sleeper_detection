@@ -1,0 +1,3674 @@
+{
+ "n_sae": 166,
+ "n_jlens": 166,
+ "sae": {
+  "15": {
+   "live_vs_inert": {
+    "n_pairs": 48,
+    "n_features_tested": 92,
+    "n_q_below_0.05": 53,
+    "top_live": [
+     {
+      "feature": 21057,
+      "mean_diff": 43.5,
+      "live_higher": 45,
+      "inert_higher": 2,
+      "active_live": 48,
+      "active_inert": 34,
+      "p": 3.297693413973692e-09,
+      "q": 1.0112926469519322e-07
+     },
+     {
+      "feature": 6919,
+      "mean_diff": 32.041666666666664,
+      "live_higher": 46,
+      "inert_higher": 1,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 5.503757402774366e-09,
+      "q": 1.265864202638104e-07
+     },
+     {
+      "feature": 115053,
+      "mean_diff": 46.552083333333336,
+      "live_higher": 42,
+      "inert_higher": 0,
+      "active_live": 42,
+      "active_inert": 10,
+      "p": 1.643713850765941e-08,
+      "q": 3.0244334854093316e-07
+     },
+     {
+      "feature": 91358,
+      "mean_diff": 53.416666666666664,
+      "live_higher": 43,
+      "inert_higher": 5,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 4.049133782016651e-08,
+      "q": 5.3347842059084e-07
+     },
+     {
+      "feature": 2223,
+      "mean_diff": 17.708333333333332,
+      "live_higher": 41,
+      "inert_higher": 7,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 4.0590749392781306e-08,
+      "q": 5.3347842059084e-07
+     },
+     {
+      "feature": 128114,
+      "mean_diff": 21.458333333333332,
+      "live_higher": 44,
+      "inert_higher": 4,
+      "active_live": 48,
+      "active_inert": 47,
+      "p": 9.312347767062557e-08,
+      "q": 9.519288828552836e-07
+     },
+     {
+      "feature": 71969,
+      "mean_diff": 42.708333333333336,
+      "live_higher": 40,
+      "inert_higher": 4,
+      "active_live": 45,
+      "active_inert": 34,
+      "p": 1.755929666140359e-07,
+      "q": 1.6154552928491305e-06
+     },
+     {
+      "feature": 70456,
+      "mean_diff": 14.770833333333334,
+      "live_higher": 38,
+      "inert_higher": 7,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 3.7724375736772413e-06,
+      "q": 2.0415544516370954e-05
+     },
+     {
+      "feature": 28034,
+      "mean_diff": 14.375,
+      "live_higher": 38,
+      "inert_higher": 10,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 1.2424279329070784e-05,
+      "q": 6.015966833023748e-05
+     },
+     {
+      "feature": 29766,
+      "mean_diff": 16.979166666666668,
+      "live_higher": 35,
+      "inert_higher": 8,
+      "active_live": 43,
+      "active_inert": 31,
+      "p": 3.7800798782333745e-05,
+      "q": 0.00015807606763521386
+     },
+     {
+      "feature": 32986,
+      "mean_diff": 26.130208333333332,
+      "live_higher": 20,
+      "inert_higher": 1,
+      "active_live": 21,
+      "active_inert": 2,
+      "p": 6.872629585662244e-05,
+      "q": 0.00027490518342648975
+     },
+     {
+      "feature": 52647,
+      "mean_diff": 12.739583333333334,
+      "live_higher": 34,
+      "inert_higher": 10,
+      "active_live": 44,
+      "active_inert": 39,
+      "p": 0.00036175443280715735,
+      "q": 0.001280054146856095
+     },
+     {
+      "feature": 107095,
+      "mean_diff": 18.125,
+      "live_higher": 26,
+      "inert_higher": 9,
+      "active_live": 32,
+      "active_inert": 19,
+      "p": 0.0009089941909055663,
+      "q": 0.002986695198689718
+     },
+     {
+      "feature": 35514,
+      "mean_diff": 13.854166666666666,
+      "live_higher": 11,
+      "inert_higher": 0,
+      "active_live": 11,
+      "active_inert": 0,
+      "p": 0.0009765625,
+      "q": 0.0030980603448275863
+     },
+     {
+      "feature": 85443,
+      "mean_diff": 10.0625,
+      "live_higher": 33,
+      "inert_higher": 14,
+      "active_live": 48,
+      "active_inert": 43,
+      "p": 0.0020630366834306414,
+      "q": 0.005931230464863094
+     }
+    ],
+    "top_inert": [
+     {
+      "feature": 98322,
+      "mean_diff": -55.067708333333336,
+      "live_higher": 4,
+      "inert_higher": 36,
+      "active_live": 19,
+      "active_inert": 40,
+      "p": 3.765308065339923e-10,
+      "q": 3.464083420112729e-08
+     },
+     {
+      "feature": 91476,
+      "mean_diff": -51.833333333333336,
+      "live_higher": 0,
+      "inert_higher": 48,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 1.6190425932535309e-09,
+      "q": 7.447595928966242e-08
+     },
+     {
+      "feature": 54891,
+      "mean_diff": -29.416666666666668,
+      "live_higher": 8,
+      "inert_higher": 38,
+      "active_live": 36,
+      "active_inert": 47,
+      "p": 9.106631218591874e-08,
+      "q": 9.519288828552836e-07
+     },
+     {
+      "feature": 82092,
+      "mean_diff": -20.333333333333332,
+      "live_higher": 7,
+      "inert_higher": 40,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 2.0288294558238072e-07,
+      "q": 1.696839181234457e-06
+     },
+     {
+      "feature": 104543,
+      "mean_diff": -27.083333333333332,
+      "live_higher": 5,
+      "inert_higher": 38,
+      "active_live": 29,
+      "active_inert": 43,
+      "p": 3.562965010098035e-07,
+      "q": 2.731606507741827e-06
+     },
+     {
+      "feature": 89425,
+      "mean_diff": -28.791666666666668,
+      "live_higher": 8,
+      "inert_higher": 35,
+      "active_live": 29,
+      "active_inert": 46,
+      "p": 6.301666245147024e-07,
+      "q": 4.4596407273348165e-06
+     },
+     {
+      "feature": 54250,
+      "mean_diff": -24.875,
+      "live_higher": 1,
+      "inert_higher": 32,
+      "active_live": 15,
+      "active_inert": 33,
+      "p": 8.908227752022078e-07,
+      "q": 5.85397823704308e-06
+     },
+     {
+      "feature": 122967,
+      "mean_diff": -38.270833333333336,
+      "live_higher": 1,
+      "inert_higher": 35,
+      "active_live": 9,
+      "active_inert": 35,
+      "p": 1.1101814301837642e-06,
+      "q": 6.809112771793754e-06
+     },
+     {
+      "feature": 17858,
+      "mean_diff": -31.0,
+      "live_higher": 3,
+      "inert_higher": 29,
+      "active_live": 12,
+      "active_inert": 32,
+      "p": 2.2326032769103983e-06,
+      "q": 1.283746884223479e-05
+     },
+     {
+      "feature": 70695,
+      "mean_diff": -32.8125,
+      "live_higher": 0,
+      "inert_higher": 26,
+      "active_live": 0,
+      "active_inert": 26,
+      "p": 8.09841453993396e-06,
+      "q": 4.139189653744023e-05
+     },
+     {
+      "feature": 72802,
+      "mean_diff": -30.125,
+      "live_higher": 0,
+      "inert_higher": 23,
+      "active_live": 2,
+      "active_inert": 23,
+      "p": 2.6641811803710332e-05,
+      "q": 0.00012255233429706754
+     },
+     {
+      "feature": 17227,
+      "mean_diff": -24.791666666666668,
+      "live_higher": 1,
+      "inert_higher": 23,
+      "active_live": 3,
+      "active_inert": 23,
+      "p": 2.9875751091124898e-05,
+      "q": 0.00013088424287540433
+     },
+     {
+      "feature": 48590,
+      "mean_diff": -32.260416666666664,
+      "live_higher": 4,
+      "inert_higher": 26,
+      "active_live": 12,
+      "active_inert": 29,
+      "p": 0.00011006648868524331,
+      "q": 0.0004219215399600994
+     },
+     {
+      "feature": 129972,
+      "mean_diff": -7.635416666666667,
+      "live_higher": 9,
+      "inert_higher": 37,
+      "active_live": 46,
+      "active_inert": 45,
+      "p": 0.00028558528388941413,
+      "q": 0.001050953844713044
+     },
+     {
+      "feature": 55045,
+      "mean_diff": -18.03125,
+      "live_higher": 8,
+      "inert_higher": 28,
+      "active_live": 21,
+      "active_inert": 32,
+      "p": 0.00048534560839761596,
+      "q": 0.0016537702212066916
+     }
+    ]
+   },
+   "fired_within_wording": {
+    "n": 70,
+    "n_fired": 35,
+    "n_features_tested": 87,
+    "n_q_below_0.05": 0,
+    "top_fired": [
+     {
+      "feature": 119834,
+      "auroc_within_wording": 0.599713055954089,
+      "p": 0.04536499990077281,
+      "active_fired": 12,
+      "active_not": 5,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 70456,
+      "auroc_within_wording": 0.6406025824964132,
+      "p": 0.04650148473414507,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 104804,
+      "auroc_within_wording": 0.6169296987087518,
+      "p": 0.07836270534700426,
+      "active_fired": 26,
+      "active_not": 20,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 7286,
+      "auroc_within_wording": 0.6341463414634146,
+      "p": 0.08707058613353913,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 17130,
+      "auroc_within_wording": 0.5251076040172167,
+      "p": 0.13305874914371715,
+      "active_fired": 28,
+      "active_not": 29,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 82400,
+      "auroc_within_wording": 0.5494978479196556,
+      "p": 0.15456855062116553,
+      "active_fired": 19,
+      "active_not": 21,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 54891,
+      "auroc_within_wording": 0.6398852223816356,
+      "p": 0.15671660853585268,
+      "active_fired": 34,
+      "active_not": 29,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 104543,
+      "auroc_within_wording": 0.6140602582496413,
+      "p": 0.1582320051880358,
+      "active_fired": 29,
+      "active_not": 26,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 54587,
+      "auroc_within_wording": 0.5523672883787661,
+      "p": 0.16208158043584728,
+      "active_fired": 7,
+      "active_not": 2,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 115053,
+      "auroc_within_wording": 0.6348637015781923,
+      "p": 0.1755020891221669,
+      "active_fired": 22,
+      "active_not": 16,
+      "q": 0.763434087681426
+     },
+     {
+      "feature": 54250,
+      "auroc_within_wording": 0.593974175035868,
+      "p": 0.2334584664503269,
+      "active_fired": 16,
+      "active_not": 11,
+      "q": 0.8381814355594324
+     },
+     {
+      "feature": 36169,
+      "auroc_within_wording": 0.5624103299856528,
+      "p": 0.24085673435615873,
+      "active_fired": 31,
+      "active_not": 28,
+      "q": 0.8381814355594324
+     },
+     {
+      "feature": 125394,
+      "auroc_within_wording": 0.5315638450502153,
+      "p": 0.27728284075472825,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.8863217846117457
+     },
+     {
+      "feature": 83142,
+      "auroc_within_wording": 0.5451936872309899,
+      "p": 0.33574445067940945,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.8863217846117457
+     },
+     {
+      "feature": 98322,
+      "auroc_within_wording": 0.5710186513629842,
+      "p": 0.3375039700041361,
+      "active_fired": 28,
+      "active_not": 26,
+      "q": 0.8863217846117457
+     }
+    ],
+    "top_not_fired": [
+     {
+      "feature": 99589,
+      "auroc_within_wording": 0.33070301291248205,
+      "p": 0.006973205040404849,
+      "active_fired": 29,
+      "active_not": 31,
+      "q": 0.6066688385152219
+     },
+     {
+      "feature": 23326,
+      "auroc_within_wording": 0.3565279770444763,
+      "p": 0.12384673798672054,
+      "active_fired": 34,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 48590,
+      "auroc_within_wording": 0.41104734576757535,
+      "p": 0.12483353021401171,
+      "active_fired": 12,
+      "active_not": 16,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 28034,
+      "auroc_within_wording": 0.41606886657101866,
+      "p": 0.12501670693693098,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 128114,
+      "auroc_within_wording": 0.3794835007173601,
+      "p": 0.1465161091466526,
+      "active_fired": 34,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 35514,
+      "auroc_within_wording": 0.41750358680057387,
+      "p": 0.14710048030101974,
+      "active_fired": 7,
+      "active_not": 10,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 62272,
+      "auroc_within_wording": 0.3586800573888092,
+      "p": 0.15079949629514788,
+      "active_fired": 33,
+      "active_not": 33,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 72802,
+      "auroc_within_wording": 0.49784791965566716,
+      "p": 0.15297907152802798,
+      "active_fired": 10,
+      "active_not": 9,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 96263,
+      "auroc_within_wording": 0.445480631276901,
+      "p": 0.15980093991097288,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 106160,
+      "auroc_within_wording": 0.44404591104734575,
+      "p": 0.16369980879987828,
+      "active_fired": 18,
+      "active_not": 23,
+      "q": 0.7495728087152321
+     },
+     {
+      "feature": 21057,
+      "auroc_within_wording": 0.38235294117647056,
+      "p": 0.20742768352993457,
+      "active_fired": 32,
+      "active_not": 33,
+      "q": 0.8381814355594324
+     },
+     {
+      "feature": 67632,
+      "auroc_within_wording": 0.4167862266857963,
+      "p": 0.2268486983185748,
+      "active_fired": 28,
+      "active_not": 32,
+      "q": 0.8381814355594324
+     },
+     {
+      "feature": 116844,
+      "auroc_within_wording": 0.41965566714490676,
+      "p": 0.23007775270618194,
+      "active_fired": 34,
+      "active_not": 35,
+      "q": 0.8381814355594324
+     },
+     {
+      "feature": 108056,
+      "auroc_within_wording": 0.46987087517934,
+      "p": 0.25983419443387423,
+      "active_fired": 5,
+      "active_not": 9,
+      "q": 0.8694451890671946
+     },
+     {
+      "feature": 89425,
+      "auroc_within_wording": 0.4017216642754663,
+      "p": 0.2979027754470973,
+      "active_fired": 30,
+      "active_not": 32,
+      "q": 0.8863217846117457
+     }
+    ]
+   },
+   "probe_comparison_live_inert": {
+    "sae_l1": {
+     "auroc": 0.969,
+     "auroc_within_stratum": 0.97
+    },
+    "sae_l2": {
+     "auroc": 0.999,
+     "auroc_within_stratum": 0.999
+    },
+    "dense_probe": {
+     "auroc": 1.0,
+     "auroc_within_stratum": 1.0
+    }
+   },
+   "probe_comparison_fired": {
+    "sae_l1": {
+     "auroc": 0.5,
+     "auroc_within_stratum": 0.5
+    },
+    "sae_l2": {
+     "auroc": 0.456,
+     "auroc_within_stratum": 0.461
+    },
+    "dense_probe": {
+     "auroc": 0.799,
+     "auroc_within_stratum": 0.763
+    }
+   }
+  },
+  "19": {
+   "live_vs_inert": {
+    "n_pairs": 48,
+    "n_features_tested": 81,
+    "n_q_below_0.05": 42,
+    "top_live": [
+     {
+      "feature": 15694,
+      "mean_diff": 69.375,
+      "live_higher": 43,
+      "inert_higher": 5,
+      "active_live": 48,
+      "active_inert": 43,
+      "p": 1.494045857998198e-08,
+      "q": 6.050885724892701e-07
+     },
+     {
+      "feature": 29540,
+      "mean_diff": 81.25,
+      "live_higher": 44,
+      "inert_higher": 3,
+      "active_live": 47,
+      "active_inert": 39,
+      "p": 7.582535363882002e-08,
+      "q": 1.2283707289488845e-06
+     },
+     {
+      "feature": 93793,
+      "mean_diff": 102.25,
+      "live_higher": 28,
+      "inert_higher": 0,
+      "active_live": 28,
+      "active_inert": 2,
+      "p": 3.743312673061596e-06,
+      "q": 3.7901040814748664e-05
+     },
+     {
+      "feature": 68733,
+      "mean_diff": 149.16666666666666,
+      "live_higher": 40,
+      "inert_higher": 8,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 5.6497980348748656e-06,
+      "q": 5.0848182313873794e-05
+     },
+     {
+      "feature": 49196,
+      "mean_diff": 104.91666666666667,
+      "live_higher": 26,
+      "inert_higher": 0,
+      "active_live": 26,
+      "active_inert": 0,
+      "p": 8.187440296452538e-06,
+      "q": 6.631826640126555e-05
+     },
+     {
+      "feature": 4724,
+      "mean_diff": 41.5,
+      "live_higher": 36,
+      "inert_higher": 10,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 1.2000867934273114e-05,
+      "q": 8.837002751601111e-05
+     },
+     {
+      "feature": 49776,
+      "mean_diff": 23.729166666666668,
+      "live_higher": 37,
+      "inert_higher": 9,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 3.2849284087671685e-05,
+      "q": 0.00020467630854626204
+     },
+     {
+      "feature": 36802,
+      "mean_diff": 58.833333333333336,
+      "live_higher": 33,
+      "inert_higher": 8,
+      "active_live": 42,
+      "active_inert": 37,
+      "p": 7.101392726508227e-05,
+      "q": 0.00038347520723144423
+     },
+     {
+      "feature": 53009,
+      "mean_diff": 24.333333333333332,
+      "live_higher": 35,
+      "inert_higher": 11,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 0.00015847747653606643,
+      "q": 0.0008022922249638363
+     },
+     {
+      "feature": 4971,
+      "mean_diff": 44.583333333333336,
+      "live_higher": 13,
+      "inert_higher": 0,
+      "active_live": 13,
+      "active_inert": 3,
+      "p": 0.000244140625,
+      "q": 0.0010986328125
+     },
+     {
+      "feature": 87642,
+      "mean_diff": 46.666666666666664,
+      "live_higher": 13,
+      "inert_higher": 0,
+      "active_live": 13,
+      "active_inert": 0,
+      "p": 0.000244140625,
+      "q": 0.0010986328125
+     },
+     {
+      "feature": 29173,
+      "mean_diff": 25.416666666666668,
+      "live_higher": 35,
+      "inert_higher": 12,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 0.0005245132392548926,
+      "q": 0.002124278618982315
+     },
+     {
+      "feature": 49714,
+      "mean_diff": 72.33333333333333,
+      "live_higher": 35,
+      "inert_higher": 12,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 0.0005999279294279375,
+      "q": 0.0023140077277934734
+     },
+     {
+      "feature": 831,
+      "mean_diff": 25.166666666666668,
+      "live_higher": 32,
+      "inert_higher": 15,
+      "active_live": 47,
+      "active_inert": 47,
+      "p": 0.001548489498699364,
+      "q": 0.005453376060636891
+     },
+     {
+      "feature": 1546,
+      "mean_diff": 21.333333333333332,
+      "live_higher": 33,
+      "inert_higher": 13,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 0.006276509443761332,
+      "q": 0.01815704517659528
+     }
+    ],
+    "top_inert": [
+     {
+      "feature": 95087,
+      "mean_diff": -116.54166666666667,
+      "live_higher": 0,
+      "inert_higher": 48,
+      "active_live": 43,
+      "active_inert": 48,
+      "p": 1.6250164675299403e-09,
+      "q": 1.3162633386992516e-07
+     },
+     {
+      "feature": 64122,
+      "mean_diff": -42.75,
+      "live_higher": 4,
+      "inert_higher": 44,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 3.193259594030965e-08,
+      "q": 8.24608226142085e-07
+     },
+     {
+      "feature": 113558,
+      "mean_diff": -85.41666666666667,
+      "live_higher": 2,
+      "inert_higher": 45,
+      "active_live": 38,
+      "active_inert": 46,
+      "p": 4.0721393883559755e-08,
+      "q": 8.24608226142085e-07
+     },
+     {
+      "feature": 130447,
+      "mean_diff": -49.166666666666664,
+      "live_higher": 8,
+      "inert_higher": 39,
+      "active_live": 45,
+      "active_inert": 48,
+      "p": 1.602871591109651e-07,
+      "q": 2.163876647998029e-06
+     },
+     {
+      "feature": 94163,
+      "mean_diff": -95.25,
+      "live_higher": 4,
+      "inert_higher": 39,
+      "active_live": 34,
+      "active_inert": 42,
+      "p": 7.835495795536387e-07,
+      "q": 9.066787991977819e-06
+     },
+     {
+      "feature": 102117,
+      "mean_diff": -32.041666666666664,
+      "live_higher": 13,
+      "inert_higher": 35,
+      "active_live": 46,
+      "active_inert": 48,
+      "p": 1.4274039174500331e-05,
+      "q": 9.634976442787723e-05
+     },
+     {
+      "feature": 20866,
+      "mean_diff": -63.5,
+      "live_higher": 0,
+      "inert_higher": 22,
+      "active_live": 5,
+      "active_inert": 22,
+      "p": 3.972542072589564e-05,
+      "q": 0.00022983993419982478
+     },
+     {
+      "feature": 24698,
+      "mean_diff": -40.583333333333336,
+      "live_higher": 0,
+      "inert_higher": 12,
+      "active_live": 0,
+      "active_inert": 12,
+      "p": 0.00048828125,
+      "q": 0.002081620065789474
+     },
+     {
+      "feature": 12655,
+      "mean_diff": -49.333333333333336,
+      "live_higher": 1,
+      "inert_higher": 16,
+      "active_live": 2,
+      "active_inert": 16,
+      "p": 0.001065055673518449,
+      "q": 0.003921341343408834
+     },
+     {
+      "feature": 41265,
+      "mean_diff": -42.958333333333336,
+      "live_higher": 13,
+      "inert_higher": 30,
+      "active_live": 32,
+      "active_inert": 41,
+      "p": 0.0020266172629738316,
+      "q": 0.006839833262536681
+     },
+     {
+      "feature": 67194,
+      "mean_diff": -50.333333333333336,
+      "live_higher": 5,
+      "inert_higher": 19,
+      "active_live": 8,
+      "active_inert": 20,
+      "p": 0.002336188864729269,
+      "q": 0.007569251921722832
+     },
+     {
+      "feature": 127523,
+      "mean_diff": -31.375,
+      "live_higher": 1,
+      "inert_higher": 10,
+      "active_live": 1,
+      "active_inert": 10,
+      "p": 0.0048828125,
+      "q": 0.015211838942307692
+     },
+     {
+      "feature": 84415,
+      "mean_diff": -35.083333333333336,
+      "live_higher": 6,
+      "inert_higher": 21,
+      "active_live": 14,
+      "active_inert": 23,
+      "p": 0.006137693571237469,
+      "q": 0.01815704517659528
+     },
+     {
+      "feature": 41876,
+      "mean_diff": -20.166666666666668,
+      "live_higher": 16,
+      "inert_higher": 32,
+      "active_live": 48,
+      "active_inert": 48,
+      "p": 0.00900934931676009,
+      "q": 0.02354055789217959
+     },
+     {
+      "feature": 60618,
+      "mean_diff": -53.354166666666664,
+      "live_higher": 11,
+      "inert_higher": 28,
+      "active_live": 23,
+      "active_inert": 33,
+      "p": 0.013247620791514536,
+      "q": 0.030054815510668256
+     }
+    ]
+   },
+   "fired_within_wording": {
+    "n": 70,
+    "n_fired": 35,
+    "n_features_tested": 72,
+    "n_q_below_0.05": 0,
+    "top_fired": [
+     {
+      "feature": 102117,
+      "auroc_within_wording": 0.6341463414634146,
+      "p": 0.03342048336738958,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 43207,
+      "auroc_within_wording": 0.593974175035868,
+      "p": 0.044236544525196694,
+      "active_fired": 6,
+      "active_not": 0,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 67194,
+      "auroc_within_wording": 0.5387374461979914,
+      "p": 0.08287717909178184,
+      "active_fired": 13,
+      "active_not": 9,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 23396,
+      "auroc_within_wording": 0.5896700143472023,
+      "p": 0.14179902310520462,
+      "active_fired": 30,
+      "active_not": 31,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 126647,
+      "auroc_within_wording": 0.6119081779053085,
+      "p": 0.16885806591201413,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 112596,
+      "auroc_within_wording": 0.5021520803443329,
+      "p": 0.1842431955708443,
+      "active_fired": 5,
+      "active_not": 3,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 53009,
+      "auroc_within_wording": 0.5918220946915351,
+      "p": 0.18628323852384832,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 85149,
+      "auroc_within_wording": 0.5989956958393113,
+      "p": 0.1980507090666397,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 94163,
+      "auroc_within_wording": 0.5150645624103299,
+      "p": 0.20037912976059793,
+      "active_fired": 31,
+      "active_not": 29,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 42314,
+      "auroc_within_wording": 0.5538020086083214,
+      "p": 0.21380934733204443,
+      "active_fired": 5,
+      "active_not": 2,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 57508,
+      "auroc_within_wording": 0.5530846484935438,
+      "p": 0.2270861371027132,
+      "active_fired": 21,
+      "active_not": 19,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 105574,
+      "auroc_within_wording": 0.5832137733142038,
+      "p": 0.24714949118860013,
+      "active_fired": 11,
+      "active_not": 5,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 93793,
+      "auroc_within_wording": 0.5911047345767575,
+      "p": 0.247929820502341,
+      "active_fired": 18,
+      "active_not": 12,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 20866,
+      "auroc_within_wording": 0.5674318507890961,
+      "p": 0.29291125520727307,
+      "active_fired": 15,
+      "active_not": 13,
+      "q": 0.9516066439352454
+     },
+     {
+      "feature": 4724,
+      "auroc_within_wording": 0.6068866571018652,
+      "p": 0.29538427106923865,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.9516066439352454
+     }
+    ],
+    "top_not_fired": [
+     {
+      "feature": 58515,
+      "auroc_within_wording": 0.3328550932568149,
+      "p": 0.011084740793301623,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.7981013371177169
+     },
+     {
+      "feature": 41876,
+      "auroc_within_wording": 0.406025824964132,
+      "p": 0.14034210539086586,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 24765,
+      "auroc_within_wording": 0.4727403156384505,
+      "p": 0.15697844241100636,
+      "active_fired": 35,
+      "active_not": 34,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 66517,
+      "auroc_within_wording": 0.44261119081779055,
+      "p": 0.17772184509561745,
+      "active_fired": 19,
+      "active_not": 25,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 97385,
+      "auroc_within_wording": 0.366571018651363,
+      "p": 0.21994706207651266,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 89062,
+      "auroc_within_wording": 0.48206599713055953,
+      "p": 0.2608256738850438,
+      "active_fired": 5,
+      "active_not": 7,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 62626,
+      "auroc_within_wording": 0.38880918220946914,
+      "p": 0.2624087155167067,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.944671375860144
+     },
+     {
+      "feature": 84415,
+      "auroc_within_wording": 0.42898134863701576,
+      "p": 0.3119825160328737,
+      "active_fired": 7,
+      "active_not": 12,
+      "q": 0.9516066439352454
+     },
+     {
+      "feature": 130447,
+      "auroc_within_wording": 0.4182209469153515,
+      "p": 0.47074096446789415,
+      "active_fired": 30,
+      "active_not": 31,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 831,
+      "auroc_within_wording": 0.4878048780487805,
+      "p": 0.47967795222929877,
+      "active_fired": 32,
+      "active_not": 33,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 113042,
+      "auroc_within_wording": 0.45265423242467717,
+      "p": 0.4862928652219468,
+      "active_fired": 3,
+      "active_not": 6,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 27178,
+      "auroc_within_wording": 0.49856527977044474,
+      "p": 0.5010896222268808,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 102722,
+      "auroc_within_wording": 0.49569583931133426,
+      "p": 0.5479595249965667,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 125013,
+      "auroc_within_wording": 0.4727403156384505,
+      "p": 0.568719381117047,
+      "active_fired": 4,
+      "active_not": 7,
+      "q": 0.9806409954437806
+     },
+     {
+      "feature": 29173,
+      "auroc_within_wording": 0.4282639885222382,
+      "p": 0.571484697520116,
+      "active_fired": 35,
+      "active_not": 35,
+      "q": 0.9806409954437806
+     }
+    ]
+   },
+   "probe_comparison_live_inert": {
+    "sae_l1": {
+     "auroc": 0.964,
+     "auroc_within_stratum": 0.967
+    },
+    "sae_l2": {
+     "auroc": 0.938,
+     "auroc_within_stratum": 0.944
+    },
+    "dense_probe": {
+     "auroc": 1.0,
+     "auroc_within_stratum": 1.0
+    }
+   },
+   "probe_comparison_fired": {
+    "sae_l1": {
+     "auroc": 0.43,
+     "auroc_within_stratum": 0.371
+    },
+    "sae_l2": {
+     "auroc": 0.415,
+     "auroc_within_stratum": 0.43
+    },
+    "dense_probe": {
+     "auroc": 0.799,
+     "auroc_within_stratum": 0.763
+    }
+   }
+  }
+ },
+ "jlens": {
+  "J": {
+   "note": {
+    "action_word_rate_live": 0.016,
+    "action_word_rate_inert": 0.006,
+    "pairs_live_higher": 5,
+    "pairs_inert_higher": 2,
+    "sign_test_p": 0.453125,
+    "action_word_rate_fired": 0.033,
+    "action_word_rate_not_fired": 0.026,
+    "fired_auroc_within_wording": 0.503
+   },
+   "mre": {
+    "action_word_rate_live": 0.002,
+    "action_word_rate_inert": 0.005,
+    "pairs_live_higher": 1,
+    "pairs_inert_higher": 3,
+    "sign_test_p": 0.625,
+    "action_word_rate_fired": 0.004,
+    "action_word_rate_not_fired": 0.002,
+    "fired_auroc_within_wording": 0.517
+   },
+   "last": {
+    "action_word_rate_live": 0.0,
+    "action_word_rate_inert": 0.0,
+    "pairs_live_higher": 0,
+    "pairs_inert_higher": 0,
+    "sign_test_p": null,
+    "action_word_rate_fired": 0.0,
+    "action_word_rate_not_fired": 0.0,
+    "fired_auroc_within_wording": 0.5
+   },
+   "enrichment_live_vs_inert_note": {
+    "a_enriched": [
+     {
+      "token": "automatically",
+      "prompts_a": 33,
+      "prompts_b": 0,
+      "log_odds": 5.345416393409202
+     },
+     {
+      "token": "checklist",
+      "prompts_a": 28,
+      "prompts_b": 0,
+      "log_odds": 4.904190179633625
+     },
+     {
+      "token": "pinned",
+      "prompts_a": 27,
+      "prompts_b": 0,
+      "log_odds": 4.820844048042291
+     },
+     {
+      "token": "requester",
+      "prompts_a": 24,
+      "prompts_b": 0,
+      "log_odds": 4.574710978503383
+     },
+     {
+      "token": "urg",
+      "prompts_a": 18,
+      "prompts_b": 0,
+      "log_odds": 4.074755026974296
+     },
+     {
+      "token": "hints",
+      "prompts_a": 17,
+      "prompts_b": 0,
+      "log_odds": 3.9869243136012638
+     },
+     {
+      "token": "they're",
+      "prompts_a": 15,
+      "prompts_b": 0,
+      "log_odds": 3.804005563597563
+     },
+     {
+      "token": "reminder",
+      "prompts_a": 32,
+      "prompts_b": 2,
+      "log_odds": 3.6010412891483123
+     },
+     {
+      "token": "alert",
+      "prompts_a": 12,
+      "prompts_b": 0,
+      "log_odds": 3.5031273622231924
+     },
+     {
+      "token": "task",
+      "prompts_a": 12,
+      "prompts_b": 0,
+      "log_odds": 3.5031273622231924
+     },
+     {
+      "token": "ingredient",
+      "prompts_a": 11,
+      "prompts_b": 0,
+      "log_odds": 3.392717080896222
+     },
+     {
+      "token": "lopt",
+      "prompts_a": 11,
+      "prompts_b": 0,
+      "log_odds": 3.392717080896222
+     },
+     {
+      "token": "ignore",
+      "prompts_a": 19,
+      "prompts_b": 1,
+      "log_odds": 3.0412888051563582
+     },
+     {
+      "token": "votes",
+      "prompts_a": 7,
+      "prompts_b": 0,
+      "log_odds": 2.863920571808995
+     },
+     {
+      "token": "complaint",
+      "prompts_a": 7,
+      "prompts_b": 0,
+      "log_odds": 2.863920571808995
+     },
+     {
+      "token": "indexed",
+      "prompts_a": 6,
+      "prompts_b": 0,
+      "log_odds": 2.6970090794746033
+     },
+     {
+      "token": "pending",
+      "prompts_a": 6,
+      "prompts_b": 0,
+      "log_odds": 2.6970090794746033
+     },
+     {
+      "token": "statements",
+      "prompts_a": 14,
+      "prompts_b": 1,
+      "log_odds": 2.5884539283216457
+     },
+     {
+      "token": "bold",
+      "prompts_a": 5,
+      "prompts_b": 0,
+      "log_odds": 2.50669813264717
+     },
+     {
+      "token": "instruction",
+      "prompts_a": 18,
+      "prompts_b": 2,
+      "log_odds": 2.4232056291900683
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "completed",
+      "prompts_a": 0,
+      "prompts_b": 39,
+      "log_odds": -5.999719851803964
+     },
+     {
+      "token": "etc",
+      "prompts_a": 0,
+      "prompts_b": 37,
+      "log_odds": -5.756704876110543
+     },
+     {
+      "token": "earlier",
+      "prompts_a": 0,
+      "prompts_b": 18,
+      "log_odds": -4.074755026974296
+     },
+     {
+      "token": "disclosures",
+      "prompts_a": 2,
+      "prompts_b": 33,
+      "log_odds": -3.6938669956249752
+     },
+     {
+      "token": "canceled",
+      "prompts_a": 0,
+      "prompts_b": 13,
+      "log_odds": -3.6078679674663965
+     },
+     {
+      "token": "paragraph",
+      "prompts_a": 0,
+      "prompts_b": 11,
+      "log_odds": -3.392717080896222
+     },
+     {
+      "token": "reviewer",
+      "prompts_a": 17,
+      "prompts_b": 45,
+      "log_odds": -3.152736022363656
+     },
+     {
+      "token": "dialog",
+      "prompts_a": 0,
+      "prompts_b": 9,
+      "log_odds": -3.1497021052028016
+     },
+     {
+      "token": "unclear",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "related",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "commenters",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "exchanges",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "scroll",
+      "prompts_a": 7,
+      "prompts_b": 35,
+      "log_odds": -2.677633417731374
+     },
+     {
+      "token": "conversation",
+      "prompts_a": 6,
+      "prompts_b": 32,
+      "log_odds": -2.5555816074579365
+     },
+     {
+      "token": "trump's",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "unpublished",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "excerpt",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "fluff",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "previously",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "referencing",
+      "prompts_a": 3,
+      "prompts_b": 23,
+      "log_odds": -2.4832713264472694
+     }
+    ]
+   },
+   "enrichment_fired_vs_not_note": {
+    "a_enriched": [
+     {
+      "token": "behavior",
+      "prompts_a": 35,
+      "prompts_b": 32,
+      "log_odds": 2.0342027562009917
+     },
+     {
+      "token": "sheriff's",
+      "prompts_a": 15,
+      "prompts_b": 5,
+      "log_odds": 1.433393729155779
+     },
+     {
+      "token": "customizer",
+      "prompts_a": 8,
+      "prompts_b": 2,
+      "log_odds": 1.4211348657806109
+     },
+     {
+      "token": "instruction",
+      "prompts_a": 27,
+      "prompts_b": 16,
+      "log_odds": 1.341173925839421
+     },
+     {
+      "token": "reminder",
+      "prompts_a": 31,
+      "prompts_b": 23,
+      "log_odds": 1.3146383722134556
+     },
+     {
+      "token": "bigger",
+      "prompts_a": 4,
+      "prompts_b": 1,
+      "log_odds": 1.1895840668738362
+     },
+     {
+      "token": "completed",
+      "prompts_a": 17,
+      "prompts_b": 9,
+      "log_odds": 0.9702830832308708
+     },
+     {
+      "token": "tweeting",
+      "prompts_a": 21,
+      "prompts_b": 13,
+      "log_odds": 0.9047299094730792
+     },
+     {
+      "token": "scroll",
+      "prompts_a": 7,
+      "prompts_b": 3,
+      "log_odds": 0.8934760541079836
+     },
+     {
+      "token": "instructions",
+      "prompts_a": 33,
+      "prompts_b": 30,
+      "log_odds": 0.882276115581925
+     },
+     {
+      "token": "apologized",
+      "prompts_a": 6,
+      "prompts_b": 3,
+      "log_odds": 0.715889034396141
+     },
+     {
+      "token": "tweets",
+      "prompts_a": 17,
+      "prompts_b": 11,
+      "log_odds": 0.7007562310266662
+     },
+     {
+      "token": "republicans",
+      "prompts_a": 9,
+      "prompts_b": 5,
+      "log_odds": 0.6871256569892592
+     },
+     {
+      "token": "bolsonaro",
+      "prompts_a": 33,
+      "prompts_b": 31,
+      "log_odds": 0.6493445579015524
+     },
+     {
+      "token": "reagan",
+      "prompts_a": 4,
+      "prompts_b": 2,
+      "log_odds": 0.6493445579015522
+     },
+     {
+      "token": "etc",
+      "prompts_a": 5,
+      "prompts_b": 3,
+      "log_odds": 0.5154985294653831
+     },
+     {
+      "token": "usps",
+      "prompts_a": 32,
+      "prompts_b": 30,
+      "log_odds": 0.5154985294653831
+     },
+     {
+      "token": "emails",
+      "prompts_a": 5,
+      "prompts_b": 3,
+      "log_odds": 0.5154985294653831
+     },
+     {
+      "token": "topic",
+      "prompts_a": 21,
+      "prompts_b": 17,
+      "log_odds": 0.44947413686189924
+     },
+     {
+      "token": "chatbot",
+      "prompts_a": 10,
+      "prompts_b": 7,
+      "log_odds": 0.4476978717314374
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "informat",
+      "prompts_a": 0,
+      "prompts_b": 9,
+      "log_odds": -3.236826942655634
+     },
+     {
+      "token": "screenshot",
+      "prompts_a": 32,
+      "prompts_b": 35,
+      "log_odds": -2.0342027562009917
+     },
+     {
+      "token": "scrolling",
+      "prompts_a": 33,
+      "prompts_b": 35,
+      "log_odds": -1.6674251700844498
+     },
+     {
+      "token": "tweeted",
+      "prompts_a": 33,
+      "prompts_b": 35,
+      "log_odds": -1.6674251700844498
+     },
+     {
+      "token": "deadline",
+      "prompts_a": 4,
+      "prompts_b": 11,
+      "log_odds": -1.1895840668738367
+     },
+     {
+      "token": "lopt",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "you'd",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "fake",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "ingredient",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "that'll",
+      "prompts_a": 34,
+      "prompts_b": 35,
+      "log_odds": -1.1271856611121658
+     },
+     {
+      "token": "counselor",
+      "prompts_a": 11,
+      "prompts_b": 20,
+      "log_odds": -1.0359109444006385
+     },
+     {
+      "token": "emailed",
+      "prompts_a": 11,
+      "prompts_b": 20,
+      "log_odds": -1.0359109444006385
+     },
+     {
+      "token": "posters",
+      "prompts_a": 13,
+      "prompts_b": 22,
+      "log_odds": -1.0216512475319814
+     },
+     {
+      "token": "prompt",
+      "prompts_a": 11,
+      "prompts_b": 19,
+      "log_odds": -0.9233801668446431
+     },
+     {
+      "token": "continue",
+      "prompts_a": 32,
+      "prompts_b": 34,
+      "log_odds": -0.9070170950888259
+     },
+     {
+      "token": "obama's",
+      "prompts_a": 32,
+      "prompts_b": 34,
+      "log_odds": -0.9070170950888259
+     },
+     {
+      "token": "newspaper",
+      "prompts_a": 2,
+      "prompts_b": 5,
+      "log_odds": -0.882276115581925
+     },
+     {
+      "token": "smithsonian",
+      "prompts_a": 2,
+      "prompts_b": 5,
+      "log_odds": -0.882276115581925
+     },
+     {
+      "token": "alert",
+      "prompts_a": 9,
+      "prompts_b": 15,
+      "log_odds": -0.7462680721665199
+     },
+     {
+      "token": "dialogue",
+      "prompts_a": 3,
+      "prompts_b": 6,
+      "log_odds": -0.715889034396141
+     }
+    ]
+   },
+   "enrichment_live_vs_inert_last": {
+    "a_enriched": [
+     {
+      "token": "comentario",
+      "prompts_a": 19,
+      "prompts_b": 6,
+      "log_odds": 1.4637261012527067
+     },
+     {
+      "token": "apology",
+      "prompts_a": 48,
+      "prompts_b": 47,
+      "log_odds": 1.1194463755709516
+     },
+     {
+      "token": "thanking",
+      "prompts_a": 6,
+      "prompts_b": 5,
+      "log_odds": 0.19031094682743332
+     },
+     {
+      "token": "therapist",
+      "prompts_a": 31,
+      "prompts_b": 31,
+      "log_odds": 0.0
+     },
+     {
+      "token": "concierge",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replied",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "interloc",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "commentaire",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "chatbot",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "gpt",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reply",
+      "prompts_a": 45,
+      "prompts_b": 45,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reviewer",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "counselor",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replying",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "requester",
+      "prompts_a": 6,
+      "prompts_b": 8,
+      "log_odds": -0.31646608841255697
+     },
+     {
+      "token": "webhook",
+      "prompts_a": 11,
+      "prompts_b": 15,
+      "log_odds": -0.4112884827013411
+     },
+     {
+      "token": "apologized",
+      "prompts_a": 20,
+      "prompts_b": 26,
+      "log_odds": -0.49310862491204444
+     },
+     {
+      "token": "discussing",
+      "prompts_a": 4,
+      "prompts_b": 7,
+      "log_odds": -0.5806213857015328
+     },
+     {
+      "token": "markdown",
+      "prompts_a": 45,
+      "prompts_b": 48,
+      "log_odds": -2.009761621041846
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "markdown",
+      "prompts_a": 45,
+      "prompts_b": 48,
+      "log_odds": -2.009761621041846
+     },
+     {
+      "token": "discussing",
+      "prompts_a": 4,
+      "prompts_b": 7,
+      "log_odds": -0.5806213857015328
+     },
+     {
+      "token": "apologized",
+      "prompts_a": 20,
+      "prompts_b": 26,
+      "log_odds": -0.49310862491204444
+     },
+     {
+      "token": "webhook",
+      "prompts_a": 11,
+      "prompts_b": 15,
+      "log_odds": -0.4112884827013411
+     },
+     {
+      "token": "requester",
+      "prompts_a": 6,
+      "prompts_b": 8,
+      "log_odds": -0.31646608841255697
+     },
+     {
+      "token": "replying",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "counselor",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reviewer",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reply",
+      "prompts_a": 45,
+      "prompts_b": 45,
+      "log_odds": 0.0
+     },
+     {
+      "token": "gpt",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "chatbot",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "commentaire",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "interloc",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replied",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "concierge",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "therapist",
+      "prompts_a": 31,
+      "prompts_b": 31,
+      "log_odds": 0.0
+     },
+     {
+      "token": "thanking",
+      "prompts_a": 6,
+      "prompts_b": 5,
+      "log_odds": 0.19031094682743332
+     },
+     {
+      "token": "apology",
+      "prompts_a": 48,
+      "prompts_b": 47,
+      "log_odds": 1.1194463755709516
+     },
+     {
+      "token": "comentario",
+      "prompts_a": 19,
+      "prompts_b": 6,
+      "log_odds": 1.4637261012527067
+     }
+    ]
+   },
+   "enrichment_live_vs_inert_mre": {
+    "a_enriched": [
+     {
+      "token": "prompt",
+      "prompts_a": 48,
+      "prompts_b": 39,
+      "log_odds": 3.1497021052028016
+     },
+     {
+      "token": "normalized",
+      "prompts_a": 48,
+      "prompts_b": 43,
+      "log_odds": 2.50669813264717
+     },
+     {
+      "token": "dbobject",
+      "prompts_a": 28,
+      "prompts_b": 7,
+      "log_odds": 2.04026960782463
+     },
+     {
+      "token": "checklist",
+      "prompts_a": 30,
+      "prompts_b": 9,
+      "log_odds": 1.9249648248296678
+     },
+     {
+      "token": "customizer",
+      "prompts_a": 48,
+      "prompts_b": 46,
+      "log_odds": 1.651549397784227
+     },
+     {
+      "token": "inlining",
+      "prompts_a": 41,
+      "prompts_b": 30,
+      "log_odds": 1.210834455165301
+     },
+     {
+      "token": "topic",
+      "prompts_a": 47,
+      "prompts_b": 44,
+      "log_odds": 1.1638528105365107
+     },
+     {
+      "token": "we've",
+      "prompts_a": 48,
+      "prompts_b": 47,
+      "log_odds": 1.1194463755709516
+     },
+     {
+      "token": "requester",
+      "prompts_a": 43,
+      "prompts_b": 36,
+      "log_odds": 0.9964292295760226
+     },
+     {
+      "token": "we're",
+      "prompts_a": 44,
+      "prompts_b": 38,
+      "log_odds": 0.9921288082656596
+     },
+     {
+      "token": "comment",
+      "prompts_a": 47,
+      "prompts_b": 45,
+      "log_odds": 0.8903152454708945
+     },
+     {
+      "token": "continue",
+      "prompts_a": 47,
+      "prompts_b": 45,
+      "log_odds": 0.8903152454708945
+     },
+     {
+      "token": "workflow",
+      "prompts_a": 43,
+      "prompts_b": 37,
+      "log_odds": 0.8860189482490524
+     },
+     {
+      "token": "congrats",
+      "prompts_a": 7,
+      "prompts_b": 3,
+      "log_odds": 0.854158950767149
+     },
+     {
+      "token": "reminder",
+      "prompts_a": 22,
+      "prompts_b": 13,
+      "log_odds": 0.8032135872551843
+     },
+     {
+      "token": "fda",
+      "prompts_a": 8,
+      "prompts_b": 4,
+      "log_odds": 0.7301759817796978
+     },
+     {
+      "token": "textbox",
+      "prompts_a": 15,
+      "prompts_b": 9,
+      "log_odds": 0.6543034583947612
+     },
+     {
+      "token": "inbox",
+      "prompts_a": 25,
+      "prompts_b": 18,
+      "log_odds": 0.5816339825433539
+     },
+     {
+      "token": "tweeted",
+      "prompts_a": 39,
+      "prompts_b": 34,
+      "log_odds": 0.5581981986897956
+     },
+     {
+      "token": "replied",
+      "prompts_a": 47,
+      "prompts_b": 46,
+      "log_odds": 0.5321030222132754
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "docket",
+      "prompts_a": 22,
+      "prompts_b": 46,
+      "log_odds": -3.0867910045009577
+     },
+     {
+      "token": "publication",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "payload",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "article",
+      "prompts_a": 1,
+      "prompts_b": 13,
+      "log_odds": -2.488421591895445
+     },
+     {
+      "token": "khtml",
+      "prompts_a": 4,
+      "prompts_b": 22,
+      "log_odds": -2.1277823686141186
+     },
+     {
+      "token": "listing",
+      "prompts_a": 20,
+      "prompts_b": 41,
+      "log_odds": -2.04026960782463
+     },
+     {
+      "token": "insights",
+      "prompts_a": 5,
+      "prompts_b": 21,
+      "log_odds": -1.8218797763173047
+     },
+     {
+      "token": "review",
+      "prompts_a": 8,
+      "prompts_b": 27,
+      "log_odds": -1.8073688801551313
+     },
+     {
+      "token": "publicado",
+      "prompts_a": 1,
+      "prompts_b": 7,
+      "log_odds": -1.7444741962380435
+     },
+     {
+      "token": "outputs",
+      "prompts_a": 18,
+      "prompts_b": 37,
+      "log_odds": -1.6819498491362475
+     },
+     {
+      "token": "output",
+      "prompts_a": 21,
+      "prompts_b": 38,
+      "log_odds": -1.5454160536691695
+     },
+     {
+      "token": "okay",
+      "prompts_a": 4,
+      "prompts_b": 14,
+      "log_odds": -1.424601117785135
+     },
+     {
+      "token": "lobject",
+      "prompts_a": 7,
+      "prompts_b": 20,
+      "log_odds": -1.3813112055641454
+     },
+     {
+      "token": "kommentar",
+      "prompts_a": 7,
+      "prompts_b": 13,
+      "log_odds": -0.7439473956574014
+     },
+     {
+      "token": "paciente",
+      "prompts_a": 40,
+      "prompts_b": 44,
+      "log_odds": -0.7301759817796978
+     },
+     {
+      "token": "disclaimer",
+      "prompts_a": 17,
+      "prompts_b": 25,
+      "log_odds": -0.669464695916386
+     },
+     {
+      "token": "comments",
+      "prompts_a": 17,
+      "prompts_b": 23,
+      "log_odds": -0.5061086338878518
+     },
+     {
+      "token": "pedia",
+      "prompts_a": 22,
+      "prompts_b": 23,
+      "log_odds": -0.0819513927675348
+     },
+     {
+      "token": "highlight",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "scrolling",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     }
+    ]
+   },
+   "enrichment_fired_vs_not_last": {
+    "a_enriched": [
+     {
+      "token": "comentario",
+      "prompts_a": 15,
+      "prompts_b": 12,
+      "log_odds": 0.3516869146226963
+     },
+     {
+      "token": "requester",
+      "prompts_a": 5,
+      "prompts_b": 4,
+      "log_odds": 0.23293155768037277
+     },
+     {
+      "token": "therapist",
+      "prompts_a": 14,
+      "prompts_b": 13,
+      "log_odds": 0.11692133805890231
+     },
+     {
+      "token": "concierge",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replied",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "interloc",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "commentaire",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "chatbot",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "gpt",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "markdown",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reply",
+      "prompts_a": 33,
+      "prompts_b": 33,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reviewer",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "counselor",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replying",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "apologized",
+      "prompts_a": 21,
+      "prompts_b": 22,
+      "log_odds": -0.11692133805890226
+     },
+     {
+      "token": "webhook",
+      "prompts_a": 17,
+      "prompts_b": 20,
+      "log_odds": -0.3351547133739723
+     },
+     {
+      "token": "discussing",
+      "prompts_a": 7,
+      "prompts_b": 10,
+      "log_odds": -0.4476978717314374
+     },
+     {
+      "token": "apology",
+      "prompts_a": 31,
+      "prompts_b": 34,
+      "log_odds": -1.1895840668738364
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "apology",
+      "prompts_a": 31,
+      "prompts_b": 34,
+      "log_odds": -1.1895840668738364
+     },
+     {
+      "token": "discussing",
+      "prompts_a": 7,
+      "prompts_b": 10,
+      "log_odds": -0.4476978717314374
+     },
+     {
+      "token": "webhook",
+      "prompts_a": 17,
+      "prompts_b": 20,
+      "log_odds": -0.3351547133739723
+     },
+     {
+      "token": "apologized",
+      "prompts_a": 21,
+      "prompts_b": 22,
+      "log_odds": -0.11692133805890226
+     },
+     {
+      "token": "replying",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "counselor",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reviewer",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "reply",
+      "prompts_a": 33,
+      "prompts_b": 33,
+      "log_odds": 0.0
+     },
+     {
+      "token": "markdown",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "gpt",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "chatbot",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "commentaire",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "interloc",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "replied",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "concierge",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "therapist",
+      "prompts_a": 14,
+      "prompts_b": 13,
+      "log_odds": 0.11692133805890231
+     },
+     {
+      "token": "requester",
+      "prompts_a": 5,
+      "prompts_b": 4,
+      "log_odds": 0.23293155768037277
+     },
+     {
+      "token": "comentario",
+      "prompts_a": 15,
+      "prompts_b": 12,
+      "log_odds": 0.3516869146226963
+     }
+    ]
+   }
+  },
+  "Lg": {
+   "note": {
+    "action_word_rate_live": 0.005,
+    "action_word_rate_inert": 0.002,
+    "pairs_live_higher": 2,
+    "pairs_inert_higher": 1,
+    "sign_test_p": 1.0,
+    "action_word_rate_fired": 0.046,
+    "action_word_rate_not_fired": 0.0,
+    "fired_auroc_within_wording": 0.542
+   },
+   "mre": {
+    "action_word_rate_live": 0.058,
+    "action_word_rate_inert": 0.064,
+    "pairs_live_higher": 7,
+    "pairs_inert_higher": 8,
+    "sign_test_p": 1.0,
+    "action_word_rate_fired": 0.024,
+    "action_word_rate_not_fired": 0.042,
+    "fired_auroc_within_wording": 0.433
+   },
+   "last": {
+    "action_word_rate_live": 0.003,
+    "action_word_rate_inert": 0.005,
+    "pairs_live_higher": 0,
+    "pairs_inert_higher": 1,
+    "sign_test_p": 1.0,
+    "action_word_rate_fired": 0.002,
+    "action_word_rate_not_fired": 0.011,
+    "fired_auroc_within_wording": 0.448
+   },
+   "enrichment_live_vs_inert_note": {
+    "a_enriched": [
+     {
+      "token": "agenda",
+      "prompts_a": 26,
+      "prompts_b": 0,
+      "log_odds": 4.738340402285185
+     },
+     {
+      "token": "let's",
+      "prompts_a": 21,
+      "prompts_b": 0,
+      "log_odds": 4.3285779089644745
+     },
+     {
+      "token": "amb",
+      "prompts_a": 42,
+      "prompts_b": 5,
+      "log_odds": 3.9457147448849925
+     },
+     {
+      "token": "ande",
+      "prompts_a": 12,
+      "prompts_b": 0,
+      "log_odds": 3.5031273622231924
+     },
+     {
+      "token": "wow",
+      "prompts_a": 5,
+      "prompts_b": 0,
+      "log_odds": 2.50669813264717
+     },
+     {
+      "token": "rational",
+      "prompts_a": 11,
+      "prompts_b": 1,
+      "log_odds": 2.2732707053252703
+     },
+     {
+      "token": "ongoing",
+      "prompts_a": 9,
+      "prompts_b": 1,
+      "log_odds": 2.0302557296318504
+     },
+     {
+      "token": "rem",
+      "prompts_a": 7,
+      "prompts_b": 1,
+      "log_odds": 1.7444741962380435
+     },
+     {
+      "token": "tent",
+      "prompts_a": 42,
+      "prompts_b": 27,
+      "log_odds": 1.6315688294898711
+     },
+     {
+      "token": "pending",
+      "prompts_a": 46,
+      "prompts_b": 39,
+      "log_odds": 1.4981527074185748
+     },
+     {
+      "token": "directives",
+      "prompts_a": 6,
+      "prompts_b": 2,
+      "log_odds": 1.0454596816903756
+     },
+     {
+      "token": "ambit",
+      "prompts_a": 36,
+      "prompts_b": 29,
+      "log_odds": 0.6576078185041174
+     },
+     {
+      "token": "statement",
+      "prompts_a": 18,
+      "prompts_b": 12,
+      "log_odds": 0.5716276647511036
+     },
+     {
+      "token": "off",
+      "prompts_a": 5,
+      "prompts_b": 3,
+      "log_odds": 0.4969365116053237
+     },
+     {
+      "token": "instructions",
+      "prompts_a": 36,
+      "prompts_b": 31,
+      "log_odds": 0.4837969513780713
+     },
+     {
+      "token": "enti",
+      "prompts_a": 6,
+      "prompts_b": 4,
+      "log_odds": 0.4137098933671408
+     },
+     {
+      "token": "ondi",
+      "prompts_a": 7,
+      "prompts_b": 5,
+      "log_odds": 0.3572224391618253
+     },
+     {
+      "token": "mood",
+      "prompts_a": 10,
+      "prompts_b": 8,
+      "log_odds": 0.26195282648596185
+     },
+     {
+      "token": "ful",
+      "prompts_a": 23,
+      "prompts_b": 21,
+      "log_odds": 0.16445503852464122
+     },
+     {
+      "token": "hal",
+      "prompts_a": 14,
+      "prompts_b": 13,
+      "log_odds": 0.10003233642620091
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "previous",
+      "prompts_a": 0,
+      "prompts_b": 31,
+      "log_odds": -5.162497643405501
+     },
+     {
+      "token": "followed",
+      "prompts_a": 1,
+      "prompts_b": 40,
+      "log_odds": -5.016500413548654
+     },
+     {
+      "token": "led",
+      "prompts_a": 0,
+      "prompts_b": 15,
+      "log_odds": -3.804005563597563
+     },
+     {
+      "token": "earlier",
+      "prompts_a": 39,
+      "prompts_b": 48,
+      "log_odds": -3.1497021052028016
+     },
+     {
+      "token": "printing",
+      "prompts_a": 1,
+      "prompts_b": 19,
+      "log_odds": -3.0412888051563582
+     },
+     {
+      "token": "stated",
+      "prompts_a": 0,
+      "prompts_b": 8,
+      "log_odds": -3.01347516788716
+     },
+     {
+      "token": "lines",
+      "prompts_a": 0,
+      "prompts_b": 8,
+      "log_odds": -3.01347516788716
+     },
+     {
+      "token": "topics",
+      "prompts_a": 7,
+      "prompts_b": 37,
+      "log_odds": -2.892784304301548
+     },
+     {
+      "token": "jan",
+      "prompts_a": 0,
+      "prompts_b": 7,
+      "log_odds": -2.863920571808995
+     },
+     {
+      "token": "statements",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.6970090794746033
+     },
+     {
+      "token": "ext",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "unrelated",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "trajectory",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "recon",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "request",
+      "prompts_a": 1,
+      "prompts_b": 11,
+      "log_odds": -2.2732707053252703
+     },
+     {
+      "token": "scenario",
+      "prompts_a": 3,
+      "prompts_b": 18,
+      "log_odds": -2.0649934059324497
+     },
+     {
+      "token": "recorded",
+      "prompts_a": 5,
+      "prompts_b": 23,
+      "log_odds": -1.9863348148419457
+     },
+     {
+      "token": "related",
+      "prompts_a": 1,
+      "prompts_b": 8,
+      "log_odds": -1.8940287923162085
+     },
+     {
+      "token": "post",
+      "prompts_a": 1,
+      "prompts_b": 8,
+      "log_odds": -1.8940287923162085
+     },
+     {
+      "token": "informal",
+      "prompts_a": 24,
+      "prompts_b": 42,
+      "log_odds": -1.8777018990287797
+     }
+    ]
+   },
+   "enrichment_fired_vs_not_note": {
+    "a_enriched": [
+     {
+      "token": "wait",
+      "prompts_a": 5,
+      "prompts_b": 0,
+      "log_odds": 2.5497012856663748
+     },
+     {
+      "token": "off",
+      "prompts_a": 7,
+      "prompts_b": 1,
+      "log_odds": 1.8004931491968095
+     },
+     {
+      "token": "ged",
+      "prompts_a": 10,
+      "prompts_b": 2,
+      "log_odds": 1.707951511955963
+     },
+     {
+      "token": "pending",
+      "prompts_a": 35,
+      "prompts_b": 34,
+      "log_odds": 1.1271856611121658
+     },
+     {
+      "token": "signed",
+      "prompts_a": 6,
+      "prompts_b": 2,
+      "log_odds": 1.082666620512683
+     },
+     {
+      "token": "intended",
+      "prompts_a": 18,
+      "prompts_b": 9,
+      "log_odds": 1.0814227855404923
+     },
+     {
+      "token": "ongoing",
+      "prompts_a": 7,
+      "prompts_b": 3,
+      "log_odds": 0.8934760541079836
+     },
+     {
+      "token": "enti",
+      "prompts_a": 11,
+      "prompts_b": 6,
+      "log_odds": 0.7562620042627058
+     },
+     {
+      "token": "rem",
+      "prompts_a": 4,
+      "prompts_b": 2,
+      "log_odds": 0.6493445579015522
+     },
+     {
+      "token": "instructions",
+      "prompts_a": 25,
+      "prompts_b": 20,
+      "log_odds": 0.6077183327817413
+     },
+     {
+      "token": "ondi",
+      "prompts_a": 15,
+      "prompts_b": 10,
+      "log_odds": 0.6077183327817413
+     },
+     {
+      "token": "revis",
+      "prompts_a": 20,
+      "prompts_b": 15,
+      "log_odds": 0.5591697244383231
+     },
+     {
+      "token": "statement",
+      "prompts_a": 12,
+      "prompts_b": 8,
+      "log_odds": 0.5428480643343969
+     },
+     {
+      "token": "informal",
+      "prompts_a": 18,
+      "prompts_b": 14,
+      "log_odds": 0.4494741368618992
+     },
+     {
+      "token": "exper",
+      "prompts_a": 3,
+      "prompts_b": 2,
+      "log_odds": 0.3667775861165419
+     },
+     {
+      "token": "given",
+      "prompts_a": 3,
+      "prompts_b": 2,
+      "log_odds": 0.3667775861165419
+     },
+     {
+      "token": "directives",
+      "prompts_a": 3,
+      "prompts_b": 2,
+      "log_odds": 0.3667775861165419
+     },
+     {
+      "token": "bran",
+      "prompts_a": 8,
+      "prompts_b": 6,
+      "log_odds": 0.33846824526792796
+     },
+     {
+      "token": "let's",
+      "prompts_a": 9,
+      "prompts_b": 7,
+      "log_odds": 0.3091481323466587
+     },
+     {
+      "token": "branching",
+      "prompts_a": 10,
+      "prompts_b": 9,
+      "log_odds": 0.13854973938477866
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "requested",
+      "prompts_a": 0,
+      "prompts_b": 6,
+      "log_odds": -2.750091790597133
+     },
+     {
+      "token": "more",
+      "prompts_a": 30,
+      "prompts_b": 35,
+      "log_odds": -2.5497012856663748
+     },
+     {
+      "token": "ambit",
+      "prompts_a": 16,
+      "prompts_b": 29,
+      "log_odds": -1.679642171107349
+     },
+     {
+      "token": "first",
+      "prompts_a": 1,
+      "prompts_b": 5,
+      "log_odds": -1.422515624554209
+     },
+     {
+      "token": "subject",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "amb",
+      "prompts_a": 32,
+      "prompts_b": 34,
+      "log_odds": -0.9070170950888259
+     },
+     {
+      "token": "hold",
+      "prompts_a": 3,
+      "prompts_b": 7,
+      "log_odds": -0.8934760541079836
+     },
+     {
+      "token": "none",
+      "prompts_a": 2,
+      "prompts_b": 5,
+      "log_odds": -0.882276115581925
+     },
+     {
+      "token": "tent",
+      "prompts_a": 18,
+      "prompts_b": 25,
+      "log_odds": -0.8317333438460919
+     },
+     {
+      "token": "focus",
+      "prompts_a": 5,
+      "prompts_b": 10,
+      "log_odds": -0.8256753963740379
+     },
+     {
+      "token": "manifest",
+      "prompts_a": 9,
+      "prompts_b": 15,
+      "log_odds": -0.7462680721665199
+     },
+     {
+      "token": "log",
+      "prompts_a": 5,
+      "prompts_b": 9,
+      "log_odds": -0.6871256569892592
+     },
+     {
+      "token": "pauta",
+      "prompts_a": 2,
+      "prompts_b": 4,
+      "log_odds": -0.6493445579015522
+     },
+     {
+      "token": "content",
+      "prompts_a": 2,
+      "prompts_b": 4,
+      "log_odds": -0.6493445579015522
+     },
+     {
+      "token": "exp",
+      "prompts_a": 9,
+      "prompts_b": 13,
+      "log_odds": -0.5150273106196908
+     },
+     {
+      "token": "scrolling",
+      "prompts_a": 10,
+      "prompts_b": 13,
+      "log_odds": -0.3764775712349121
+     },
+     {
+      "token": "tasks",
+      "prompts_a": 2,
+      "prompts_b": 3,
+      "log_odds": -0.3667775861165419
+     },
+     {
+      "token": "earlier",
+      "prompts_a": 31,
+      "prompts_b": 32,
+      "log_odds": -0.28256697178501056
+     },
+     {
+      "token": "combined",
+      "prompts_a": 3,
+      "prompts_b": 4,
+      "log_odds": -0.28256697178501033
+     },
+     {
+      "token": "topics",
+      "prompts_a": 4,
+      "prompts_b": 5,
+      "log_odds": -0.23293155768037277
+     }
+    ]
+   },
+   "enrichment_live_vs_inert_last": {
+    "a_enriched": [
+     {
+      "token": "explanation",
+      "prompts_a": 9,
+      "prompts_b": 0,
+      "log_odds": 3.1497021052028016
+     },
+     {
+      "token": "hopefully",
+      "prompts_a": 47,
+      "prompts_b": 39,
+      "log_odds": 2.0302557296318504
+     },
+     {
+      "token": "description",
+      "prompts_a": 9,
+      "prompts_b": 2,
+      "log_odds": 1.4981527074185743
+     },
+     {
+      "token": "angle",
+      "prompts_a": 16,
+      "prompts_b": 5,
+      "log_odds": 1.390133137427056
+     },
+     {
+      "token": "assistant",
+      "prompts_a": 44,
+      "prompts_b": 36,
+      "log_odds": 1.2198281761157301
+     },
+     {
+      "token": "nonfiction",
+      "prompts_a": 43,
+      "prompts_b": 34,
+      "log_odds": 1.2012021712454275
+     },
+     {
+      "token": "proactively",
+      "prompts_a": 48,
+      "prompts_b": 47,
+      "log_odds": 1.1194463755709516
+     },
+     {
+      "token": "formulated",
+      "prompts_a": 48,
+      "prompts_b": 47,
+      "log_odds": 1.1194463755709516
+     },
+     {
+      "token": "clarity",
+      "prompts_a": 5,
+      "prompts_b": 2,
+      "log_odds": 0.8551487348629423
+     },
+     {
+      "token": "pinned",
+      "prompts_a": 29,
+      "prompts_b": 20,
+      "log_odds": 0.7434549989063153
+     },
+     {
+      "token": "continued",
+      "prompts_a": 19,
+      "prompts_b": 12,
+      "log_odds": 0.6576078185041174
+     },
+     {
+      "token": "says",
+      "prompts_a": 46,
+      "prompts_b": 44,
+      "log_odds": 0.6317497883232353
+     },
+     {
+      "token": "aim",
+      "prompts_a": 19,
+      "prompts_b": 13,
+      "log_odds": 0.5528672132609134
+     },
+     {
+      "token": "message",
+      "prompts_a": 47,
+      "prompts_b": 46,
+      "log_odds": 0.5321030222132754
+     },
+     {
+      "token": "how",
+      "prompts_a": 5,
+      "prompts_b": 3,
+      "log_odds": 0.4969365116053237
+     },
+     {
+      "token": "mentions",
+      "prompts_a": 45,
+      "prompts_b": 43,
+      "log_odds": 0.4969365116053237
+     },
+     {
+      "token": "figure",
+      "prompts_a": 44,
+      "prompts_b": 42,
+      "log_odds": 0.4137098933671408
+     },
+     {
+      "token": "ator",
+      "prompts_a": 10,
+      "prompts_b": 7,
+      "log_odds": 0.41150742256412687
+     },
+     {
+      "token": "chat",
+      "prompts_a": 29,
+      "prompts_b": 26,
+      "log_odds": 0.2503463739942709
+     },
+     {
+      "token": "man",
+      "prompts_a": 44,
+      "prompts_b": 43,
+      "log_odds": 0.2233989465397075
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "elic",
+      "prompts_a": 44,
+      "prompts_b": 48,
+      "log_odds": -2.2832991861074623
+     },
+     {
+      "token": "onward",
+      "prompts_a": 19,
+      "prompts_b": 38,
+      "log_odds": -1.7132587819063338
+     },
+     {
+      "token": "tone",
+      "prompts_a": 47,
+      "prompts_b": 48,
+      "log_odds": -1.1194463755709516
+     },
+     {
+      "token": "pun",
+      "prompts_a": 42,
+      "prompts_b": 46,
+      "log_odds": -1.045459681690376
+     },
+     {
+      "token": "dec",
+      "prompts_a": 5,
+      "prompts_b": 12,
+      "log_odds": -0.9964292295760226
+     },
+     {
+      "token": "dialogue",
+      "prompts_a": 26,
+      "prompts_b": 36,
+      "log_odds": -0.9079541924983883
+     },
+     {
+      "token": "once",
+      "prompts_a": 24,
+      "prompts_b": 34,
+      "log_odds": -0.8668106746107854
+     },
+     {
+      "token": "language",
+      "prompts_a": 27,
+      "prompts_b": 36,
+      "log_odds": -0.8254505467412818
+     },
+     {
+      "token": "onda",
+      "prompts_a": 8,
+      "prompts_b": 15,
+      "log_odds": -0.790530395710403
+     },
+     {
+      "token": "entes",
+      "prompts_a": 32,
+      "prompts_b": 39,
+      "log_odds": -0.7471291648714241
+     },
+     {
+      "token": "rest",
+      "prompts_a": 28,
+      "prompts_b": 36,
+      "log_odds": -0.7421044151499481
+     },
+     {
+      "token": "bas",
+      "prompts_a": 28,
+      "prompts_b": 36,
+      "log_odds": -0.7421044151499481
+     },
+     {
+      "token": "avier",
+      "prompts_a": 4,
+      "prompts_b": 7,
+      "log_odds": -0.5806213857015328
+     },
+     {
+      "token": "content",
+      "prompts_a": 8,
+      "prompts_b": 12,
+      "log_odds": -0.48965219433603235
+     },
+     {
+      "token": "ton",
+      "prompts_a": 12,
+      "prompts_b": 17,
+      "log_odds": -0.48379695137807144
+     },
+     {
+      "token": "silence",
+      "prompts_a": 8,
+      "prompts_b": 11,
+      "log_odds": -0.37924191300906185
+     },
+     {
+      "token": "voice",
+      "prompts_a": 2,
+      "prompts_b": 3,
+      "log_odds": -0.3582122232576186
+     },
+     {
+      "token": "using",
+      "prompts_a": 18,
+      "prompts_b": 19,
+      "log_odds": -0.08598015375301377
+     },
+     {
+      "token": "further",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     },
+     {
+      "token": "vela",
+      "prompts_a": 48,
+      "prompts_b": 48,
+      "log_odds": 0.0
+     }
+    ]
+   },
+   "enrichment_live_vs_inert_mre": {
+    "a_enriched": [
+     {
+      "token": "set",
+      "prompts_a": 11,
+      "prompts_b": 0,
+      "log_odds": 3.392717080896222
+     },
+     {
+      "token": "ist",
+      "prompts_a": 6,
+      "prompts_b": 0,
+      "log_odds": 2.6970090794746033
+     },
+     {
+      "token": "confirms",
+      "prompts_a": 34,
+      "prompts_b": 7,
+      "log_odds": 2.5776010813051733
+     },
+     {
+      "token": "autom",
+      "prompts_a": 48,
+      "prompts_b": 43,
+      "log_odds": 2.50669813264717
+     },
+     {
+      "token": "confirming",
+      "prompts_a": 41,
+      "prompts_b": 15,
+      "log_odds": 2.4814958216002077
+     },
+     {
+      "token": "returns",
+      "prompts_a": 47,
+      "prompts_b": 38,
+      "log_odds": 2.15598161880217
+     },
+     {
+      "token": "thanks",
+      "prompts_a": 48,
+      "prompts_b": 45,
+      "log_odds": 2.009761621041846
+     },
+     {
+      "token": "next",
+      "prompts_a": 36,
+      "prompts_b": 14,
+      "log_odds": 1.938394290890976
+     },
+     {
+      "token": "briefing",
+      "prompts_a": 7,
+      "prompts_b": 1,
+      "log_odds": 1.7444741962380435
+     },
+     {
+      "token": "instruction",
+      "prompts_a": 11,
+      "prompts_b": 2,
+      "log_odds": 1.7411676831119944
+     },
+     {
+      "token": "formatted",
+      "prompts_a": 48,
+      "prompts_b": 46,
+      "log_odds": 1.651549397784227
+     },
+     {
+      "token": "retrospect",
+      "prompts_a": 48,
+      "prompts_b": 46,
+      "log_odds": 1.651549397784227
+     },
+     {
+      "token": "followed",
+      "prompts_a": 47,
+      "prompts_b": 42,
+      "log_odds": 1.5775627039036515
+     },
+     {
+      "token": "looks",
+      "prompts_a": 11,
+      "prompts_b": 3,
+      "log_odds": 1.3829554598543758
+     },
+     {
+      "token": "clar",
+      "prompts_a": 26,
+      "prompts_b": 11,
+      "log_odds": 1.345623321388963
+     },
+     {
+      "token": "you've",
+      "prompts_a": 10,
+      "prompts_b": 3,
+      "log_odds": 1.2656663733312759
+     },
+     {
+      "token": "reflecting",
+      "prompts_a": 24,
+      "prompts_b": 11,
+      "log_odds": 1.181993897607161
+     },
+     {
+      "token": "desem",
+      "prompts_a": 46,
+      "prompts_b": 42,
+      "log_odds": 1.045459681690376
+     },
+     {
+      "token": "entries",
+      "prompts_a": 29,
+      "prompts_b": 17,
+      "log_odds": 1.001762462678192
+     },
+     {
+      "token": "content",
+      "prompts_a": 33,
+      "prompts_b": 22,
+      "log_odds": 0.9343348386876218
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "ful",
+      "prompts_a": 0,
+      "prompts_b": 7,
+      "log_odds": -2.863920571808995
+     },
+     {
+      "token": "block",
+      "prompts_a": 6,
+      "prompts_b": 32,
+      "log_odds": -2.5555816074579365
+     },
+     {
+      "token": "arms",
+      "prompts_a": 0,
+      "prompts_b": 5,
+      "log_odds": -2.50669813264717
+     },
+     {
+      "token": "included",
+      "prompts_a": 20,
+      "prompts_b": 41,
+      "log_odds": -2.04026960782463
+     },
+     {
+      "token": "fort",
+      "prompts_a": 5,
+      "prompts_b": 23,
+      "log_odds": -1.9863348148419457
+     },
+     {
+      "token": "coff",
+      "prompts_a": 1,
+      "prompts_b": 7,
+      "log_odds": -1.7444741962380435
+     },
+     {
+      "token": "bang",
+      "prompts_a": 1,
+      "prompts_b": 6,
+      "log_odds": -1.5775627039036515
+     },
+     {
+      "token": "scrolling",
+      "prompts_a": 1,
+      "prompts_b": 5,
+      "log_odds": -1.3872517570762182
+     },
+     {
+      "token": "details",
+      "prompts_a": 31,
+      "prompts_b": 42,
+      "log_odds": -1.2899152341266606
+     },
+     {
+      "token": "output",
+      "prompts_a": 25,
+      "prompts_b": 38,
+      "log_odds": -1.2176049531159938
+     },
+     {
+      "token": "summary",
+      "prompts_a": 47,
+      "prompts_b": 48,
+      "log_odds": -1.1194463755709516
+     },
+     {
+      "token": "shows",
+      "prompts_a": 21,
+      "prompts_b": 32,
+      "log_odds": -0.9240127779680654
+     },
+     {
+      "token": "given",
+      "prompts_a": 5,
+      "prompts_b": 11,
+      "log_odds": -0.8860189482490521
+     },
+     {
+      "token": "onders",
+      "prompts_a": 10,
+      "prompts_b": 16,
+      "log_odds": -0.621403275701104
+     },
+     {
+      "token": "basically",
+      "prompts_a": 38,
+      "prompts_b": 42,
+      "log_odds": -0.5784189148985188
+     },
+     {
+      "token": "figure",
+      "prompts_a": 10,
+      "prompts_b": 15,
+      "log_odds": -0.5285775692244411
+     },
+     {
+      "token": "good",
+      "prompts_a": 11,
+      "prompts_b": 16,
+      "log_odds": -0.504114189178004
+     },
+     {
+      "token": "cript",
+      "prompts_a": 3,
+      "prompts_b": 5,
+      "log_odds": -0.4969365116053237
+     },
+     {
+      "token": "comment",
+      "prompts_a": 34,
+      "prompts_b": 38,
+      "log_odds": -0.43247230951947546
+     },
+     {
+      "token": "del",
+      "prompts_a": 17,
+      "prompts_b": 20,
+      "log_odds": -0.25830746377187663
+     }
+    ]
+   },
+   "enrichment_fired_vs_not_last": {
+    "a_enriched": [
+     {
+      "token": "hopefully",
+      "prompts_a": 34,
+      "prompts_b": 29,
+      "log_odds": 1.622906129484967
+     },
+     {
+      "token": "content",
+      "prompts_a": 12,
+      "prompts_b": 4,
+      "log_odds": 1.3146383722134556
+     },
+     {
+      "token": "language",
+      "prompts_a": 29,
+      "prompts_b": 21,
+      "log_odds": 1.1186838007370943
+     },
+     {
+      "token": "nonfiction",
+      "prompts_a": 31,
+      "prompts_b": 27,
+      "log_odds": 0.7717903078790584
+     },
+     {
+      "token": "chat",
+      "prompts_a": 15,
+      "prompts_b": 9,
+      "log_odds": 0.7462680721665199
+     },
+     {
+      "token": "pinned",
+      "prompts_a": 26,
+      "prompts_b": 20,
+      "log_odds": 0.7462680721665198
+     },
+     {
+      "token": "html",
+      "prompts_a": 10,
+      "prompts_b": 7,
+      "log_odds": 0.4476978717314374
+     },
+     {
+      "token": "using",
+      "prompts_a": 20,
+      "prompts_b": 16,
+      "log_odds": 0.44663894688232775
+     },
+     {
+      "token": "angle",
+      "prompts_a": 11,
+      "prompts_b": 8,
+      "log_odds": 0.4177937589947779
+     },
+     {
+      "token": "instruction",
+      "prompts_a": 5,
+      "prompts_b": 4,
+      "log_odds": 0.23293155768037277
+     },
+     {
+      "token": "continued",
+      "prompts_a": 16,
+      "prompts_b": 14,
+      "log_odds": 0.2268502010439222
+     },
+     {
+      "token": "helf",
+      "prompts_a": 19,
+      "prompts_b": 17,
+      "log_odds": 0.22262393581797701
+     },
+     {
+      "token": "ator",
+      "prompts_a": 8,
+      "prompts_b": 7,
+      "log_odds": 0.16088122555608542
+     },
+     {
+      "token": "pun",
+      "prompts_a": 21,
+      "prompts_b": 20,
+      "log_odds": 0.11431942348792695
+     },
+     {
+      "token": "inc",
+      "prompts_a": 15,
+      "prompts_b": 14,
+      "log_odds": 0.11431942348792684
+     },
+     {
+      "token": "aim",
+      "prompts_a": 20,
+      "prompts_b": 19,
+      "log_odds": 0.11253077755599528
+     },
+     {
+      "token": "ignoring",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "jumps",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "rede",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     },
+     {
+      "token": "text",
+      "prompts_a": 35,
+      "prompts_b": 35,
+      "log_odds": 0.0
+     }
+    ],
+    "b_enriched": [
+     {
+      "token": "message",
+      "prompts_a": 29,
+      "prompts_b": 34,
+      "log_odds": -1.622906129484967
+     },
+     {
+      "token": "comments",
+      "prompts_a": 3,
+      "prompts_b": 12,
+      "log_odds": -1.597205343998466
+     },
+     {
+      "token": "voice",
+      "prompts_a": 1,
+      "prompts_b": 5,
+      "log_odds": -1.422515624554209
+     },
+     {
+      "token": "description",
+      "prompts_a": 1,
+      "prompts_b": 5,
+      "log_odds": -1.422515624554209
+     },
+     {
+      "token": "how",
+      "prompts_a": 1,
+      "prompts_b": 4,
+      "log_odds": -1.1895840668738362
+     },
+     {
+      "token": "mentions",
+      "prompts_a": 34,
+      "prompts_b": 35,
+      "log_odds": -1.1271856611121658
+     },
+     {
+      "token": "avier",
+      "prompts_a": 2,
+      "prompts_b": 6,
+      "log_odds": -1.082666620512683
+     },
+     {
+      "token": "man",
+      "prompts_a": 29,
+      "prompts_b": 33,
+      "log_odds": -1.082666620512683
+     },
+     {
+      "token": "bas",
+      "prompts_a": 19,
+      "prompts_b": 27,
+      "log_odds": -1.0070657565130885
+     },
+     {
+      "token": "says",
+      "prompts_a": 32,
+      "prompts_b": 34,
+      "log_odds": -0.9070170950888259
+     },
+     {
+      "token": "once",
+      "prompts_a": 15,
+      "prompts_b": 22,
+      "log_odds": -0.7904104859851523
+     },
+     {
+      "token": "entes",
+      "prompts_a": 16,
+      "prompts_b": 22,
+      "log_odds": -0.6778797084291569
+     },
+     {
+      "token": "reply",
+      "prompts_a": 2,
+      "prompts_b": 4,
+      "log_odds": -0.6493445579015522
+     },
+     {
+      "token": "explanation",
+      "prompts_a": 7,
+      "prompts_b": 11,
+      "log_odds": -0.5786749845508633
+     },
+     {
+      "token": "onda",
+      "prompts_a": 8,
+      "prompts_b": 12,
+      "log_odds": -0.5428480643343969
+     },
+     {
+      "token": "onward",
+      "prompts_a": 22,
+      "prompts_b": 26,
+      "log_odds": -0.5150273106196905
+     },
+     {
+      "token": "dec",
+      "prompts_a": 14,
+      "prompts_b": 18,
+      "log_odds": -0.4494741368618992
+     },
+     {
+      "token": "strikes",
+      "prompts_a": 2,
+      "prompts_b": 3,
+      "log_odds": -0.3667775861165419
+     },
+     {
+      "token": "dialogue",
+      "prompts_a": 27,
+      "prompts_b": 29,
+      "log_odds": -0.33846824526792796
+     },
+     {
+      "token": "silence",
+      "prompts_a": 3,
+      "prompts_b": 4,
+      "log_odds": -0.28256697178501033
+     }
+    ]
+   }
+  }
+ }
+}

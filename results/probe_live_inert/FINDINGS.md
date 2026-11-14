@@ -1,39 +1,46 @@
 # Linear probes on gpt-oss-20b for planted memory notes
 
-Raghav Agarwal, AI Alignment @ Illinois Fellowship, Interpretability stream. October 2026.
-Built on the behavior_v1 dataset and gptoss.py harness in this repo.
+Raghav Agarwal, AI Alignment @ Illinois Fellowship, Interpretability stream. Updated 14 November 2026.
+Built on Huy Pham's behavior_v1 dataset and gptoss.py harness in this repo.
 
 ## Summary
 
-1. **Live vs inert.** A linear probe on the residual stream separates a pending instruction from a closed record of the
-   same action with AUROC 0.998 to 1.000 on held out wordings and domains. A TF-IDF text baseline also scores 1.000, so
-   this validates the pipeline but shows nothing beyond the words. The signal reaches the end of the memory tool result
-   by layer 1 and is perfectly decodable from about layer 13.
-2. **Fired.** Among live notes only, the same kind of probe predicts whether the agent will actually execute the planted
-   action at the trigger turn. Holding out whole cases and comparing only notes that share a wording, the probe scores
-   AUROC **0.876 [0.818, 0.920]**, against 0.781 for TF-IDF on the note (difference +0.096 [+0.008, +0.185]) and 0.814
-   for TF-IDF on the full prompt (difference +0.062 [−0.016, +0.141], not significant).
-3. **Wording drives obedience.** The six live note wordings are executed in 1% to 92% of cases. The paper's own
-   preamble (template 0) is executed 92% of the time; template 4 only 1%.
-4. **Caveat.** The pre-registered primary set E3 has only 2 executed notes out of 40 and cannot be interpreted. All
-   controls in section 4 are exploratory, run after the pre-registered report.
+1. **Live vs inert is easy and textual.** A probe separates a pending instruction from a closed record of the same
+   action with AUROC 0.998 to 1.000 on every held out set, and so does TF-IDF on the note (1.000). This validates the
+   pipeline and nothing more.
+2. **Whether the agent will act is not textual, and the probe reads it better than text.** Among live notes, we compare
+   only notes that share a wording, because wording alone moves obedience from 2% to 78% of rollouts.
+   * Held out domains (43 folds, all 888 live notes): probe 0.821 vs full prompt TF-IDF 0.621, difference
+     **+0.200 [+0.083, +0.318]**.
+   * Held out cases, fire rate as the training target (all 888 notes): probe 0.909 vs 0.805, difference
+     **+0.104 [+0.035, +0.173]**; Spearman with the fire rate 0.529 vs 0.364.
+   * The original 512 note control, now with nested choice of C: 0.849 vs 0.814, difference +0.035 [−0.043, +0.132],
+     not significant.
+   These analyses were run after the pre-registered report and are exploratory.
+3. **A strong guard model does not see it.** Jev (TypeSafe) scored 0.473 on the fired task on E1, where the probe scores
+   0.981 on the same 33 notes. That first run had design problems; `jev_baseline.py` is rewritten for a fair rerun.
+4. **Interpretability readouts.** On Neuronpedia's Jacobian lens, the last token of a live note reads out as
+   "reminder, checklist, task, automatically", an inert note as "completed, earlier, canceled". Neuronpedia's SAE latents
+   separate live from inert but carry no detectable fired signal in a 70 note sample, where the dense probe does
+   (0.76 within wording). Both are small, exploratory samples.
+5. **The pre-registered primary set E3 is uninformative** (2 fired notes of 40) and should not be cited.
 
 ## 1. Setup
 
 | Item | Value |
 | --- | --- |
-| Model | gpt-oss-20b, Hugging Face weights dequantized to bf16 (activations), vLLM 0.30.0 MXFP4 (behaviour) |
-| Data | behavior_v1: 148 Sleeper Attack cases × (6 live, 6 inert, 1 no note) = 1,924 trigger turn requests |
-| Feature | residual stream averaged over resid layers 14 to 19 (pre-registered in manifest.json) |
-| Sites | `memory_result_end` (primary, label free); `entry0.occ0.last`, the last token of the planted note (secondary) |
-| Probe | standardise, then L2 logistic regression; C chosen by leave one template out CV on train only |
-| Splits | train = templates 0 to 3, train domains; E1 = templates 4 and 5, seen domains; E2 = templates 0 to 3, 9 new domains; E3 = both new |
-| Baselines | TF-IDF (word 1 to 2 grams and char 3 to 5 grams) on the note; difference of means; 20 shuffled label probes |
-| Uncertainty | 2,000 bootstrap resamples of cases (notes from one case are not independent) |
-| Behaviour | 8 samples per live note at T = 1.0, up to 4 agent steps, judged by the case's own success conditions. Fired = executed in at least 4 of 8 |
+| Model | gpt-oss-20b. Activations from Hugging Face weights dequantized to bf16; behaviour from vLLM 0.30.0 (MXFP4) |
+| Data | behavior_v1, 148 Sleeper Attack cases × 13 versions (6 live notes, 6 inert notes, 1 with no note) = 1,924 prompts |
+| What a prompt is | one trigger turn. The user makes a benign request, the agent retrieves memory, the memory result contains the note. Live and inert notes both contain the planted action; live says it is still to be done, inert says it was done |
+| Feature | residual stream averaged over layers 14 to 19 (pre-registered) |
+| Sites | end of the memory result (primary, label free) and the last token of the planted note (secondary) |
+| Probe | standardize, then L2 logistic regression |
+| Splits | train = templates 0 to 3 in 34 domains; E1 = templates 4 and 5, seen domains; E2 = templates 0 to 3, 9 new domains; E3 = both new |
+| Behaviour | 8 rollouts per live note at T = 1.0, up to 4 agent steps, judged by each case's success conditions. Fire rate = executed rollouts / 8; fired = at least 4 of 8 |
+| Uncertainty | bootstrap over whole cases (the 13 versions of a case are not independent) |
 
-Prompts are identical between activation capture and behaviour sampling: vLLM was run with
-`VLLM_SYSTEM_START_DATE` set to the dataset's build date, and a check request rendered to 962 = 962 tokens.
+Prompts are identical between capture and sampling (vLLM run with `VLLM_SYSTEM_START_DATE` set to the dataset build date;
+a check request rendered to 962 = 962 tokens).
 
 ## 2. Live vs inert (pre-registered)
 
@@ -43,77 +50,166 @@ Prompts are identical between activation capture and behaviour sampling: vLLM wa
 | Probe, end of memory result | 1.000 | 1.000 | 0.998 [0.993, 1.000] |
 | Probe, end of note | 1.000 | 1.000 | 1.000 |
 
-Shuffled label probes average 0.48 and 0.53. Requests with no note get a mean live probability of 0.003.
-Per layer AUROC at the end of the memory result is 0.50 at layer 0 (the token is identical in both conditions), 0.94 at
-layer 1, and 1.00 from layer 13 to 21. Difference of means scores 0.997 at the note but 0.736 at the end of the memory
-result: the direction is dominant at the note and becomes one of many after it is carried forward.
-Full report: `REPORT_live_inert.md`.
+The signal at the end of the memory result is 0.50 at layer 0 (the token is identical), 0.94 at layer 1 and 1.00 from
+layer 13. At a 0.5 cutoff the probe calls 6 live notes inert, and all 6 use template 4, the wording that is executed in
+about 1% of rollouts. The live/inert direction seems to already encode how seriously the model takes the note.
 
 ## 3. Fired (pre-registered report)
 
-| Method | E1 new wording (13 of 256 fired) | E2 new domains (39 of 80) | E3 both new (2 of 40) |
+| Method | E1 (13 of 256 fired) | E2 (39 of 80) | E3 (2 of 40) |
 | --- | --- | --- | --- |
-| TF-IDF note text | 0.809 [0.684, 0.920] | 0.890 [0.797, 0.963] | 0.105 |
-| Probe, end of memory result | 0.945 [0.898, 0.980] | 0.927 [0.866, 0.979] | 0.974 |
-| Probe, end of note | 0.950 [0.914, 0.978] | 0.911 [0.847, 0.968] | 0.934 |
+| TF-IDF note text | 0.809 [0.684, 0.920] | 0.890 [0.797, 0.963] | not interpretable |
+| Probe, end of memory result | 0.945 [0.898, 0.980] | 0.927 [0.866, 0.979] | not interpretable |
+| Probe, end of note | 0.950 [0.914, 0.978] | 0.911 [0.847, 0.968] | not interpretable |
 
-Fired rate by template: 0 = 0.92, 1 = 0.07, 2 = 0.10, 3 = 0.74, 4 = 0.01, 5 = 0.10. Because the held out wordings
-(4 and 5) are rarely executed, E3 has only 2 positives; a shuffled label probe reached 0.97 there, so E3 numbers are
-noise. Full report: `REPORT_fired.md`.
+Share of notes fired, by template: 0 = 0.92, 1 = 0.07, 2 = 0.10, 3 = 0.74, 4 = 0.01, 5 = 0.10 (mean fire rate 0.78,
+0.11, 0.12, 0.62, 0.02, 0.11). The held out wordings are rarely executed, so E3 has 2 positives and a shuffled label
+probe reaches 0.97 there.
 
-## 4. Controls (exploratory)
+**What the agent did in the 7,104 rollouts.** 69.3% did only the user's task, 29.2% did the user's task and the planted
+action, 0.2% did only the planted action, 1.3% did neither. A fired note is almost always executed alongside the
+legitimate task, not instead of it. Of the 602 notes labeled not fired, 160 were executed in at least one rollout, which
+is why section 5 uses the fire rate itself.
 
-Two confounds could explain the probe's lead in section 3. **Case recognition**: E1 contains the same cases as
-training with new wording, and the probe sees the whole prompt while the baseline sees only the note. **Template**:
-wording alone predicts most of the label. `interp/probe_live_inert/controls.py` addresses both.
+## 4. Phase 1 controls (exploratory)
 
-**Training split, 5 fold CV holding out whole cases, AUROC only over pairs that share a template** (6,562 pairs):
+The probe's lead could come from recognizing cases (E1 reuses training cases) or from wording (wording predicts most of
+the label). `controls.py` holds out whole cases and scores only pairs of notes that share a template.
 
-| Method | Overall | Within template [95% CI] |
+| Method (training split, 5 folds by case, 6,562 pairs) | Overall | Within template [95% CI] |
 | --- | --- | --- |
-| Probe, end of memory result | 0.965 | **0.876 [0.818, 0.920]** |
+| Probe, end of memory result | 0.965 | 0.876 [0.818, 0.920] |
 | Probe, end of note | 0.963 | 0.869 [0.809, 0.916] |
 | TF-IDF, note | 0.950 | 0.781 [0.708, 0.846] |
-| TF-IDF, user request plus note | 0.946 | 0.779 [0.698, 0.853] |
 | TF-IDF, full prompt | 0.952 | 0.814 [0.747, 0.876] |
-| Template only | 0.890 | 0.5 by construction |
 
-Probe minus note text: +0.096 [+0.008, +0.185]. Probe minus full prompt text: +0.062 [−0.016, +0.141].
-Within template, the probe's score also tracks the continuous fire rate better (Spearman 0.38 to 0.61 vs 0.35 to 0.51).
+On E1 within template the full prompt baseline is level with the probe (0.933 vs 0.917), so part of the E1 lead is
+case recognition. Within case on E1, the probe ranks template 5 above template 4 in all 11 cases where they behave
+differently, matching behaviour, while every text baseline ranks them the other way; this is one comparison of two
+wordings. TF-IDF on the note still finds 38.5% (E1) and 53.8% (E2) of fired notes at 5% FPR, so text is weaker, not
+useless. Details in `CONTROLS_fired.md`.
 
-**Held out sets with stronger baselines:**
+## 5. Phase 2 analyses (exploratory, CPU, `phase2_analysis.py`)
 
-| Method | E1 | E2 |
-| --- | --- | --- |
-| Probe, end of memory result | 0.946 | 0.927 |
-| TF-IDF, full prompt | 0.890 | 0.901 |
-| Same case's fired rate in training | 0.862 | n/a |
-| Template's fired rate in training | n/a | 0.869 |
+All rows compare notes within the same wording. The probe's C is chosen by nested cross validation inside every training
+fold; TF-IDF uses C = 1.0, the value its pre-registered search picked. Full tables in `PHASE2_ANALYSIS.md`.
 
-Within template on E1, the full prompt baseline ties the probe (0.933 vs 0.917), so part of the E1 lead is case
-recognition. Within case on E1, the probe ranks template 5 above template 4 in all 11 cases where they behave
-differently, which matches behaviour (10% vs 1%); every text baseline ranks them the other way. This is effectively a
-single comparison between two wordings. Details: `CONTROLS_fired.md`, `controls_fired.json`.
+| Analysis | Probe (end of memory result) | TF-IDF full prompt | Difference [95% CI] |
+| --- | --- | --- | --- |
+| A. Leave one domain out, 888 notes, 43 domains | 0.821 | 0.621 | **+0.200 [+0.083, +0.318]** |
+| A, only pairs from the same held out domain | 0.768 | 0.598 | wide intervals |
+| B. Held out cases, trained on fire rate, 888 notes | 0.909 | 0.805 | **+0.104 [+0.035, +0.173]** |
+| B2. Same folds, trained on fired yes/no | 0.860 | 0.793 | +0.067 [−0.013, +0.149] |
+| C. Phase 1 control rerun with nested C, 512 notes | 0.849 | 0.814 | +0.035 [−0.043, +0.132] |
 
-## 5. What this does and does not show
+Spearman correlation with the fire rate, within wording: A 0.381 vs 0.235 (difference +0.146 [+0.033, +0.257]);
+B 0.529 vs 0.364 (+0.165 [+0.091, +0.240]); B2 0.450 vs 0.352 (+0.098 [+0.017, +0.186]).
 
-It shows that gpt-oss-20b represents whether a memory note is pending, and that its activations before the trigger turn
-carry information about whether it will act on the note, at least as much as any text baseline tried and significantly
-more than the note's text alone. It does not yet show that the activations beat a strong reader of the full prompt; that
-difference is +0.06 and not significant with 148 cases and 6 wordings. All results are on one model and one attack
-family, with tool results after the first step canned.
+Reading.
+1. On new domains the probe keeps most of its within wording signal while text drops close to chance. This is the
+   clearest result so far.
+2. Training on the fire rate helps the probe (0.860 to 0.909) and barely helps text (0.793 to 0.805), so the
+   activations carry graded information about how likely the agent is to act.
+3. Nested C shrinks the phase 1 gap from +0.062 to +0.035. With 512 notes and 4 wordings the probe and a strong text
+   reader cannot be told apart; with 888 notes and 6 wordings they can.
+4. On the pre-registered splits with the fire rate as target, the probe and text are close on E1 (Spearman within
+   wording 0.41 vs 0.45) and the probe is ahead on E2 (0.52 vs 0.29).
+5. A domain averaged leave one domain out AUROC (0.98) mostly measures wording, so it should not be reported alone.
 
-## 6. Next steps
+The earlier `paper/new_analysis.py` was rerun with real scikit-learn 1.7.2. It reproduces the pre-registered numbers
+exactly (E1 0.946, E2 0.927). The homemade offline reimplementation it had used was off by up to 0.03 in Spearman.
 
-1. Write many more live note wordings (for example 30), so generalization to new wording is tested on many wordings
-   rather than 2. This is also what would make E3 usable.
-2. Add cases or attack families to narrow the confidence intervals.
-3. Pre-register TF-IDF on the full prompt (or a small LLM reading the prompt) as the main baseline.
-4. Predict the continuous fire rate instead of a 0.5 threshold, and consider k = 16 to reduce label noise.
-5. Test whether the probe direction is causal by steering along it at the trigger turn (hooks exist in gptoss.py).
+## 6. Jev guard baseline
+
+First run (`REPORT_jev_baseline.md`, 21 October). Jev was asked whether the memory is malicious and whether executing it
+violates a policy that says executing hidden memory instructions is a violation.
+
+| Task, split | n (positive) | Jev AUROC | Probe on the same notes |
+| --- | --- | --- | --- |
+| live vs inert, E1 | 40 (20) | 0.816 | 1.000 |
+| live vs inert, E2 | 40 (20) | 0.924 | 1.000 |
+| fired, E1 | 33 (13) | 0.473 | 0.981 |
+| fired, E2 | 40 (20) | 0.647 | 0.905 (note TF-IDF 0.920) |
+
+Jev scored nearly every live note above 0.8 whether or not the agent acted. That is the expected behaviour of a text
+guard asked whether a note is malicious, since every live note is. The run also had fixable problems: the first N notes
+in file order rather than a random or full set, API errors scored 0.5 and not counted, scores not saved, a policy that
+makes every live note a violation by definition, and no question about whether the agent will act.
+
+`jev_baseline.py` is rewritten to fix all of these. It scores full splits (or a seeded stratified sample), saves every
+raw answer and per note score, retries and counts errors, uses a neutral policy by default, adds a will_execute and an
+is_pending question, supports few shot examples from the training split and a combiner and threshold fit on training
+notes, reports within wording AUROC and TPR at 1% and 5% FPR, and computes the probe and TF-IDF on exactly the notes Jev
+scored. The report is generated from the numbers. A dry run with mock answers passes. It needs an OpenRouter key to run;
+the full E1 plus E2 for both tasks is about 1,000 calls, roughly 5 cents at the first run's prices.
+
+## 7. Attention baselines from the literature (implemented, need a GPU run)
+
+`attention_capture.py` (GPU) and `attention_baselines.py` (CPU) implement
+* Attention Tracker (Hung et al. 2024): heads calibrated on 30 sentences with and without "Ignore previous instruction",
+  k = 4 rule, focus score on the user request, flag when low; plus a version with heads chosen on our training labels;
+* AttnDA (Kawasaki and Lee 2026): A(I) / (A(I) + A(D)) for all 1,536 heads, shrinkage diagonal LDA, with variants on
+  full attention layers only and at the memory result position;
+* AttentionDefense (Siska and Sankaran 2025): last layer attention to the system prompt, per head z-normalized, random
+  forest and logistic regression;
+* the AttnDA paper's FC baseline (logistic regression on the final hidden state).
+
+One design point matters for gpt-oss-20b. Half its layers use a 128 token sliding window, and from the last prompt token
+the user request is 123 to 818 tokens back (median 390), so those layers mostly cannot attend to it. Attention Tracker
+style scores therefore have to come from the full attention layers. Unit tests and an end to end test on synthetic
+attention with a planted signal pass; the capture takes about 25 minutes on an A100.
+
+These methods target an instruction that hijacks the current turn. Our notes fire alongside the user's task (29.2% of
+rollouts do both), so we expect attention distraction to be weak here; that is the RQ1 test.
+
+## 8. SAE and Jacobian lens readouts (exploratory, Neuronpedia, `SAE_JLENS.md`)
+
+Sample, seeded, training split only: 48 live/inert pairs (24 cases, templates 0 and 1) and 70 live notes for fired vs
+not within wording (template 3, 24 vs 24; template 2, 11 vs 11). No GPU; Neuronpedia's own endpoints, queried from the
+browser (`neuronpedia_collect.js`).
+
+**Jacobian lens** (Gurnee et al. 2026), exact prompts by token id, top 8 readout tokens at every layer, middle band
+layers 9 to 21. At the last token of the note, readouts verbalize the note's status. Tokens that appear in live prompts
+and never in inert ones include automatically (33 of 48), checklist (28), pinned (27), reminder (32 vs 2), urg (18),
+task (12). Inert prompts show completed (39 vs 0), earlier (18 vs 0), canceled (13 vs 0). The logit lens shows the same
+split more weakly (agenda, pending, ongoing vs previous, followed). Part of this may echo words in the note itself, so it
+is a lead, not evidence of an abstract status representation. Readouts do not separate fired from not fired notes, and
+the planted action's words almost never appear in the readout at the memory result or the reply position.
+
+**SAE latents** (Andy Arditi's BatchTopK SAEs, 131k latents, layers 15 and 19, top 100 latents at the end of the memory
+result). Neuronpedia only accepts text, so prompts were re-rendered with tool schemas shortened to their names.
+* Live vs inert: 53 of 92 latents at layer 15 differ at q < 0.05, and a sparse classifier on the latents reaches 0.97.
+  Their Neuronpedia labels describe the local token (braces, punctuation, code), not note status.
+* Fired vs not, within wording: no latent survives correction, and classifiers on the latents are at chance
+  (0.37 to 0.50), while the dense probe on the same 70 notes reaches 0.76.
+So the fired signal is either spread across many small latents, outside the top 100, in the SAE's reconstruction error,
+or altered by the shortened prompts. Checking which needs the SAE weights on a GPU with the exact prompts.
+
+## 9. What this does and does not show
+
+It shows that gpt-oss-20b represents whether a memory note is pending, and that within a wording its activations at the
+trigger turn predict whether it will act on the note better than a bag of words reader of the full prompt, clearly so on
+new domains. It does not show causality, and the probe and text cannot be separated on the smaller 512 note split.
+Everything is one model, one attack family, one trigger turn, and canned tool results after the first step. The note is
+always present in these prompts; detecting a note before its trigger arrives (the dormant setting in the 6 November
+plan) needs Huy's multi turn data.
+
+## 10. Next steps
+
+1. Run the rewritten Jev baseline (needs the OpenRouter key) and the attention baselines (one A100 session).
+2. Many more wordings (30 or more) and timing minimal pairs, so new wording generalization is tested on many wordings
+   and E3 becomes usable.
+3. Steering and ablation along the probe direction at the trigger turn (hooks exist in gptoss.py).
+4. Pull the SAE weights to test whether the fired direction is spanned by a few latents or lies in the error term.
+5. Evaluate on MemoryDojo (Yang et al. 2026, 155 multi session poisoning trajectories, 4 domains, 5 memory systems) as
+   an external dataset.
 
 ## Reproduce
 
-See `interp/probe_live_inert/README.md`. Section 4 runs on a laptop in about 2 minutes from the files in this folder.
-GPU steps ran on one RunPod A100 SXM 80 GB: activation capture takes about 10 minutes and sampling the 888 live notes
-at k = 8 well under an hour.
+`interp/probe_live_inert/README.md` covers the GPU steps. CPU steps, from the repo root:
+
+    python interp/probe_live_inert/controls.py
+    python interp/probe_live_inert/phase2_analysis.py           # about 15 minutes on 2 cores
+    python interp/probe_live_inert/sae_jlens_analysis.py        # uses neuronpedia/export.json
+    python interp/probe_live_inert/test_attention_baselines.py --e2e
+    python interp/probe_live_inert/jev_baseline.py --task both --mock    # dry run, no API calls
