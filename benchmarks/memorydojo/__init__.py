@@ -1,3 +1,8 @@
+from benchmarks.memorydojo.taxonomy import (
+    SessionLifecycleState,
+    LEGACY_TO_MEMORYDOJO,
+    MemoryDojoSessionIndicators,
+)
 from benchmarks.memorydojo.memory_systems import (
     MemorySystemType,
     MemoryItem,
@@ -15,6 +20,9 @@ from benchmarks.memorydojo.metrics import (
 )
 
 __all__ = [
+    "SessionLifecycleState",
+    "LEGACY_TO_MEMORYDOJO",
+    "MemoryDojoSessionIndicators",
     "MemorySystemType",
     "MemoryItem",
     "MemorySystemSimulator",
