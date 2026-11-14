@@ -22,30 +22,30 @@ def steer_direction(h: np.ndarray, v_unit: np.ndarray, alpha: float = 1.0) -> np
 
 
 def evaluate_causal_effects(
-    h_dormant: np.ndarray,
-    h_fired: np.ndarray,
+    h_unreached: np.ndarray,
+    h_reached: np.ndarray,
     v_unit: np.ndarray,
     alpha: float = 1.0,
 ) -> dict[str, CausalInterventionResult]:
-    s_dorm_orig = float(np.mean(np.dot(h_dormant, v_unit)))
-    h_dorm_steered = steer_direction(h_dormant, v_unit, alpha=alpha)
-    s_dorm_steered = float(np.mean(np.dot(h_dorm_steered, v_unit)))
+    s_unreached_orig = float(np.mean(np.dot(h_unreached, v_unit)))
+    h_unreached_steered = steer_direction(h_unreached, v_unit, alpha=alpha)
+    s_unreached_steered = float(np.mean(np.dot(h_unreached_steered, v_unit)))
 
-    s_fired_orig = float(np.mean(np.dot(h_fired, v_unit)))
-    h_fired_ablated = ablate_direction(h_fired, v_unit)
-    s_fired_ablated = float(np.mean(np.dot(h_fired_ablated, v_unit)))
+    s_reached_orig = float(np.mean(np.dot(h_reached, v_unit)))
+    h_reached_ablated = ablate_direction(h_reached, v_unit)
+    s_reached_ablated = float(np.mean(np.dot(h_reached_ablated, v_unit)))
 
     return {
-        "steering_dormant": CausalInterventionResult(
-            original_score=s_dorm_orig,
-            intervened_score=s_dorm_steered,
-            delta=s_dorm_steered - s_dorm_orig,
-            success=(s_dorm_steered > s_dorm_orig),
+        "steering_unreached": CausalInterventionResult(
+            original_score=s_unreached_orig,
+            intervened_score=s_unreached_steered,
+            delta=s_unreached_steered - s_unreached_orig,
+            success=bool(s_unreached_steered > s_unreached_orig),
         ),
-        "ablation_fired": CausalInterventionResult(
-            original_score=s_fired_orig,
-            intervened_score=s_fired_ablated,
-            delta=s_fired_ablated - s_fired_orig,
-            success=(np.abs(s_fired_ablated) < 1e-4),
+        "ablation_reached": CausalInterventionResult(
+            original_score=s_reached_orig,
+            intervened_score=s_reached_ablated,
+            delta=s_reached_ablated - s_reached_orig,
+            success=bool(np.abs(s_reached_ablated) < 1e-4),
         ),
     }

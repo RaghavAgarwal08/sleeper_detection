@@ -11,35 +11,35 @@ class TransferResult:
     retention_ratio: float
 
 
-def train_fired_test_dormant(
+def train_reached_test_unreached(
     h_clean_train: np.ndarray,
-    h_fired_train: np.ndarray,
+    h_reached_train: np.ndarray,
     h_clean_test: np.ndarray,
-    h_dormant_test: np.ndarray,
+    h_unreached_test: np.ndarray,
     target_layer: int = 16,
 ) -> TransferResult:
     x_c_tr = h_clean_train[:, target_layer, :]
-    x_f_tr = h_fired_train[:, target_layer, :]
-    v_fired = np.mean(x_f_tr, axis=0) - np.mean(x_c_tr, axis=0)
-    norm_f = np.linalg.norm(v_fired)
-    if norm_f > 1e-12:
-        v_fired = v_fired / norm_f
+    x_r_tr = h_reached_train[:, target_layer, :]
+    v_reached = np.mean(x_r_tr, axis=0) - np.mean(x_c_tr, axis=0)
+    norm_r = np.linalg.norm(v_reached)
+    if norm_r > 1e-12:
+        v_reached = v_reached / norm_r
 
     x_c_te = h_clean_test[:, target_layer, :]
-    x_d_te = h_dormant_test[:, target_layer, :]
+    x_u_te = h_unreached_test[:, target_layer, :]
 
-    s_c = np.dot(x_c_te, v_fired)
-    s_d = np.dot(x_d_te, v_fired)
-    auroc_transfer = _roc(s_d, s_c)
+    s_c = np.dot(x_c_te, v_reached)
+    s_u = np.dot(x_u_te, v_reached)
+    auroc_transfer = _roc(s_u, s_c)
 
-    # Oracle trained on dormant
-    v_dormant = np.mean(x_d_te, axis=0) - np.mean(x_c_te, axis=0)
-    norm_d = np.linalg.norm(v_dormant)
-    if norm_d > 1e-12:
-        v_dormant = v_dormant / norm_d
-    s_c_oracle = np.dot(x_c_te, v_dormant)
-    s_d_oracle = np.dot(x_d_te, v_dormant)
-    auroc_oracle = _roc(s_d_oracle, s_c_oracle)
+    # Oracle trained directly on unreached states
+    v_unreached = np.mean(x_u_te, axis=0) - np.mean(x_c_te, axis=0)
+    norm_u = np.linalg.norm(v_unreached)
+    if norm_u > 1e-12:
+        v_unreached = v_unreached / norm_u
+    s_c_oracle = np.dot(x_c_te, v_unreached)
+    s_u_oracle = np.dot(x_u_te, v_unreached)
+    auroc_oracle = _roc(s_u_oracle, s_c_oracle)
 
     retention = float(auroc_transfer / auroc_oracle) if auroc_oracle > 1e-12 else 0.0
 

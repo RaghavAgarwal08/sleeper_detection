@@ -22,20 +22,24 @@ class SubspaceDivergenceProbe:
 
     def fit(
         self,
-        hidden_states_dormant: np.ndarray,
-        hidden_states_twin: np.ndarray,
+        hidden_states_unreached: np.ndarray,
+        hidden_states_benign_twin: np.ndarray,
         hidden_states_clean: np.ndarray,
     ) -> SubspaceDivergenceProbe:
-        n_layers = hidden_states_dormant.shape[1]
+        n_layers = hidden_states_unreached.shape[1]
         l_start, l_end = self.target_layers
 
-        delta_commitment = hidden_states_dormant[:, l_start:l_end, :] - hidden_states_twin[:, l_start:l_end, :]
+        delta_commitment = (
+            hidden_states_unreached[:, l_start:l_end, :] - hidden_states_benign_twin[:, l_start:l_end, :]
+        )
         v_commit = np.mean(delta_commitment, axis=(0, 1))
         norm_c = np.linalg.norm(v_commit)
         if norm_c > 1e-12:
             v_commit = v_commit / norm_c
 
-        delta_surface = hidden_states_twin[:, l_start:l_end, :] - hidden_states_clean[:, l_start:l_end, :]
+        delta_surface = (
+            hidden_states_benign_twin[:, l_start:l_end, :] - hidden_states_clean[:, l_start:l_end, :]
+        )
         v_surface = np.mean(delta_surface, axis=(0, 1))
         norm_s = np.linalg.norm(v_surface)
         if norm_s > 1e-12:
@@ -50,7 +54,7 @@ class SubspaceDivergenceProbe:
         self.surface_vector = v_surface
 
         layer_div = np.mean(
-            np.linalg.norm(hidden_states_dormant - hidden_states_twin, axis=-1),
+            np.linalg.norm(hidden_states_unreached - hidden_states_benign_twin, axis=-1),
             axis=0,
         )
         norm_div = np.sum(layer_div[l_start:l_end])

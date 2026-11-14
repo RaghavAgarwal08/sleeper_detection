@@ -22,34 +22,34 @@ def run_rq3_evaluation(n_samples: int = 100, n_layers: int = 24, d_model: int = 
     h_clean = rng.normal(scale=1.0, size=(n_samples, n_layers, d_model))
     h_twin = h_clean + 1.2 * v_surface[None, None, :]
     h_untrig = h_clean + 1.2 * v_surface[None, None, :] + 0.4 * v_commit[None, None, :]
-    h_dormant = h_twin.copy()
-    h_fired = h_twin.copy()
+    h_unreached = h_twin.copy()
+    h_reached = h_twin.copy()
 
-    h_dormant[:, 14:20, :] += 2.5 * v_commit[None, None, :]
-    h_fired[:, 14:20, :] += 2.8 * v_commit[None, None, :]
-    h_fired[:, 20:, :] += 3.5 * v_commit[None, None, :]
+    h_unreached[:, 14:20, :] += 2.5 * v_commit[None, None, :]
+    h_reached[:, 14:20, :] += 2.8 * v_commit[None, None, :]
+    h_reached[:, 20:, :] += 3.5 * v_commit[None, None, :]
 
     s_clean = np.dot(h_clean[:, 16, :], v_commit)
     s_twin = np.dot(h_twin[:, 16, :], v_commit)
     s_untrig = np.dot(h_untrig[:, 16, :], v_commit)
-    s_dormant = np.dot(h_dormant[:, 16, :], v_commit)
-    s_fired = np.dot(h_fired[:, 16, :], v_commit)
+    s_unreached = np.dot(h_unreached[:, 16, :], v_commit)
+    s_reached = np.dot(h_reached[:, 16, :], v_commit)
 
-    twin_res = evaluate_benign_twin_separation(s_dormant, s_twin)
-    hyp_res = evaluate_untriggerable_contrast(s_clean, s_twin, s_untrig, s_dormant, s_fired)
+    twin_res = evaluate_benign_twin_separation(s_unreached, s_twin)
+    hyp_res = evaluate_untriggerable_contrast(s_clean, s_twin, s_untrig, s_unreached, s_reached)
 
-    div_curve = compute_divergence_curve(h_fired, h_dormant)
+    div_curve = compute_divergence_curve(h_reached, h_unreached)
     bif_layer = find_bifurcation_layer(div_curve)
 
-    causal_res = evaluate_causal_effects(h_dormant[:, 16, :], h_fired[:, 16, :], v_commit, alpha=1.5)
+    causal_res = evaluate_causal_effects(h_unreached[:, 16, :], h_reached[:, 16, :], v_commit, alpha=1.5)
 
     return {
         "Benign Twin AUROC": twin_res["twin_auroc"],
         "H0 Falsified": "YES (Ruled out)" if twin_res["h0_falsified"] else "NO",
         "Untriggerable Decision": hyp_res.favored_hypothesis,
         "Bifurcation Layer": bif_layer,
-        "Steering Delta": causal_res["steering_dormant"].delta,
-        "Ablation Success": "YES" if causal_res["ablation_fired"].success else "NO",
+        "Steering Delta": causal_res["steering_unreached"].delta,
+        "Ablation Success": "YES" if causal_res["ablation_reached"].success else "NO",
     }
 
 

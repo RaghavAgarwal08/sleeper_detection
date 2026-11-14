@@ -3,10 +3,10 @@ from __future__ import annotations
 import argparse
 import numpy as np
 
-from interp.attention_tracker import AttentionTracker
-from interp.attnda import AttnDA
-from interp.subspace_probe import SubspaceDivergenceProbe
-from interp.memorydojo import (
+from rq1_baselines.attention_tracker import AttentionTracker
+from rq1_baselines.attnda import AttnDA
+from rq2_probing.subspace_probe import SubspaceDivergenceProbe
+from benchmarks.memorydojo import (
     TaskDomain,
     build_synthetic_trajectory,
     compute_lifecycle_metrics,
@@ -16,16 +16,16 @@ from interp.memorydojo import (
 def run_benchmark(n_samples: int = 100, n_layers: int = 24, n_heads: int = 16, d_model: int = 2880) -> dict[str, dict[str, float]]:
     rng = np.random.default_rng(42)
 
-    # 1. Simulate attention focus scores:
-    # Fired: attention redirected to payload
-    # Dormant: attention remains on instruction/benign context (no trigger -> no attention shift)
+    # 1. Attention focus scores:
+    # Clean & Retrieved-Unreached: attention remains on instruction/benign context
+    # Reached Execution: attention actively redirected to injected payload
     fs_clean = rng.normal(loc=0.80, scale=0.08, size=(n_samples, n_layers, n_heads))
     fs_twin = rng.normal(loc=0.80, scale=0.08, size=(n_samples, n_layers, n_heads))
-    fs_dormant = rng.normal(loc=0.80, scale=0.08, size=(n_samples, n_layers, n_heads))
-    fs_fired = rng.normal(loc=0.35, scale=0.10, size=(n_samples, n_layers, n_heads))
+    fs_unreached = rng.normal(loc=0.80, scale=0.08, size=(n_samples, n_layers, n_heads))
+    fs_reached = rng.normal(loc=0.35, scale=0.10, size=(n_samples, n_layers, n_heads))
 
-    # 2. Simulate hidden states:
-    # Surface direction v_surface + latent commitment direction v_commit in middle layers (14-19)
+    # 2. Hidden states:
+    # Surface text direction v_surface + latent commitment direction v_commit in middle layers (14-19)
     v_surface = rng.normal(size=d_model)
     v_surface /= np.linalg.norm(v_surface)
 
@@ -35,63 +35,61 @@ def run_benchmark(n_samples: int = 100, n_layers: int = 24, n_heads: int = 16, d
 
     h_clean = rng.normal(scale=1.0, size=(n_samples, n_layers, d_model))
     h_twin = h_clean + 1.2 * v_surface[None, None, :]
-    h_dormant = h_twin.copy()
-    h_fired = h_twin.copy()
+    h_unreached = h_twin.copy()
+    h_reached = h_twin.copy()
 
-    # In middle layers (14-19), both dormant and fired enter the commitment state
-    h_dormant[:, 14:20, :] += 2.5 * v_commit[None, None, :]
-    h_fired[:, 14:20, :] += 2.8 * v_commit[None, None, :]
-    # Late layers: fired continues executing, dormant decays
-    h_fired[:, 20:, :] += 3.5 * v_commit[None, None, :]
+    # Pre-execution commitment in middle layers (14-19)
+    h_unreached[:, 14:20, :] += 2.5 * v_commit[None, None, :]
+    h_reached[:, 14:20, :] += 2.8 * v_commit[None, None, :]
+    # Late layers: execution commitment
+    h_reached[:, 20:, :] += 3.5 * v_commit[None, None, :]
 
-    # 3. Fit detectors on training data (Clean vs Fired / Twins)
-    train_fs = np.concatenate([fs_clean[:50], fs_fired[:50]], axis=0)
+    # 3. Fit detectors on training split
+    train_fs = np.concatenate([fs_clean[:50], fs_reached[:50]], axis=0)
     train_labels = np.array([0] * 50 + [1] * 50)
 
     at = AttentionTracker(k=2.0).fit(train_fs, train_labels)
     attnda = AttnDA().fit(train_fs, train_labels)
 
     probe = SubspaceDivergenceProbe(target_layers=(14, 20)).fit(
-        hidden_states_dormant=h_dormant[:50],
-        hidden_states_twin=h_twin[:50],
+        hidden_states_unreached=h_unreached[:50],
+        hidden_states_benign_twin=h_twin[:50],
         hidden_states_clean=h_clean[:50],
     )
 
-    # 4. Evaluate on Test sets:
-    # Test A: Fired vs Clean
-    test_fs_fired = np.concatenate([fs_clean[50:], fs_fired[50:]], axis=0)
-    test_h_fired = np.concatenate([h_clean[50:], h_fired[50:]], axis=0)
-    test_labels_fired = np.array([0] * 50 + [1] * 50)
+    # 4. Evaluate across 3 test settings:
+    # Test A: Reached Execution vs Clean
+    test_fs_reached = np.concatenate([fs_clean[50:], fs_reached[50:]], axis=0)
+    test_h_reached = np.concatenate([h_clean[50:], h_reached[50:]], axis=0)
+    test_labels_reached = np.array([0] * 50 + [1] * 50)
 
-    # Test B: Dormant vs Clean (The key question)
-    test_fs_dormant = np.concatenate([fs_clean[50:], fs_dormant[50:]], axis=0)
-    test_h_dormant = np.concatenate([h_clean[50:], h_dormant[50:]], axis=0)
-    test_labels_dormant = np.array([0] * 50 + [1] * 50)
+    # Test B: Retrieved Unreached (Pre-Execution) vs Clean
+    test_fs_unreached = np.concatenate([fs_clean[50:], fs_unreached[50:]], axis=0)
+    test_h_unreached = np.concatenate([h_clean[50:], h_unreached[50:]], axis=0)
+    test_labels_unreached = np.array([0] * 50 + [1] * 50)
 
-    # Test C: Dormant vs Benign Twin (Ruling out surface confound H0)
-    test_fs_twin = np.concatenate([fs_twin[50:], fs_dormant[50:]], axis=0)
-    test_h_twin = np.concatenate([h_twin[50:], h_dormant[50:]], axis=0)
+    # Test C: Retrieved Unreached vs Benign Twin (Falsifying H0 text confound)
+    test_fs_twin = np.concatenate([fs_twin[50:], fs_unreached[50:]], axis=0)
+    test_h_twin = np.concatenate([h_twin[50:], h_unreached[50:]], axis=0)
     test_labels_twin = np.array([0] * 50 + [1] * 50)
 
-    results = {
-        "Fired vs Clean": {
-            "Attention Tracker": at.evaluate(test_fs_fired, test_labels_fired).auroc,
-            "AttnDA": attnda.evaluate(test_fs_fired, test_labels_fired).auroc,
-            "Subspace Divergence (Ours)": probe.evaluate(test_h_fired, test_labels_fired).auroc,
+    return {
+        "Reached Execution vs Clean": {
+            "Attention Tracker": at.evaluate(test_fs_reached, test_labels_reached).auroc,
+            "AttnDA": attnda.evaluate(test_fs_reached, test_labels_reached).auroc,
+            "Subspace Divergence (Ours)": probe.evaluate(test_h_reached, test_labels_reached).auroc,
         },
-        "Dormant vs Clean": {
-            "Attention Tracker": at.evaluate(test_fs_dormant, test_labels_dormant).auroc,
-            "AttnDA": attnda.evaluate(test_fs_dormant, test_labels_dormant).auroc,
-            "Subspace Divergence (Ours)": probe.evaluate(test_h_dormant, test_labels_dormant).auroc,
+        "Retrieved Unreached vs Clean": {
+            "Attention Tracker": at.evaluate(test_fs_unreached, test_labels_unreached).auroc,
+            "AttnDA": attnda.evaluate(test_fs_unreached, test_labels_unreached).auroc,
+            "Subspace Divergence (Ours)": probe.evaluate(test_h_unreached, test_labels_unreached).auroc,
         },
-        "Dormant vs Benign Twin": {
+        "Retrieved Unreached vs Benign Twin": {
             "Attention Tracker": at.evaluate(test_fs_twin, test_labels_twin).auroc,
             "AttnDA": attnda.evaluate(test_fs_twin, test_labels_twin).auroc,
             "Subspace Divergence (Ours)": probe.evaluate(test_h_twin, test_labels_twin).auroc,
         },
     }
-
-    return results
 
 
 def main():

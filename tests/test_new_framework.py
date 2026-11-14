@@ -10,7 +10,7 @@ from rq3_mechanisms import (
     evaluate_causal_effects,
 )
 from rq4_transfer import (
-    train_fired_test_dormant,
+    train_reached_test_unreached,
     compute_incident_curve,
     evaluate_lodo_transfer,
 )
@@ -51,49 +51,49 @@ def test_rq2_subspace_probe_and_layer_sweep():
 
     h_clean = rng.normal(size=(20, 10, d))
     h_twin = h_clean + 1.5 * v_surface[None, None, :]
-    h_dormant = h_twin.copy()
-    h_dormant[:, 5:8, :] += 2.0 * v_commit[None, None, :]
-    h_fired = h_dormant.copy()
-    h_fired[:, 8:, :] += 3.0 * v_commit[None, None, :]
+    h_unreached = h_twin.copy()
+    h_unreached[:, 5:8, :] += 2.0 * v_commit[None, None, :]
+    h_reached = h_unreached.copy()
+    h_reached[:, 8:, :] += 3.0 * v_commit[None, None, :]
 
     probe = SubspaceDivergenceProbe(target_layers=(5, 8)).fit(
-        hidden_states_dormant=h_dormant,
-        hidden_states_twin=h_twin,
+        hidden_states_unreached=h_unreached,
+        hidden_states_benign_twin=h_twin,
         hidden_states_clean=h_clean,
     )
 
     dot_surface = np.abs(np.dot(probe.commitment_vector, probe.surface_vector))
     assert dot_surface < 1e-5
 
-    test_X = np.concatenate([h_twin, h_dormant], axis=0)
+    test_X = np.concatenate([h_twin, h_unreached], axis=0)
     test_y = np.array([0] * 20 + [1] * 20)
     assert probe.evaluate(test_X, test_y).auroc > 0.95
 
-    sweep = run_layer_sweep(h_clean, h_dormant, h_fired)
+    sweep = run_layer_sweep(h_clean, h_unreached, h_reached)
     assert sweep.best_mid_layer in [5, 6, 7]
 
 
 def test_rq3_mechanisms_and_causality():
     rng = np.random.default_rng(42)
-    s_dorm = rng.normal(loc=2.0, scale=0.3, size=20)
+    s_unreached = rng.normal(loc=2.0, scale=0.3, size=20)
     s_twin = rng.normal(loc=0.1, scale=0.3, size=20)
 
-    twin_res = evaluate_benign_twin_separation(s_dorm, s_twin)
+    twin_res = evaluate_benign_twin_separation(s_unreached, s_twin)
     assert twin_res["h0_falsified"] is True
 
     s_clean = rng.normal(loc=0.0, scale=0.2, size=20)
     s_untrig = rng.normal(loc=0.3, scale=0.2, size=20)
-    s_fired = rng.normal(loc=3.0, scale=0.3, size=20)
-    hyp_res = evaluate_untriggerable_contrast(s_clean, s_twin, s_untrig, s_dorm, s_fired)
+    s_reached = rng.normal(loc=3.0, scale=0.3, size=20)
+    hyp_res = evaluate_untriggerable_contrast(s_clean, s_twin, s_untrig, s_unreached, s_reached)
     assert "H1" in hyp_res.favored_hypothesis
 
     v = rng.normal(size=64)
     v /= np.linalg.norm(v)
-    h_dorm = rng.normal(size=(20, 64))
-    h_fired = h_dorm + 2.0 * v
-    causal_res = evaluate_causal_effects(h_dorm, h_fired, v, alpha=1.5)
-    assert bool(causal_res["steering_dormant"].success)
-    assert bool(causal_res["ablation_fired"].success)
+    h_unreached = rng.normal(size=(20, 64))
+    h_reached = h_unreached + 2.0 * v
+    causal_res = evaluate_causal_effects(h_unreached, h_reached, v, alpha=1.5)
+    assert bool(causal_res["steering_unreached"].success)
+    assert bool(causal_res["ablation_reached"].success)
 
 
 def test_rq4_cross_state_and_lodo():
@@ -103,18 +103,18 @@ def test_rq4_cross_state_and_lodo():
     v /= np.linalg.norm(v)
 
     c = rng.normal(size=(20, 10, d))
-    d_act = c + 2.0 * v[None, None, :]
-    f_act = c + 2.5 * v[None, None, :]
+    u_act = c + 2.0 * v[None, None, :]
+    r_act = c + 2.5 * v[None, None, :]
 
-    trans = train_fired_test_dormant(c[:10], f_act[:10], c[10:], d_act[10:], target_layer=5)
+    trans = train_reached_test_unreached(c[:10], r_act[:10], c[10:], u_act[10:], target_layer=5)
     assert trans.transfer_auroc > 0.90
 
-    curve = compute_incident_curve(c, f_act, d_act, counts=[2, 5], target_layer=5)
+    curve = compute_incident_curve(c, r_act, u_act, counts=[2, 5], target_layer=5)
     assert len(curve.probe_tpr_at_1fpr) == 2
 
     family_data = {
-        "fam1": {"clean": c, "dormant": d_act, "fired": f_act},
-        "fam2": {"clean": c, "dormant": d_act, "fired": f_act},
+        "fam1": {"clean": c, "unreached": u_act, "reached": r_act},
+        "fam2": {"clean": c, "unreached": u_act, "reached": r_act},
     }
     lodo = evaluate_lodo_transfer(family_data, target_layer=5)
     assert lodo["mean_lodo_auroc"] > 0.90
