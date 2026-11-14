@@ -128,7 +128,7 @@ set_text_frame(s3.shapes[10].text_frame, [
 s4 = prs.slides[3]
 # Col 1: 01 / INPUT (Left 0.67, Width 3.54)
 set_text_frame(s4.shapes[6].text_frame, [
-    "• gpt-oss-20b: 25-layer MoE, 32 experts (2880 residual dim).",
+    "• AttnDA Catalogue: Llama-3-8B, Qwen2-1.5B, Phi-3-mini, Mistral-7B across open-weight architectures.",
     "• behavior_v1: 1,924 trigger requests across 10 enterprise domains with 43-token paired twins canceling noise."
 ], default_size=14, default_color=NAVY, space_after=5)
 
@@ -209,14 +209,14 @@ s8_data = [
 ]
 update_table(s8.shapes[5].table, s8_data, header_size=13, body_size=12)
 set_text_frame(s8.shapes[6].text_frame,
-    "CONFIDENCE  /  High confidence that latent states linearly separate live instructions in gpt-oss-20b; currently verifying causal steering invariance across multi-turn history.",
+    "CONFIDENCE  /  High confidence that latent states linearly separate reached instructions across AttnDA models; currently verifying causal steering invariance across multi-turn history.",
     default_size=15, default_color=NAVY, default_bold=True, space_after=3)
 
 # ==================== SLIDE 9: What is unresolved ====================
 s9 = prs.slides[8]
 # Col 1: LIMITATIONS (Left 0.67, Width 5.52)
 set_text_frame(s9.shapes[6].text_frame, [
-    "• Architecture Breadth: Validated on gpt-oss-20b MoE; dense models (Llama-3-70B) may distribute planning across different depths.",
+    "• Architecture Breadth: Validated across AttnDA catalogue (Llama-3-8B, Qwen2-1.5B, Phi-3-mini, Mistral-7B); 70B scale remains to be evaluated.",
     "• Interaction Scope: behavior_v1 tests single-tool triggers; multi-agent dialogues and long-context RAG remain to be tested."
 ], default_size=15, default_color=NAVY, space_after=6)
 
@@ -271,7 +271,7 @@ set_text_frame(s12.shapes[2].text_frame, "Implementation & Mechanistic Probing S
 
 # Col 1: Setup - 2 concise punchy bullets
 set_text_frame(s12.shapes[6].text_frame, [
-    "• Model & Harness: gpt-oss-20b (25 layers, 32 MoE experts, 2880 dim); bfloat16 forward pass with 93–100% rollout agreement.",
+    "• Model Catalogue: AttnDA baseline models (Llama-3-8B, Qwen2-1.5B, Phi-3-mini, Mistral-7B) evaluated with exact span tokenization.",
     "• Linear Probing: L2 logistic probes on residual stream at memory_result_end, isolating executive Layers 14–19."
 ], default_size=14.5, default_color=NAVY, space_after=5)
 
