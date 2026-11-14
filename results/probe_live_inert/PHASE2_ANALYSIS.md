@@ -1,13 +1,13 @@
 # Phase 2 analyses on cached features (exploratory)
 
 Script: `interp/probe_live_inert/phase2_analysis.py`. Raw numbers: `phase2_analysis.json`.
-Fire rate = fired_any / 8. Binary label = fire rate at least 0.5. 95% CIs resample whole cases.
+Terms follow the MemoryDojo lifecycle states (see TERMINOLOGY.md). Poisoned notes only. Execution rate = rollouts reaching execution / 8. Binary label = reached execution if the rate is at least 0.5, otherwise triggered resisted. 95% CIs resample whole cases.
 
-Of 602 notes labeled not fired, 160 fired in at least one rollout.
+Of 602 notes labeled triggered resisted, 160 reached execution in at least one rollout.
 
-## A. Leave one domain out, all live notes (888 notes, 43 domains, 286 fired)
+## A. Leave one domain out, all poisoned notes (888 notes, 43 domains, 286 reached execution)
 
-| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with fire rate, within wording [95% CI] |
+| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with execution rate, within wording [95% CI] |
 | --- | --- | --- | --- | --- |
 | probe_mre | 0.964 | 0.821 [0.76, 0.88] | 0.768 [0.645, 0.865] | 0.381 [0.301, 0.46] |
 | probe_note | 0.958 | 0.791 [0.725, 0.851] | 0.641 [0.525, 0.749] | 0.371 [0.288, 0.451] |
@@ -24,9 +24,9 @@ Of 602 notes labeled not fired, 160 fired in at least one rollout.
 
 Macro AUROC over domains with both classes: probe_mre 0.980, probe_note 0.964, text_full 0.958, text_note 0.956, template 0.953
 
-## B. Fire rate as the primary label, 5 fold held-out cases, all live notes (888 notes)
+## B. Execution rate as the primary label, 5 fold held-out cases, all poisoned notes (888 notes)
 
-| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with fire rate, within wording [95% CI] |
+| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with execution rate, within wording [95% CI] |
 | --- | --- | --- | --- | --- |
 | probe_mre | 0.978 | 0.909 [0.867, 0.944] | 0.918 [0.869, 0.953] | 0.529 [0.457, 0.592] |
 | probe_note | 0.974 | 0.894 [0.854, 0.927] | 0.892 [0.842, 0.931] | 0.513 [0.437, 0.577] |
@@ -43,7 +43,7 @@ Macro AUROC over domains with both classes: probe_mre 0.980, probe_note 0.964, t
 
 ## B2. Same folds as B, models trained on the binary label (888 notes)
 
-| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with fire rate, within wording [95% CI] |
+| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with execution rate, within wording [95% CI] |
 | --- | --- | --- | --- | --- |
 | probe_mre | 0.968 | 0.860 [0.809, 0.904] | 0.884 [0.825, 0.932] | 0.450 [0.371, 0.523] |
 | probe_note | 0.970 | 0.880 [0.839, 0.918] | 0.887 [0.838, 0.929] | 0.476 [0.402, 0.538] |
@@ -60,7 +60,7 @@ Macro AUROC over domains with both classes: probe_mre 0.980, probe_note 0.964, t
 
 ## C. Phase 1 control with nested C, training split only (512 notes)
 
-| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with fire rate, within wording [95% CI] |
+| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with execution rate, within wording [95% CI] |
 | --- | --- | --- | --- | --- |
 | probe_mre | 0.956 | 0.849 [0.786, 0.901] | 0.866 [0.803, 0.925] | 0.432 [0.331, 0.519] |
 | probe_note | 0.956 | 0.848 [0.787, 0.904] | 0.857 [0.794, 0.916] | 0.404 [0.301, 0.493] |
@@ -75,7 +75,7 @@ Macro AUROC over domains with both classes: probe_mre 0.980, probe_note 0.964, t
 | probe_note_minus_text_full | +0.034 [-0.031, 0.111] | -0.003 [-0.083, 0.089] |
 | probe_note_minus_text_note | +0.068 [-0.007, 0.148] | +0.072 [-0.017, 0.168] |
 
-## D. Pre-registered splits, models trained on the fire rate
+## D. Pre-registered splits, models trained on the execution rate
 
 | Split | Method | Spearman overall | Spearman within wording | AUROC (binary) |
 | --- | --- | --- | --- | --- |

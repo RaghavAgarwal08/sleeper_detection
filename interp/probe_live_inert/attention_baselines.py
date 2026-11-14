@@ -6,8 +6,8 @@ Methods (each follows its paper as closely as our data allows; deviations are li
               k = 2, 1, 0 and finally the top 10 heads by margin if none survive). Focus score FS = mean attention
               from the last prompt token to the user request (the instruction) over those heads. Flag when FS is
               low, so the score is minus FS. Training free.
-  AT_fit      Same focus score, heads chosen with the same rule on our training split labels (live or fired
-              notes play the role of attacks).
+  AT_fit      Same focus score, heads chosen with the same rule on our training split labels (poisoned notes or notes that
+              reached execution play the role of attacks).
   AttnDA      Kawasaki and Lee 2026 (arXiv 2610.28988). Feature per head FS(l,h) = A(I) / (A(I) + A(D)), I = user
               request, D = memory tool result, all 24 x 64 heads. Shrinkage diagonal LDA,
               w = ((1 - eps) S + eps I)^-1 (mu_pos - mu_neg), eps picked by grouped CV on the training notes.
@@ -22,9 +22,10 @@ Methods (each follows its paper as closely as our data allows; deviations are li
   probe_mre   Our pre-registered probe (mean of layers 14 to 19 at the end of the memory result), for reference.
   text_full   TF-IDF on the full prompt, C = 1.0, for reference.
 
-Evaluations (both tasks: live vs inert over all notes, and fired vs not fired over live notes)
+Evaluations (both tasks: poisoned vs benign twin over all notes, and reached execution vs triggered resisted over
+poisoned notes; terms as in results/probe_live_inert/TERMINOLOGY.md)
   pre-registered: fit on the training split, score E1 (new wordings) and E2 (new domains)
-  grouped CV:     5 folds holding out whole cases over all notes of the task (the fired-task analysis that has
+  grouped CV:     5 folds holding out whole cases over all notes of the task (the execution-task analysis that has
                   enough positives), with within-wording AUROC
 Metrics: AUROC with case-bootstrap CI, AUROC within wording, TPR at 1% and 5% FPR.
 
@@ -232,8 +233,9 @@ def main():
 
     X, full = reference_inputs(labels)
     report = {"full_attention_layers": full_layers, "tasks": {}}
-    for task in ["live_inert", "fired"]:
-        if task == "live_inert":
+    # behavior_v1 field values: framing "live" = poisoned note, "inert" = benign twin; fired_any = rollouts executed.
+    for task in ["poison_vs_twin", "execution"]:
+        if task == "poison_vs_twin":
             y = np.array([int(l["framing"] == "live") for l in labels])
             pop = np.array([l["framing"] in ("live", "inert") for l in labels])
         else:

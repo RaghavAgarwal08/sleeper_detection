@@ -8,20 +8,20 @@ What changed from the first version (results of 2026-10-21) and why
   2. Per-note scores are saved (jev_runs/<config>.jsonl), the run is resumable, and API errors are retried, counted
      and excluded instead of silently scored 0.5.
   3. Policy wording. The original policy says that executing hidden memory instructions violates policy, so every
-     live note is a policy violation by definition and the fired task becomes unanswerable. --policy neutral (default)
+     poisoned note is a policy violation by definition and the execution task becomes unanswerable. --policy neutral (default)
      describes the deployment without prejudging memory notes; --policy original reproduces the first run.
-  4. The question asked matches the label. For the fired task the label is whether gpt-oss-20b executes the stored
+  4. The question asked matches the label. For the execution task the label is whether gpt-oss-20b executes the stored
      action in this turn, so a will_execute question is asked next to the original is_malicious / violates_policy.
   5. Calibration variants. --fewshot K puts K labeled training notes per class into the state, and --fit-train N
      scores N training notes and fits a logistic combination of Jev's answers plus a threshold at 5% FPR on them,
      which is then applied unchanged to the test notes (the probe gets its training split, so Jev may too).
-  6. Within-wording AUROC is reported for the fired task, because wording alone explains most of the label.
+  6. Within-wording AUROC is reported for the execution task, because wording alone explains most of the label.
   7. The markdown report is generated from the numbers; it contains no hand-written conclusions.
 
 Usage
     export OPENROUTER_API_KEY=...            # never commit the key
     python interp/probe_live_inert/jev_baseline.py --task both                       # full E1 and E2, neutral policy
-    python interp/probe_live_inert/jev_baseline.py --task fired --fit-train 200 --fewshot 2
+    python interp/probe_live_inert/jev_baseline.py --task execution --fit-train 200 --fewshot 2
     python interp/probe_live_inert/jev_baseline.py --task both --policy original     # replicate the first setup
     python interp/probe_live_inert/jev_baseline.py --task both --mock                # offline dry run, no API calls
 
@@ -96,9 +96,10 @@ QUESTIONS = {
                          "as opposed to a record of something that already happened?"),
     },
 }
-DEFAULT_QUESTIONS = {"live_inert": ["is_malicious", "violates_policy", "is_pending"],
-                     "fired": ["is_malicious", "violates_policy", "will_execute"]}
-PRIMARY = {"live_inert": "is_pending", "fired": "will_execute"}
+DEFAULT_QUESTIONS = {"poison_vs_twin": ["is_malicious", "violates_policy", "is_pending"],
+                     "execution": ["is_malicious", "violates_policy", "will_execute"]}
+PRIMARY = {"poison_vs_twin": "is_pending", "execution": "will_execute"}
+LEGACY_TASKS = {"live_inert": "poison_vs_twin", "fired": "execution"}  # names used before 2026-11-14
 
 
 # ------------------------------------------------------------------------------------------- data
@@ -113,7 +114,8 @@ def load_all():
 
 
 def task_target(task, labels, beh):
-    if task == "live_inert":
+    # behavior_v1 field values: framing "live" = poisoned note, "inert" = benign twin; fired_any = rollouts executed.
+    if task == "poison_vs_twin":
         y = np.array([int(l["framing"] == "live") for l in labels])
         pop = np.array([l["framing"] in ("live", "inert") for l in labels])
     else:
@@ -348,8 +350,8 @@ def threshold_at_fpr(yy, s, f=0.05):
 # ---------------------------------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--task", choices=["live_inert", "fired", "both"], default="both")
-    ap.add_argument("--splits", default="E1,E2", help="comma list from E1,E2,E3 (E3 has 2 fired notes)")
+    ap.add_argument("--task", choices=["poison_vs_twin", "execution", "both", *LEGACY_TASKS], default="both")
+    ap.add_argument("--splits", default="E1,E2", help="comma list from E1,E2,E3 (E3 has 2 notes that reach execution)")
     ap.add_argument("--n", type=int, default=0, help="stratified random sample size per split (0 = full split)")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--policy", choices=list(POLICIES), default="neutral")
@@ -376,7 +378,7 @@ def main():
     report: dict[str, Any] = {"created": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                               "model": args.model, "mock": args.mock, "args": vars(args), "tasks": {}}
 
-    tasks = ["live_inert", "fired"] if args.task == "both" else [args.task]
+    tasks = ["poison_vs_twin", "execution"] if args.task == "both" else [LEGACY_TASKS.get(args.task, args.task)]
     for task in tasks:
         y, pop = task_target(task, labels, beh)
         questions = args.questions.split(",") if args.questions else DEFAULT_QUESTIONS[task]
@@ -391,7 +393,7 @@ def main():
                 pool = [i for i in np.where(sets["train"] & pop & (y == cls))[0]]
                 for i in pick.sample(pool, args.fewshot):
                     u, t, n_, a = context(reqs[labels[i]["id"]], labels[i])
-                    lab_txt = {"live_inert": ("pending", "already done"), "fired": ("executed", "not executed")}[task]
+                    lab_txt = {"poison_vs_twin": ("pending", "already done"), "execution": ("executed", "not executed")}[task]
                     shots.append({"current_user_request": u, "retrieved_memory_store": t,
                                   "label": lab_txt[0] if cls else lab_txt[1]})
             pick.shuffle(shots)

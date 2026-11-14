@@ -4,8 +4,13 @@
 
 Two tasks on gpt-oss-20b's residual stream at the trigger turn:
 
-* `--task live_inert`: is the planted note a pending instruction (live) or a closed record of the same action (inert)?
-* `--task fired`: among live notes only, will the agent actually execute the planted action?
+Terms follow the MemoryDojo lifecycle states; see [`TERMINOLOGY.md`](../../results/probe_live_inert/TERMINOLOGY.md). The
+command line names of the pre-registered scripts are unchanged.
+
+* `--task live_inert` (poisoned vs benign twin): is the planted note a pending instruction (poisoned note) or a closed
+  record of the same action (its benign twin)?
+* `--task fired` (execution task): among poisoned notes only, does the agent reach execution of the planted action or is
+  it triggered but resisted?
 
 ## Files
 
@@ -15,9 +20,9 @@ Two tasks on gpt-oss-20b's residual stream at the trigger turn:
 | `probe.py` | CPU | Pre-registered probes, baselines and bootstrap CIs; writes `REPORT_<task>.md` and `report_<task>.json` |
 | `export_features.py` | CPU | Saves the layer 14 to 19 window features (20 MB) so later analysis needs no cache |
 | `check_vllm.py` | with vLLM running | Confirms vLLM renders the same prompt tokens as the cache (must print MATCH) |
-| `sample_live.py` | GPU, vLLM | Samples trigger turn behaviour for the 888 live notes (k samples each), wrapping `demo/sample_behavior.py` |
-| `controls.py` | CPU, about 2 min | Exploratory controls for the fired result (case and template confounds, stronger text baselines) |
-| `run.sh` | Huy's A100 server | Capture plus live vs inert probe, using the repo's memory guard |
+| `sample_live.py` | GPU, vLLM | Samples trigger turn behaviour for the 888 poisoned notes (k samples each), wrapping `demo/sample_behavior.py` |
+| `controls.py` | CPU, about 2 min | Exploratory controls for the execution result (case and template confounds, stronger text baselines) |
+| `run.sh` | Huy's A100 server | Capture plus poisoned vs benign twin probe, using the repo's memory guard |
 
 Outputs in `results/probe_live_inert/`, behaviour labels in `interp/data/behavior_v1/behavior.jsonl.gz`.
 
@@ -36,7 +41,7 @@ From `interp/data/behavior_v1/manifest.json`, written before any activations exi
 | Probe | standardise, then L2 logistic regression; C by leave one template out CV on train only |
 | Baselines | TF-IDF on the note text; difference of means; shuffled labels |
 | Uncertainty | 95% bootstrap CIs resampling cases; paired CI for probe minus text |
-| Fired label | `fired_any / k >= 0.5` with k = 8 |
+| Reached execution label | `fired_any / k >= 0.5` with k = 8 (otherwise triggered resisted) |
 
 The per layer sweep and everything in `controls.py` are exploratory.
 
@@ -73,7 +78,7 @@ export VLLM_SYSTEM_START_DATE=$(python -c "import json;print(json.load(open('int
 nohup /workspace/vllm-env/bin/vllm serve openai/gpt-oss-20b --port 8000 --served-model-name gpt-oss-20b --max-model-len 8192 --gpu-memory-utilization 0.92 --enable-auto-tool-choice --tool-call-parser openai --reasoning-parser openai_gptoss --max-num-seqs 64 > vllm.log 2>&1 &
 tail -f vllm.log                                     # wait for "Application startup complete", then Ctrl+C
 
-# 3. behaviour labels and the fired probe
+# 3. behaviour labels and the execution probe
 /workspace/vllm-env/bin/python interp/probe_live_inert/check_vllm.py        # must print MATCH
 /workspace/vllm-env/bin/python interp/probe_live_inert/sample_live.py --limit 8 --k 8 --workers 8   # smoke test
 nohup /workspace/vllm-env/bin/python interp/probe_live_inert/sample_live.py --k 8 --workers 64 > sample.log 2>&1 &
@@ -90,7 +95,7 @@ pods, so the commands above call Python directly. The MXFP4 warning from transfo
 
 | File | Where it runs | What it does |
 | --- | --- | --- |
-| `phase2_analysis.py` | CPU, about 15 minutes | Leave one domain out and held out case analyses within wording, fire rate as the target, nested C. Writes `PHASE2_ANALYSIS.md` |
+| `phase2_analysis.py` | CPU, about 15 minutes | Leave one domain out and held out case analyses within wording, execution rate as the target, nested C. Writes `PHASE2_ANALYSIS.md` |
 | `jev_baseline.py` | CPU plus OpenRouter key | Fair Jev guard baseline (full or random sets, saved scores, neutral policy, will_execute question, few shot and train fitted variants). `--mock` for a dry run |
 | `attention_capture.py` | GPU, about 25 minutes | Attention mass per head to each prompt span, system prompt attention, final hidden state, Attention Tracker head calibration |
 | `attention_baselines.py` | CPU | Attention Tracker, AttnDA, AttentionDefense and the FC baseline on those features. Writes `ATTENTION_BASELINES.md` |

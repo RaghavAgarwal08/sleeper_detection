@@ -1,11 +1,11 @@
 {
  "notes": {
-  "fire_rate": "rate = fired_any / 8; binary label fired = rate >= 0.5",
+  "execution_rate": "rate = fired_any / 8 (rollouts reaching execution); binary label reached_execution = rate >= 0.5, else triggered_resisted",
   "text_C": 1.0,
   "probe_C": "nested GroupKFold(4) by case inside each training fold, grid [0.0001, 0.001, 0.01, 0.1, 1.0]",
   "bootstrap": "1000 case resamples, 95% percentile intervals"
  },
- "fire_rate_by_template_mean": {
+ "execution_rate_by_template_mean": {
   "0": 0.782,
   "1": 0.108,
   "2": 0.122,
@@ -14,12 +14,12 @@
   "5": 0.111
  },
  "binary_vs_rate": {
-  "notes_not_fired_but_fired_at_least_once": 160,
-  "notes_not_fired": 602
+  "resisted_notes_executed_at_least_once": 160,
+  "resisted_notes": 602
  },
  "A_lodo_binary": {
   "n_notes": 888,
-  "n_fired": 286,
+  "n_reached_execution": 286,
   "n_cases": 148,
   "n_domains": 43,
   "methods": {
@@ -527,7 +527,7 @@
  },
  "B_heldout_cases_rate": {
   "n_notes": 888,
-  "n_fired": 286,
+  "n_reached_execution": 286,
   "n_cases": 148,
   "n_domains": 43,
   "methods": {
@@ -688,7 +688,7 @@
  },
  "B2_heldout_cases_binary": {
   "n_notes": 888,
-  "n_fired": 286,
+  "n_reached_execution": 286,
   "n_cases": 148,
   "n_domains": 43,
   "methods": {
@@ -841,7 +841,7 @@
  },
  "C_train_split_nested": {
   "n_notes": 512,
-  "n_fired": 232,
+  "n_reached_execution": 232,
   "n_cases": 128,
   "n_domains": 34,
   "methods": {

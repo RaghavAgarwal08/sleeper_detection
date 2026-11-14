@@ -1,4 +1,7 @@
-"""Exploratory SAE and Jacobian lens (J-lens) analysis of the live/inert and fired contrasts, from Neuronpedia.
+"""Exploratory SAE and Jacobian lens (J-lens) analysis of the poisoned vs benign twin and execution contrasts, from Neuronpedia.
+
+Terms follow the MemoryDojo lifecycle states (results/probe_live_inert/TERMINOLOGY.md): poisoned note = framing "live",
+benign twin = framing "inert", reached execution = executed in at least 4 of 8 rollouts, otherwise triggered resisted.
 
 Data come from neuronpedia_collect.js (run in a browser tab on neuronpedia.org, see that file), which queries
   * /api/search-all with the gpt-oss BatchTopK residual SAEs (Andy Arditi, 131k latents, "resid-post-aa"),
@@ -9,8 +12,8 @@ Data come from neuronpedia_collect.js (run in a browser tab on neuronpedia.org, 
     tokens at every layer, kept at four positions: user_end, note (last token of the note), mre (end of the memory
     result) and last (the last prompt token, where the reply starts).
 
-Sample (seeded, training split only): 48 live/inert pairs (24 cases x templates 0 and 1), and 70 live notes for the
-fired contrast within wording (template 3: 24 fired vs 24 not; template 2: 11 vs 11).
+Sample (seeded, training split only): 48 poisoned/benign twin pairs (24 cases x templates 0 and 1), and 70 poisoned notes
+for the execution contrast within wording (template 3: 24 reached execution vs 24 triggered resisted; template 2: 11 vs 11).
 
     python interp/probe_live_inert/sae_jlens_analysis.py --data results/probe_live_inert/neuronpedia/export.json
 Writes results/probe_live_inert/SAE_JLENS.md and sae_jlens.json.
@@ -68,9 +71,9 @@ def sae_matrix(sae, ids, layer):
     return X, np.array(feats)
 
 
-def sae_live_inert(sae, pairs, layer, top=15):
-    live, inert = [p[0] for p in pairs], [p[1] for p in pairs]
-    X, feats = sae_matrix(sae, live + inert, layer)
+def sae_poisoned_twin(sae, pairs, layer, top=15):
+    poisoned, twins = [p[0] for p in pairs], [p[1] for p in pairs]
+    X, feats = sae_matrix(sae, poisoned + twins, layer)
     D = X[: len(pairs)] - X[len(pairs):]
     rows = []
     for k, f in enumerate(feats):
@@ -79,18 +82,18 @@ def sae_live_inert(sae, pairs, layer, top=15):
         if len(nz) < 6:
             continue
         p = wilcoxon(nz).pvalue
-        rows.append({"feature": int(f), "mean_diff": float(d.mean()), "live_higher": int((d > 0).sum()),
-                     "inert_higher": int((d < 0).sum()), "active_live": int((X[: len(pairs), k] > 0).sum()),
-                     "active_inert": int((X[len(pairs):, k] > 0).sum()), "p": float(p)})
+        rows.append({"feature": int(f), "mean_diff": float(d.mean()), "poisoned_higher": int((d > 0).sum()),
+                     "twin_higher": int((d < 0).sum()), "active_poisoned": int((X[: len(pairs), k] > 0).sum()),
+                     "active_twin": int((X[len(pairs):, k] > 0).sum()), "p": float(p)})
     q = bh([r["p"] for r in rows])
     for r, qq in zip(rows, q):
         r["q"] = float(qq)
     rows.sort(key=lambda r: r["p"])
     return {"n_pairs": len(pairs), "n_features_tested": len(rows), "n_q_below_0.05": int((q < 0.05).sum()),
-            "top_live": [r for r in rows if r["mean_diff"] > 0][:top], "top_inert": [r for r in rows if r["mean_diff"] < 0][:top]}
+            "top_poisoned": [r for r in rows if r["mean_diff"] > 0][:top], "top_twin": [r for r in rows if r["mean_diff"] < 0][:top]}
 
 
-def sae_fired(sae, F, layer, top=15):
+def sae_execution(sae, F, layer, top=15):
     ids = [f[0] for f in F]
     y = np.array([f[2] for f in F])
     tm = np.array([f[1] for f in F])
@@ -113,14 +116,14 @@ def sae_fired(sae, F, layer, top=15):
         from scipy.stats import combine_pvalues
         p = combine_pvalues(ps).pvalue if ps else 1.0
         rows.append({"feature": int(f), "auroc_within_wording": float(num / den), "p": float(p),
-                     "active_fired": int((x[y == 1] > 0).sum()), "active_not": int((x[y == 0] > 0).sum())})
+                     "active_reached": int((x[y == 1] > 0).sum()), "active_resisted": int((x[y == 0] > 0).sum())})
     q = bh([r["p"] for r in rows])
     for r, qq in zip(rows, q):
         r["q"] = float(qq)
     rows.sort(key=lambda r: r["p"])
-    return {"n": len(ids), "n_fired": int(y.sum()), "n_features_tested": len(rows), "n_q_below_0.05": int((q < 0.05).sum()),
-            "top_fired": [r for r in rows if r["auroc_within_wording"] > 0.5][:top],
-            "top_not_fired": [r for r in rows if r["auroc_within_wording"] < 0.5][:top]}
+    return {"n": len(ids), "n_reached_execution": int(y.sum()), "n_features_tested": len(rows), "n_q_below_0.05": int((q < 0.05).sum()),
+            "top_reached": [r for r in rows if r["auroc_within_wording"] > 0.5][:top],
+            "top_resisted": [r for r in rows if r["auroc_within_wording"] < 0.5][:top]}
 
 
 def sae_probe(sae, ids, y, groups, strata, layer, dense=None):
@@ -217,8 +220,8 @@ def main():
     Xd = feat["X"][list(feat["sites"]).index("memory_result_end")]
 
     for layer in (15, 19):
-        li = sae_live_inert(SAE, pairs, layer)
-        fi = sae_fired(SAE, F, layer)
+        li = sae_poisoned_twin(SAE, pairs, layer)
+        fi = sae_execution(SAE, F, layer)
         idsL = [p[0] for p in pairs] + [p[1] for p in pairs]
         yL = np.array([1] * len(pairs) + [0] * len(pairs))
         gL = np.array([LAB[i]["case_id"] for i in idsL])
@@ -228,9 +231,9 @@ def main():
         gF = np.array([LAB[i]["case_id"] for i in idsF])
         sF = np.array([f[1] for f in F])
         out["sae"][layer] = {
-            "live_vs_inert": li, "fired_within_wording": fi,
-            "probe_comparison_live_inert": sae_probe(SAE, idsL, yL, gL, sL, layer, Xd[[pos[i] for i in idsL]].astype(np.float32)),
-            "probe_comparison_fired": sae_probe(SAE, idsF, yF, gF, sF, layer, Xd[[pos[i] for i in idsF]].astype(np.float32)),
+            "poisoned_vs_twin": li, "execution_within_wording": fi,
+            "probe_comparison_poisoned_twin": sae_probe(SAE, idsL, yL, gL, sL, layer, Xd[[pos[i] for i in idsL]].astype(np.float32)),
+            "probe_comparison_execution": sae_probe(SAE, idsF, yF, gF, sF, layer, Xd[[pos[i] for i in idsF]].astype(np.float32)),
         }
 
     # J-lens: action-word readout rate and token enrichment
@@ -252,17 +255,17 @@ def main():
                 den += len(a) * len(b)
             nz = d[np.isfinite(d) & (d != 0)]
             res[p] = {
-                "action_word_rate_live": round(float(np.nanmean(hl)), 3), "action_word_rate_inert": round(float(np.nanmean(hi)), 3),
-                "pairs_live_higher": int((d > 0).sum()), "pairs_inert_higher": int((d < 0).sum()),
+                "action_word_rate_poisoned": round(float(np.nanmean(hl)), 3), "action_word_rate_twin": round(float(np.nanmean(hi)), 3),
+                "pairs_poisoned_higher": int((d > 0).sum()), "pairs_twin_higher": int((d < 0).sum()),
                 "sign_test_p": float(binomtest(int((nz > 0).sum()), len(nz)).pvalue) if len(nz) else None,
-                "action_word_rate_fired": round(float(np.nanmean(hf[yF == 1])), 3), "action_word_rate_not_fired": round(float(np.nanmean(hf[yF == 0])), 3),
-                "fired_auroc_within_wording": round(float(num / den), 3) if den else None,
+                "action_word_rate_reached": round(float(np.nanmean(hf[yF == 1])), 3), "action_word_rate_resisted": round(float(np.nanmean(hf[yF == 0])), 3),
+                "execution_auroc_within_wording": round(float(num / den), 3) if den else None,
             }
-        res["enrichment_live_vs_inert_note"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "note", lens)
-        res["enrichment_fired_vs_not_note"] = enrichment(JL, [f[0] for f in jl_F if f[2] == 1], [f[0] for f in jl_F if f[2] == 0], "note", lens)
-        res["enrichment_live_vs_inert_last"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "last", lens)
-        res["enrichment_live_vs_inert_mre"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "mre", lens)
-        res["enrichment_fired_vs_not_last"] = enrichment(JL, [f[0] for f in jl_F if f[2] == 1], [f[0] for f in jl_F if f[2] == 0], "last", lens)
+        res["enrichment_poisoned_vs_twin_note"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "note", lens)
+        res["enrichment_reached_vs_resisted_note"] = enrichment(JL, [f[0] for f in jl_F if f[2] == 1], [f[0] for f in jl_F if f[2] == 0], "note", lens)
+        res["enrichment_poisoned_vs_twin_last"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "last", lens)
+        res["enrichment_poisoned_vs_twin_mre"] = enrichment(JL, [a for a, b in jl_pairs], [b for a, b in jl_pairs], "mre", lens)
+        res["enrichment_reached_vs_resisted_last"] = enrichment(JL, [f[0] for f in jl_F if f[2] == 1], [f[0] for f in jl_F if f[2] == 0], "last", lens)
         out["jlens"][lens] = res
 
     (RES / "sae_jlens.json").write_text(json.dumps(out, indent=1))
@@ -278,55 +281,55 @@ def ex(expl, layer, f):
 def render(out, expl, nP, nF, nJP, nJF):
     L = ["# SAE and Jacobian lens readouts on behavior_v1 (exploratory, Neuronpedia)", "",
          "Script: `interp/probe_live_inert/sae_jlens_analysis.py`; data collected with `neuronpedia_collect.js`. "
-         f"SAE sample: {nP} live/inert pairs and {nF} live notes for the fired contrast. J-lens sample: {nJP} pairs and {nJF} live notes.",
+         f"SAE sample: {nP} poisoned/benign twin pairs and {nF} poisoned notes for the execution contrast. J-lens sample: {nJP} pairs and {nJF} poisoned notes.",
          "Small samples, many features: treat single latents as leads to check with steering, not findings. q = Benjamini-Hochberg.",
          "Explanations are Neuronpedia's automatic labels. At this position (a closing brace) nearly all of them describe the "
-         "local token or format (punctuation, braces, code), so the latents that separate live from inert are not "
+         "local token or format (punctuation, braces, code), so the latents that separate poisoned notes from benign twins are not "
          "interpretable as status features from their labels alone.", ""]
     for layer, r in out["sae"].items():
-        li, fi = r["live_vs_inert"], r["fired_within_wording"]
+        li, fi = r["poisoned_vs_twin"], r["execution_within_wording"]
         L += [f"## SAE layer {layer}, end of the memory result", "",
-              f"Live vs inert: {li['n_features_tested']} latents tested, {li['n_q_below_0.05']} with q < 0.05. "
-              f"Fired vs not fired within wording: {fi['n_features_tested']} tested, {fi['n_q_below_0.05']} with q < 0.05.", "",
+              f"Poisoned vs benign twin: {li['n_features_tested']} latents tested, {li['n_q_below_0.05']} with q < 0.05. "
+              f"Reached execution vs triggered resisted within wording: {fi['n_features_tested']} tested, {fi['n_q_below_0.05']} with q < 0.05.", "",
               "Decoding from SAE latents vs the dense probe on the same notes (grouped CV by case): "
-              f"live vs inert {r['probe_comparison_live_inert']}, fired {r['probe_comparison_fired']}.", "",
-              "| Higher on live notes | pairs live > inert | q | explanation |", "| --- | --- | --- | --- |"]
-        for x in li["top_live"][:10]:
-            L.append(f"| {x['feature']} | {x['live_higher']} of {li['n_pairs']} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
-        L += ["", "| Higher on inert notes | pairs inert > live | q | explanation |", "| --- | --- | --- | --- |"]
-        for x in li["top_inert"][:10]:
-            L.append(f"| {x['feature']} | {x['inert_higher']} of {li['n_pairs']} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
-        L += ["", "| Higher when the note fires (within wording) | AUROC | q | explanation |", "| --- | --- | --- | --- |"]
-        for x in fi["top_fired"][:8]:
+              f"poisoned vs benign twin {r['probe_comparison_poisoned_twin']}, execution {r['probe_comparison_execution']}.", "",
+              "| Higher on poisoned notes | pairs poisoned > twin | q | explanation |", "| --- | --- | --- | --- |"]
+        for x in li["top_poisoned"][:10]:
+            L.append(f"| {x['feature']} | {x['poisoned_higher']} of {li['n_pairs']} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
+        L += ["", "| Higher on benign twins | pairs twin > poisoned | q | explanation |", "| --- | --- | --- | --- |"]
+        for x in li["top_twin"][:10]:
+            L.append(f"| {x['feature']} | {x['twin_higher']} of {li['n_pairs']} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
+        L += ["", "| Higher when the note reaches execution (within wording) | AUROC | q | explanation |", "| --- | --- | --- | --- |"]
+        for x in fi["top_reached"][:8]:
             L.append(f"| {x['feature']} | {x['auroc_within_wording']:.2f} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
-        L += ["", "| Higher when the note does not fire | AUROC | q | explanation |", "| --- | --- | --- | --- |"]
-        for x in fi["top_not_fired"][:8]:
+        L += ["", "| Higher when the note is resisted | AUROC | q | explanation |", "| --- | --- | --- | --- |"]
+        for x in fi["top_resisted"][:8]:
             L.append(f"| {x['feature']} | {x['auroc_within_wording']:.2f} | {x['q']:.3g} | {ex(expl, layer, x['feature'])} |")
         L.append("")
     for lens, name in (("J", "Jacobian lens"), ("Lg", "Logit lens")):
         r = out["jlens"][lens]
         L += [f"## {name}: does the planted action show up in the readout? (layers 9 to 21)", "",
               "Action-word rate = fraction of workspace layers whose top 8 readout tokens include a content word of the planted action.", "",
-              "| Position | live | inert | pairs live > inert / inert > live | sign test p | fired | not fired | fired AUROC within wording |",
+              "| Position | poisoned | benign twin | pairs poisoned > twin / twin > poisoned | sign test p | reached execution | triggered resisted | execution AUROC within wording |",
               "| --- | --- | --- | --- | --- | --- | --- | --- |"]
         for p in ("note", "mre", "last"):
             x = r[p]
-            L.append(f"| {p} | {x['action_word_rate_live']} | {x['action_word_rate_inert']} | {x['pairs_live_higher']} / {x['pairs_inert_higher']} | "
-                     f"{x['sign_test_p']:.3g} | {x['action_word_rate_fired']} | {x['action_word_rate_not_fired']} | {x['fired_auroc_within_wording']} |"
-                     if x["sign_test_p"] is not None else f"| {p} | {x['action_word_rate_live']} | {x['action_word_rate_inert']} | 0 / 0 | n/a | | | |")
+            L.append(f"| {p} | {x['action_word_rate_poisoned']} | {x['action_word_rate_twin']} | {x['pairs_poisoned_higher']} / {x['pairs_twin_higher']} | "
+                     f"{x['sign_test_p']:.3g} | {x['action_word_rate_reached']} | {x['action_word_rate_resisted']} | {x['execution_auroc_within_wording']} |"
+                     if x["sign_test_p"] is not None else f"| {p} | {x['action_word_rate_poisoned']} | {x['action_word_rate_twin']} | 0 / 0 | n/a | | | |")
         for pos_name, key in (("the last token of the note", "note"),):
-            e = r[f"enrichment_live_vs_inert_{key}"]
-            L += ["", f"Readout tokens at {pos_name} most enriched in live vs inert prompts (prompts with the token, live vs inert): "
+            e = r[f"enrichment_poisoned_vs_twin_{key}"]
+            L += ["", f"Readout tokens at {pos_name} most enriched in poisoned vs benign twin prompts (prompts with the token, poisoned vs twin): "
                   + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in e["a_enriched"][:12]),
-                  "", "Most enriched in inert prompts: " + ", ".join(f"{x['token']} ({x['prompts_b']} vs {x['prompts_a']})" for x in e["b_enriched"][:12]),
-                  "", "Most enriched in fired vs not fired notes (note token): "
-                  + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in r[f"enrichment_fired_vs_not_{key}"]["a_enriched"][:12])]
-        e = r["enrichment_live_vs_inert_last"]
-        L += ["", "Readout tokens at the last prompt token most enriched in live vs inert prompts (number of prompts): "
+                  "", "Most enriched in benign twin prompts: " + ", ".join(f"{x['token']} ({x['prompts_b']} vs {x['prompts_a']})" for x in e["b_enriched"][:12]),
+                  "", "Most enriched in notes that reached execution vs were resisted (note token): "
+                  + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in r[f"enrichment_reached_vs_resisted_{key}"]["a_enriched"][:12])]
+        e = r["enrichment_poisoned_vs_twin_last"]
+        L += ["", "Readout tokens at the last prompt token most enriched in poisoned vs benign twin prompts (number of prompts): "
               + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in e["a_enriched"][:12]),
-              "", "Most enriched in inert prompts: " + ", ".join(f"{x['token']} ({x['prompts_b']} vs {x['prompts_a']})" for x in e["b_enriched"][:12]),
-              "", "Most enriched in fired vs not fired (last token): "
-              + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in r["enrichment_fired_vs_not_last"]["a_enriched"][:12]), ""]
+              "", "Most enriched in benign twin prompts: " + ", ".join(f"{x['token']} ({x['prompts_b']} vs {x['prompts_a']})" for x in e["b_enriched"][:12]),
+              "", "Most enriched in reached execution vs resisted (last token): "
+              + ", ".join(f"{x['token']} ({x['prompts_a']} vs {x['prompts_b']})" for x in r["enrichment_reached_vs_resisted_last"]["a_enriched"][:12]), ""]
     return "\n".join(L) + "\n"
 
 

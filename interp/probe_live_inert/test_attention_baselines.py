@@ -73,16 +73,16 @@ def test_methods():
 
 
 def test_e2e():
-    """Synthetic attn_features.npz aligned with the real ids, signal planted on the live label, full analysis run."""
+    """Synthetic attn_features.npz aligned with the real ids, signal planted on the poisoned label, full analysis run."""
     import probe as P
     labels, _ = P.load_labels(DATA)
     reqs = [json.loads(l) for l in open(DATA / "requests.jsonl")]
     n_sys = len(AC.spans(reqs[0])["system"])
     rng = np.random.default_rng(1)
     n, L, H = len(labels), 24, 64
-    live = np.array([l["framing"] == "live" for l in labels])
+    poisoned = np.array([l["framing"] == "live" for l in labels])  # dataset field: "live" = poisoned
     seg = rng.uniform(0.01, 0.2, (n, 2, L, H, len(AC.SPANS))).astype(np.float16)
-    seg[live, 0, 9, :4, AC.SPANS.index("user_content")] *= 0.3
+    seg[poisoned, 0, 9, :4, AC.SPANS.index("user_content")] *= 0.3
     with tempfile.TemporaryDirectory() as d:
         np.savez_compressed(Path(d) / "attn_features.npz", ids=np.array([l["id"] for l in labels]), seg_attn=seg,
                             sys_attn=rng.uniform(0, 0.1, (n, 2, H, n_sys)).astype(np.float16),
@@ -92,7 +92,7 @@ def test_e2e():
         subprocess.run([sys.executable, str(HERE / "attention_baselines.py"), "--attn", str(Path(d) / "attn_features.npz"),
                         "--out", d], check=True)
         rep = json.load(open(Path(d) / "attention_baselines.json"))
-    li = rep["tasks"]["live_inert"]["E1_new_templates"]["methods"]
+    li = rep["tasks"]["poison_vs_twin"]["E1_new_templates"]["methods"]
     assert li["AT_fit"]["auroc"] > 0.9 and li["AttnDA"]["auroc"] > 0.8 and li["AttnDA_full"]["auroc"] > 0.8, li  # 4 of 1,536 heads carry signal
     assert abs(li["FC"]["auroc"] - 0.5) < 0.15, "FC got random features, should be near chance"
     print("e2e ok", {k: v["auroc"] for k, v in li.items()})

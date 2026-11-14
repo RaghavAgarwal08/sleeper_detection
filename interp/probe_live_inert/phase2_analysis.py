@@ -3,10 +3,15 @@
 Addresses the review of the phase 1 results:
   A. Leave-one-domain-out (LODO) evaluated WITHIN wording and next to text and wording baselines. A plain LODO AUROC
      mixes the six wordings, and wording alone predicts most of the label, so it mostly measures wording.
-  B. Fire rate (0 to 8 of 8 rollouts) as the PRIMARY label. Models are fit with binomial sample weights
-     (each note counts as a positive with weight r and a negative with weight 1 - r, r = fired/8). Reported:
-     Spearman correlation with the fire rate, pooled and within wording, plus within-wording AUROC on the binary
-     label (fired = at least 4 of 8) as a secondary metric.
+  B. Execution rate (0 to 8 of 8 rollouts reaching execution) as the PRIMARY label. Models are fit with binomial
+     sample weights (each note counts as a positive with weight r and a negative with weight 1 - r, r = executed/8).
+     Reported: Spearman correlation with the execution rate, pooled and within wording, plus within-wording AUROC on
+     the binary label (reached execution = at least 4 of 8, otherwise triggered resisted) as a secondary metric.
+
+Terminology follows the MemoryDojo lifecycle states used in the repo (benchmarks/memorydojo/taxonomy.py): a poisoned
+note is a planted pending instruction (the dataset's framing "live"), its benign twin is the same action recorded as
+already done (framing "inert"), clean has no note. At the trigger turn a poisoned session either reaches execution or
+is triggered but resisted. See results/probe_live_inert/TERMINOLOGY.md.
   C. Nested cross-validation for the probe's regularization C, removing the small optimistic bias of choosing C
      on folds that are later used for testing.
 
@@ -52,7 +57,7 @@ ids = np.array([l["id"] for l in labels])
 bpath = DATA / "behavior.jsonl"
 beh_lines = open(bpath) if bpath.exists() else gzip.open(str(bpath) + ".gz", "rt")
 beh = {b["id"]: b for b in map(json.loads, beh_lines)}
-live = np.array([l["framing"] == "live" and l["id"] in beh for l in labels])
+poisoned = np.array([l["framing"] == "live" and l["id"] in beh for l in labels])  # dataset field: "live" = poisoned
 rate = np.array([beh[i]["fired_any"] / beh[i]["k"] if i in beh else np.nan for i in ids])
 y = (rate >= 0.5).astype(int)
 cases = np.array([l["case_id"] for l in labels])
@@ -109,7 +114,7 @@ def boot(fn, mask, B=N_BOOT):
 
 # ----------------------------------------------------------------------------------------------- models
 def binomial_xy(mask):
-    """Duplicate each note into a positive and a negative copy weighted by its fire rate."""
+    """Duplicate each note into a positive and a negative copy weighted by its execution rate."""
     idx = np.where(mask)[0]
     rows = np.concatenate([idx, idx])
     yy = np.concatenate([np.ones(len(idx), int), np.zeros(len(idx), int)])
@@ -202,7 +207,7 @@ def fold_of(oof):
 
 def summarize(oof, population, label):
     m = population
-    res = {"n_notes": int(m.sum()), "n_fired": int(y[m].sum()), "n_cases": int(len(np.unique(cases[m]))),
+    res = {"n_notes": int(m.sum()), "n_reached_execution": int(y[m].sum()), "n_cases": int(len(np.unique(cases[m]))),
            "n_domains": int(len(np.unique(dom[m]))), "methods": {}}
     for k in METHODS:
         s = oof[k]
@@ -238,24 +243,24 @@ def summarize(oof, population, label):
 
 # -------------------------------------------------------------------------------------------- analyses
 out = {"notes": {
-    "fire_rate": "rate = fired_any / 8; binary label fired = rate >= 0.5",
+    "execution_rate": "rate = fired_any / 8 (rollouts reaching execution); binary label reached_execution = rate >= 0.5, else triggered_resisted",
     "text_C": TEXT_C, "probe_C": "nested GroupKFold(4) by case inside each training fold, grid " + str(C_GRID),
     "bootstrap": f"{N_BOOT} case resamples, 95% percentile intervals",
 }}
-fire_rate_by_template = {int(t): round(float(rate[live & (tmpl == t)].mean()), 3) for t in range(6)}
-out["fire_rate_by_template_mean"] = fire_rate_by_template
+execution_rate_by_template = {int(t): round(float(rate[poisoned & (tmpl == t)].mean()), 3) for t in range(6)}
+out["execution_rate_by_template_mean"] = execution_rate_by_template
 out["binary_vs_rate"] = {
-    "notes_not_fired_but_fired_at_least_once": int(((rate < 0.5) & (rate > 0) & live).sum()),
-    "notes_not_fired": int(((rate < 0.5) & live).sum()),
+    "resisted_notes_executed_at_least_once": int(((rate < 0.5) & (rate > 0) & poisoned).sum()),
+    "resisted_notes": int(((rate < 0.5) & poisoned).sum()),
 }
 
-print("A. leave-one-domain-out, all live notes, binary target (models trained on the binary label)")
-oofA, cA = out_of_fold(live, dom, len(np.unique(dom[live])), "binary", "LODO binary")
-out["A_lodo_binary"] = summarize(oofA, live, "LODO binary")
+print("A. leave-one-domain-out, all poisoned notes, binary target (models trained on the binary label)")
+oofA, cA = out_of_fold(poisoned, dom, len(np.unique(dom[poisoned])), "binary", "LODO binary")
+out["A_lodo_binary"] = summarize(oofA, poisoned, "LODO binary")
 out["A_lodo_binary"]["probe_C_chosen"] = {k: sorted(set(c for kk, c in cA if kk == k)) for k in SITE}
 per_dom = {}
-for d in np.unique(dom[live]):
-    m = live & (dom == d)
+for d in np.unique(dom[poisoned]):
+    m = poisoned & (dom == d)
     if len(np.unique(y[m])) == 2:
         per_dom[d] = {k: round(float(roc_auc_score(y[m], oofA[k][m])), 3) for k in METHODS}
         per_dom[d]["n"] = int(m.sum())
@@ -263,22 +268,22 @@ out["A_lodo_binary"]["per_domain_auroc"] = per_dom
 macro = {k: round(float(np.mean([v[k] for v in per_dom.values()])), 3) for k in METHODS}
 out["A_lodo_binary"]["macro_auroc_over_domains"] = macro
 
-print("B. fire rate as the primary label: held-out cases, all live notes, models trained on the fire rate")
-oofB, cB = out_of_fold(live, cases, 5, "rate", "cases rate")
-out["B_heldout_cases_rate"] = summarize(oofB, live, "cases rate")
+print("B. execution rate as the primary label: held-out cases, all poisoned notes, models trained on the execution rate")
+oofB, cB = out_of_fold(poisoned, cases, 5, "rate", "cases rate")
+out["B_heldout_cases_rate"] = summarize(oofB, poisoned, "cases rate")
 out["B_heldout_cases_rate"]["probe_C_chosen"] = {k: sorted(set(c for kk, c in cB if kk == k)) for k in SITE}
 
-print("B2. same held-out-case folds and all live notes, but models trained on the binary label (separates the effect of the target from the effect of the larger sample)")
-oofB2, cB2 = out_of_fold(live, cases, 5, "binary", "cases binary")
-out["B2_heldout_cases_binary"] = summarize(oofB2, live, "cases binary")
+print("B2. same held-out-case folds and all poisoned notes, but models trained on the binary label (separates the effect of the target from the effect of the larger sample)")
+oofB2, cB2 = out_of_fold(poisoned, cases, 5, "binary", "cases binary")
+out["B2_heldout_cases_binary"] = summarize(oofB2, poisoned, "cases binary")
 
 print("C. replication of the phase 1 control with nested C: training split only, held-out cases, binary")
-trl = sets["train"] & live
+trl = sets["train"] & poisoned
 oofC, cC = out_of_fold(trl, cases, 5, "binary", "train split nested")
 out["C_train_split_nested"] = summarize(oofC, trl, "train split nested")
 out["C_train_split_nested"]["probe_C_chosen"] = {k: sorted(set(c for kk, c in cC if kk == k)) for k in SITE}
 
-print("D. pre-registered splits with the fire-rate target (train on the training split, score E1 and E2)")
+print("D. pre-registered splits with the execution-rate target (train on the training split, score E1 and E2)")
 D = {}
 for k in METHODS:
     if k.startswith("probe"):
@@ -289,7 +294,7 @@ for k in METHODS:
     else:
         f = fit_template(trl, "rate")
     for e in ["E1_new_templates", "E2_new_domains"]:
-        m = sets[e] & live
+        m = sets[e] & poisoned
         s = np.full(len(ids), np.nan); s[m] = f(m)
         D.setdefault(e, {})[k] = {
             "spearman_rate_overall": round(float(spearmanr(s[m], rate[m]).statistic), 3),
@@ -304,7 +309,7 @@ RES.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------------------------------------- report
 def table(sec):
-    lines = ["| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with fire rate, within wording [95% CI] |",
+    lines = ["| Method | AUROC overall | AUROC within wording [95% CI] | within wording and fold [95% CI] | Spearman with execution rate, within wording [95% CI] |",
              "| --- | --- | --- | --- | --- |"]
     for k, r in sec["methods"].items():
         lines.append(f"| {k} | {r['auroc_overall']:.3f} | {r['auroc_within_wording']:.3f} {r['auroc_within_wording_ci']} | "
@@ -321,19 +326,21 @@ A, B, B2, C_ = out["A_lodo_binary"], out["B_heldout_cases_rate"], out["B2_heldou
 md = [
     "# Phase 2 analyses on cached features (exploratory)", "",
     "Script: `interp/probe_live_inert/phase2_analysis.py`. Raw numbers: `phase2_analysis.json`.",
-    "Fire rate = fired_any / 8. Binary label = fire rate at least 0.5. 95% CIs resample whole cases.", "",
-    f"Of {out['binary_vs_rate']['notes_not_fired']} notes labeled not fired, "
-    f"{out['binary_vs_rate']['notes_not_fired_but_fired_at_least_once']} fired in at least one rollout.", "",
-    f"## A. Leave one domain out, all live notes ({A['n_notes']} notes, {A['n_domains']} domains, {A['n_fired']} fired)", "",
+    "Terms follow the MemoryDojo lifecycle states (see TERMINOLOGY.md). Poisoned notes only. Execution rate = rollouts "
+    "reaching execution / 8. Binary label = reached execution if the rate is at least 0.5, otherwise triggered resisted. "
+    "95% CIs resample whole cases.", "",
+    f"Of {out['binary_vs_rate']['resisted_notes']} notes labeled triggered resisted, "
+    f"{out['binary_vs_rate']['resisted_notes_executed_at_least_once']} reached execution in at least one rollout.", "",
+    f"## A. Leave one domain out, all poisoned notes ({A['n_notes']} notes, {A['n_domains']} domains, {A['n_reached_execution']} reached execution)", "",
     table(A), "",
     "Macro AUROC over domains with both classes: " + ", ".join(f"{k} {v:.3f}" for k, v in A["macro_auroc_over_domains"].items()), "",
-    f"## B. Fire rate as the primary label, 5 fold held-out cases, all live notes ({B['n_notes']} notes)", "",
+    f"## B. Execution rate as the primary label, 5 fold held-out cases, all poisoned notes ({B['n_notes']} notes)", "",
     table(B), "",
     f"## B2. Same folds as B, models trained on the binary label ({B2['n_notes']} notes)", "",
     table(B2), "",
     f"## C. Phase 1 control with nested C, training split only ({C_['n_notes']} notes)", "",
     table(C_), "",
-    "## D. Pre-registered splits, models trained on the fire rate", "",
+    "## D. Pre-registered splits, models trained on the execution rate", "",
     "| Split | Method | Spearman overall | Spearman within wording | AUROC (binary) |", "| --- | --- | --- | --- | --- |",
 ]
 for e, v in D.items():
