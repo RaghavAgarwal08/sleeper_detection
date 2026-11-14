@@ -22,6 +22,7 @@ def load_model_and_tokenizer(
     device: str = "cuda:0",
     torch_dtype: Any = None,
     local_files_only: bool = False,
+    attn_implementation: str = "eager",
 ) -> tuple[Any, Any]:
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -39,6 +40,7 @@ def load_model_and_tokenizer(
         device_map=device if torch.cuda.is_available() and device.startswith("cuda") else "cpu",
         low_cpu_mem_usage=True,
         local_files_only=local_files_only,
+        attn_implementation=attn_implementation,
     )
     model.eval()
     return model, tok
