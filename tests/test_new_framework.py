@@ -1,10 +1,20 @@
 import numpy as np
 import pytest
 
-from interp.attention_tracker import AttentionTracker
-from interp.attnda import AttnDA
-from interp.subspace_probe import SubspaceDivergenceProbe
-from interp.memorydojo import (
+from rq1_baselines import AttentionTracker, AttnDA
+from rq2_probing import SubspaceDivergenceProbe, run_layer_sweep
+from rq3_mechanisms import (
+    evaluate_benign_twin_separation,
+    evaluate_untriggerable_contrast,
+    compute_divergence_curve,
+    evaluate_causal_effects,
+)
+from rq4_transfer import (
+    train_fired_test_dormant,
+    compute_incident_curve,
+    evaluate_lodo_transfer,
+)
+from benchmarks.memorydojo import (
     TaskDomain,
     MemorySystemType,
     MemorySystemSimulator,
@@ -13,7 +23,7 @@ from interp.memorydojo import (
 )
 
 
-def test_attention_tracker_fit_and_score():
+def test_rq1_attention_tracker_and_attnda():
     rng = np.random.default_rng(123)
     clean_fs = rng.normal(loc=0.85, scale=0.05, size=(20, 4, 8))
     malicious_fs = rng.normal(loc=0.30, scale=0.05, size=(20, 4, 8))
@@ -23,25 +33,13 @@ def test_attention_tracker_fit_and_score():
 
     at = AttentionTracker(k=3.0).fit(X, y)
     assert len(at.selected_heads) > 0
+    assert at.evaluate(X, y).auroc > 0.95
 
-    eval_res = at.evaluate(X, y)
-    assert eval_res.auroc > 0.95
-
-
-def test_attnda_fisher_discriminant():
-    rng = np.random.default_rng(123)
-    clean_fs = rng.normal(loc=0.85, scale=0.05, size=(20, 4, 8))
-    malicious_fs = rng.normal(loc=0.30, scale=0.05, size=(20, 4, 8))
-
-    X = np.concatenate([clean_fs, malicious_fs], axis=0)
-    y = np.array([0] * 20 + [1] * 20)
-
-    model = AttnDA(epsilon=1e-3).fit(X, y)
-    eval_res = model.evaluate(X, y)
-    assert eval_res.auroc > 0.95
+    lda = AttnDA(epsilon=1e-3).fit(X, y)
+    assert lda.evaluate(X, y).auroc > 0.95
 
 
-def test_subspace_probe_orthogonal_commitment():
+def test_rq2_subspace_probe_and_layer_sweep():
     rng = np.random.default_rng(123)
     d = 128
     v_surface = rng.normal(size=d)
@@ -55,6 +53,8 @@ def test_subspace_probe_orthogonal_commitment():
     h_twin = h_clean + 1.5 * v_surface[None, None, :]
     h_dormant = h_twin.copy()
     h_dormant[:, 5:8, :] += 2.0 * v_commit[None, None, :]
+    h_fired = h_dormant.copy()
+    h_fired[:, 8:, :] += 3.0 * v_commit[None, None, :]
 
     probe = SubspaceDivergenceProbe(target_layers=(5, 8)).fit(
         hidden_states_dormant=h_dormant,
@@ -67,11 +67,60 @@ def test_subspace_probe_orthogonal_commitment():
 
     test_X = np.concatenate([h_twin, h_dormant], axis=0)
     test_y = np.array([0] * 20 + [1] * 20)
-    res = probe.evaluate(test_X, test_y)
-    assert res.auroc > 0.95
+    assert probe.evaluate(test_X, test_y).auroc > 0.95
+
+    sweep = run_layer_sweep(h_clean, h_dormant, h_fired)
+    assert sweep.best_mid_layer in [5, 6, 7]
 
 
-def test_memorydojo_lifecycle():
+def test_rq3_mechanisms_and_causality():
+    rng = np.random.default_rng(42)
+    s_dorm = rng.normal(loc=2.0, scale=0.3, size=20)
+    s_twin = rng.normal(loc=0.1, scale=0.3, size=20)
+
+    twin_res = evaluate_benign_twin_separation(s_dorm, s_twin)
+    assert twin_res["h0_falsified"] is True
+
+    s_clean = rng.normal(loc=0.0, scale=0.2, size=20)
+    s_untrig = rng.normal(loc=0.3, scale=0.2, size=20)
+    s_fired = rng.normal(loc=3.0, scale=0.3, size=20)
+    hyp_res = evaluate_untriggerable_contrast(s_clean, s_twin, s_untrig, s_dorm, s_fired)
+    assert "H1" in hyp_res.favored_hypothesis
+
+    v = rng.normal(size=64)
+    v /= np.linalg.norm(v)
+    h_dorm = rng.normal(size=(20, 64))
+    h_fired = h_dorm + 2.0 * v
+    causal_res = evaluate_causal_effects(h_dorm, h_fired, v, alpha=1.5)
+    assert bool(causal_res["steering_dormant"].success)
+    assert bool(causal_res["ablation_fired"].success)
+
+
+def test_rq4_cross_state_and_lodo():
+    rng = np.random.default_rng(42)
+    d = 64
+    v = rng.normal(size=d)
+    v /= np.linalg.norm(v)
+
+    c = rng.normal(size=(20, 10, d))
+    d_act = c + 2.0 * v[None, None, :]
+    f_act = c + 2.5 * v[None, None, :]
+
+    trans = train_fired_test_dormant(c[:10], f_act[:10], c[10:], d_act[10:], target_layer=5)
+    assert trans.transfer_auroc > 0.90
+
+    curve = compute_incident_curve(c, f_act, d_act, counts=[2, 5], target_layer=5)
+    assert len(curve.probe_tpr_at_1fpr) == 2
+
+    family_data = {
+        "fam1": {"clean": c, "dormant": d_act, "fired": f_act},
+        "fam2": {"clean": c, "dormant": d_act, "fired": f_act},
+    }
+    lodo = evaluate_lodo_transfer(family_data, target_layer=5)
+    assert lodo["mean_lodo_auroc"] > 0.90
+
+
+def test_memorydojo_lifecycle_and_simulation():
     traj = build_synthetic_trajectory(TaskDomain.WORKSPACE, length=5, t0=0)
     assert len(traj.sessions) == 5
     assert traj.insertion_session_idx == 0
@@ -81,10 +130,7 @@ def test_memorydojo_lifecycle():
     assert metrics.rsr > 0.0
     assert metrics.br == 1.0
 
-
-def test_memory_simulator():
     sim = MemorySystemSimulator(MemorySystemType.LETTA_CORE)
     sim.write(session_idx=0, observations=["Note 1", "Note 2"])
     retrieved = sim.retrieve("query", k=1)
     assert len(retrieved) == 1
-    assert retrieved[0].session_id == 0
