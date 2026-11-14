@@ -12,4 +12,6 @@ export CONTAINER="${CONTAINER:-/sw/user/NGC_containers/pytorch_24.09-py3.sif}"
 export PATH="${PYTHONUSERBASE}/bin:${PATH}"
 mkdir -p "$WORK" "$HF_HOME" "$PYTHONUSERBASE" "$APPTAINER_CACHEDIR" 2>/dev/null
 # Run python inside the container with the GPU visible and our folders mounted.
-py() { apptainer exec --nv --bind /work,/projects,"$HOME" "$CONTAINER" env PYTHONUSERBASE="$PYTHONUSERBASE" HF_HOME="$HF_HOME" python3 "$@"; }
+# HF_HUB_OFFLINE: weights are downloaded once on the login node; compute nodes may have no internet.
+# MODEL_ID: gptoss.py now defaults to a catalogue model; behavior_v1 token ids are gpt-oss-20b's.
+py() { apptainer exec --nv --bind /work,/projects,"$HOME" "$CONTAINER" env PYTHONUSERBASE="$PYTHONUSERBASE" HF_HOME="$HF_HOME" HF_HUB_OFFLINE=1 MODEL_ID=openai/gpt-oss-20b PYTHONPATH="$REPO" python3 "$@"; }

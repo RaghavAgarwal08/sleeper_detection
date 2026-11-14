@@ -42,6 +42,10 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 INTERP = HERE.parent
 sys.path.insert(0, str(INTERP))
+sys.path.insert(0, str(INTERP.parent))  # gptoss.py imports rq1_baselines from the repo root
+# behavior_v1 stores gpt-oss-20b token ids, so this script must run gpt-oss-20b whatever gptoss.py defaults to
+# (since 2026-11-14 its default is a model from the AttnDA catalogue).
+GPT_OSS = "openai/gpt-oss-20b"
 
 START, MESSAGE, END = 200006, 200008, 200007  # <|start|>, <|message|>, <|end|> in the o200k_harmony vocabulary
 ROLES = ["system", "developer", "user", "assistant_call", "tool", "final_assistant"]
@@ -120,8 +124,16 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0)
     args = ap.parse_args()
 
+    import os
+    os.environ["MODEL_ID"] = GPT_OSS
     import gptoss as gp
-    m, tok = gp.model()
+    m, tok = gp.model(GPT_OSS)
+    assert m.config.model_type == "gpt_oss", f"expected gpt-oss-20b, got {m.config.model_type}"
+    # output_attentions needs the eager attention implementation
+    try:
+        m.set_attn_implementation("eager")
+    except Exception:  # older transformers
+        m.config._attn_implementation = "eager"
     layer_types = list(getattr(m.config, "layer_types", []) or [])
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
