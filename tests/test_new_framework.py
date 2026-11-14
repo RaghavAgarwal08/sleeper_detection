@@ -134,3 +134,23 @@ def test_memorydojo_lifecycle_and_simulation():
     sim.write(session_idx=0, observations=["Note 1", "Note 2"])
     retrieved = sim.retrieve("query", k=1)
     assert len(retrieved) == 1
+
+
+def test_attnda_model_catalogue():
+    from rq1_baselines.model_loader import ATTNDA_CATALOG, resolve_model_id, locate_subspan_tokens
+
+    assert resolve_model_id("qwen2-1.5b") == "Qwen/Qwen2-1.5B-Instruct"
+    assert resolve_model_id("phi3-mini") == "microsoft/Phi-3-mini-4k-instruct"
+    assert resolve_model_id("mistral-7b") == "mistralai/Mistral-7B-Instruct-v0.3"
+    assert resolve_model_id("llama3-8b") == "meta-llama/Meta-Llama-3-8B-Instruct"
+
+    class MockTokenizer:
+        def encode(self, text: str, add_special_tokens: bool = False):
+            return list(text.encode("utf-8"))
+
+    tok = MockTokenizer()
+    full_text = "Instruction: find user. Data: malicious payload content."
+    span = locate_subspan_tokens(tok, full_text, "malicious payload content.")
+    assert span[0] > 0
+    assert span[1] > span[0]
+

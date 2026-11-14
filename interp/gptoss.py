@@ -31,8 +31,9 @@ from typing import Callable, Iterable
 import numpy as np
 import torch
 
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-MODEL_ID = "openai/gpt-oss-20b"
+from rq1_baselines.model_loader import ATTNDA_CATALOG, resolve_model_id
+
+MODEL_ID = resolve_model_id(os.environ.get("MODEL_ID", "qwen2-1.5b"))
 _MODEL = None
 _TOK = None
 
@@ -57,17 +58,27 @@ def named_positions(record: dict, include_entries: bool = True) -> dict[str, int
 
 
 # ---------------------------------------------------------------------------------------------- model
-def model(device: str = "cuda:0"):
-    global _MODEL, _TOK
+def model(model_name_or_key: str | None = None, device: str = "cuda:0"):
+    global _MODEL, _TOK, MODEL_ID
+    if model_name_or_key is not None:
+        target_id = resolve_model_id(model_name_or_key)
+        if target_id != MODEL_ID:
+            MODEL_ID = target_id
+            _MODEL = None
+            _TOK = None
+
     if _MODEL is None:
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        _TOK = AutoTokenizer.from_pretrained(MODEL_ID, local_files_only=True)
+        local_only = bool(int(os.environ.get("HF_HUB_OFFLINE", "0")))
+        _TOK = AutoTokenizer.from_pretrained(MODEL_ID, local_files_only=local_only)
+        if _TOK.pad_token is None:
+            _TOK.pad_token = _TOK.eos_token
         _MODEL = AutoModelForCausalLM.from_pretrained(
             MODEL_ID,
             torch_dtype=torch.bfloat16,
-            device_map=device,
+            device_map=device if torch.cuda.is_available() and device.startswith("cuda") else "cpu",
             low_cpu_mem_usage=True,
-            local_files_only=True
+            local_files_only=local_only,
         )
         _MODEL.eval()
     return _MODEL, _TOK
