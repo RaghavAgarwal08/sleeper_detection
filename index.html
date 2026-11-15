@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Technical report: linear probes on gpt-oss-20b predict whether an agent will execute a planted memory instruction.">
+<title>Planted Memory Probes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: a single reading column (about 72ch) with full width figure panels; a sticky contents rail on wide screens. */
+:root {
+  --bg: #fbfbfa; --panel: #ffffff; --fg: #1d2126; --fg2: #4a5059; --muted: #7a808a; --rule: #e3e5e8; --grid: #eceef1;
+  --accent: #2a78d6; --probe: #2a78d6; --text: #eb6834; --aqua: #1baf7a; --gray: #a3a8b0; --warn-bg: #fff6e6; --warn: #8a5a00;
+  --good-bg: #e9f6ef; --good: #126b3f; --code-bg: #f1f3f5;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-head: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15181c; --panel: #1c2026; --fg: #e8eaed; --fg2: #b9bec6; --muted: #8b919b; --rule: #2c323a; --grid: #262b32;
+  --accent: #5b9cf0; --probe: #3987e5; --text: #d95926; --aqua: #199e70; --gray: #6b717a; --warn-bg: #2e2412; --warn: #f0c070;
+  --good-bg: #13291e; --good: #7fd1a4; --code-bg: #22272e; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #15181c; --panel: #1c2026; --fg: #e8eaed; --fg2: #b9bec6; --muted: #8b919b; --rule: #2c323a; --grid: #262b32;
+  --accent: #5b9cf0; --probe: #3987e5; --text: #d95926; --aqua: #199e70; --gray: #6b717a; --warn-bg: #2e2412; --warn: #f0c070;
+  --good-bg: #13291e; --good: #7fd1a4; --code-bg: #22272e; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 80px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } nav.toc { display: none; } }
+nav.toc { position: sticky; top: calc(24px + env(safe-area-inset-top, 0px)); align-self: start; font-size: 13px; }
+nav.toc .lbl { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+nav.toc ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+nav.toc a { color: var(--fg2); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); outline: none; text-decoration: underline; }
+main { min-width: 0; }
+header.top { border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 32px; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--f-head); font-weight: 700; font-size: clamp(30px, 4vw, 42px); line-height: 1.12; margin: 8px 0 12px; text-wrap: balance; }
+h2 { font-family: var(--f-head); font-weight: 700; font-size: 26px; line-height: 1.2; margin: 56px 0 12px; text-wrap: balance; scroll-margin-top: 24px; }
+h3 { font-family: var(--f-head); font-weight: 600; font-size: 19px; margin: 32px 0 8px; text-wrap: balance; }
+p, li { max-width: 72ch; }
+p { margin: 0 0 14px; color: var(--fg); }
+.lede { font-size: 18px; color: var(--fg2); max-width: 68ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--muted); margin-top: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { font-family: var(--f-mono); font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--fg2); background: var(--panel); }
+.chip.done { background: var(--good-bg); color: var(--good); border-color: transparent; }
+.chip.wait { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+.keyfind { display: grid; gap: 12px; margin: 20px 0 8px; padding: 0; list-style: none; counter-reset: k; }
+.keyfind li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; max-width: none; }
+.keyfind li::before { counter-increment: k; content: counter(k); font-family: var(--f-mono); font-weight: 500; color: var(--accent); font-size: 18px; }
+.keyfind b { font-weight: 600; }
+.num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: .93em; }
+figure { margin: 22px 0 26px; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 16px 12px; }
+figure .ft { font-family: var(--f-head); font-weight: 600; font-size: 16px; margin-bottom: 2px; }
+figure .fs { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+figcaption { font-size: 13px; color: var(--fg2); margin-top: 8px; max-width: 80ch; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--fg2); margin: 4px 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+svg.chart { width: 100%; height: auto; display: block; overflow: visible; }
+svg.chart text { fill: var(--fg2); font-family: var(--f-body); font-size: 12px; }
+svg.chart .axis { stroke: var(--muted); stroke-width: 1; }
+svg.chart .gridl { stroke: var(--grid); stroke-width: 1; }
+svg.chart .ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+svg.chart .probe { fill: var(--probe); stroke: var(--probe); }
+svg.chart .textc { fill: var(--text); stroke: var(--text); }
+svg.chart .aqua { fill: var(--aqua); stroke: var(--aqua); }
+svg.chart .grayc { fill: var(--gray); stroke: var(--gray); }
+svg.chart .ring { stroke: var(--panel); stroke-width: 2; }
+svg.chart .val { fill: var(--fg); font-family: var(--f-mono); font-size: 11.5px; }
+svg.chart .band { fill: var(--grid); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 720px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.two figure { margin: 0; }
+.tw { overflow-x: auto; margin: 14px 0 22px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--f-mono); font-weight: 500; font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); background: var(--panel); }
+tr:last-child td { border-bottom: none; }
+td.n { font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.callout { border-left: 3px solid var(--accent); background: var(--panel); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+.callout.warn { border-left-color: var(--warn); background: var(--warn-bg); }
+.callout p:last-child { margin-bottom: 0; }
+.conf { font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-left: 6px; vertical-align: 2px; white-space: nowrap; }
+.conf.hi { background: var(--good-bg); color: var(--good); }
+.conf.md { background: var(--warn-bg); color: var(--warn); }
+.conf.lo { background: var(--code-bg); color: var(--fg2); }
+code { font-family: var(--f-mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 6px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tag { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+</style>
+<style>*,*::before,*::after{box-sizing:border-box}html{color-scheme:light dark}img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <div class="lbl">Contents</div>
+  <ol>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#setup">Question and setup</a></li>
+    <li><a href="#ran">What we ran</a></li>
+    <li><a href="#behaviour">Behaviour</a></li>
+    <li><a href="#twin">Poisoned vs benign twin</a></li>
+    <li><a href="#exec">Predicting execution</a></li>
+    <li><a href="#controls">Wording controls</a></li>
+    <li><a href="#guard">Guard model</a></li>
+    <li><a href="#interp">SAE and J-Lens</a></li>
+    <li><a href="#why">Why we see this</a></li>
+    <li><a href="#changes">What changed</a></li>
+    <li><a href="#built">Built, not yet run</a></li>
+    <li><a href="#next">Next steps</a></li>
+    <li><a href="#limits">Limitations</a></li>
+    <li><a href="#files">Files</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="eyebrow">AI Alignment @ Illinois · Interpretability stream · Technical report</div>
+  <h1>Reading whether an agent will execute a planted memory note</h1>
+  <p class="lede">Linear probes on gpt-oss-20b's mid layer activations, tested against text readers, a guard model, sparse autoencoder features and the Jacobian lens, on 148 Sleeper Attack memory poisoning cases.</p>
+  <div class="meta"><span>Raghav Agarwal with Huy Pham</span><span>Mentors Enyi Jiang and Himnish Hunma</span><span>14 November 2026</span></div>
+  <div class="chips">
+    <span class="chip done">Pre-registered phase 1 complete</span>
+    <span class="chip done">Phase 2 analyses complete (exploratory)</span>
+    <span class="chip done">SAE and J-Lens readouts (exploratory)</span>
+    <span class="chip wait">Attention baselines, Jev rerun, multi model: built, need GPU or key</span>
+  </div>
+</header>
+
+<section id="summary">
+<h2>Summary</h2>
+<p>An attacker plants an instruction in an agent's long term memory. Later a harmless user request makes the agent retrieve it, and the agent may carry out the planted action. We asked whether the agent's own activations at that moment, before it writes anything, show whether it will act, and whether they show more than the words of the prompt already do.</p>
+<ul class="keyfind">
+  <li><span><b>Telling a planted instruction from a harmless record is easy, and text alone does it.</b> A probe scores AUROC 0.998 to 1.000 and so does a bag of words reader. This only validates the pipeline.</span></li>
+  <li><span><b>Whether the agent will execute the note is the real question, and wording dominates it.</b> The same note executes in 2% to 78% of rollouts depending only on how it is phrased, so every fair comparison has to hold wording fixed.</span></li>
+  <li><span><b>Within the same wording, the probe predicts execution better than text, clearly so on unseen domains.</b> Probe 0.821 vs full prompt TF-IDF 0.621 when whole domains are held out (difference <span class="num">+0.200 [+0.083, +0.318]</span>), and 0.909 vs 0.805 on held out cases when trained on the execution rate (<span class="num">+0.104 [+0.035, +0.173]</span>). On the smaller pre-registered training split the gap is not significant.</span></li>
+  <li><span><b>A guard model does not see it.</b> Jev scored 0.47 on predicting execution where the probe scored 0.98 on the same notes. It flags every planted instruction as malicious, which is correct but says nothing about whether this model will obey.</span></li>
+  <li><span><b>The model verbalizes the note's status, not its decision.</b> Jacobian lens readouts at the note say "reminder, checklist, task" for planted instructions and "completed, earlier, canceled" for records. Neither those readouts nor the top SAE features carry the execution signal the dense probe finds.</span></li>
+</ul>
+<div class="callout warn"><p>Everything after the pre-registered phase 1 report is exploratory. Several analysis choices (the execution rate target, within wording metrics) were made after seeing phase 1. The next dataset should pre-register them.</p></div>
+</section>
+
+<section id="setup">
+<h2>Question and setup</h2>
+<p>We follow the repository's MemoryDojo lifecycle terms. The October reports and the dataset files use older names, shown in the last column.</p>
+<div class="tw"><table>
+<thead><tr><th>Term</th><th>Meaning in this dataset</th><th>Older name</th></tr></thead>
+<tbody>
+<tr><td>Poisoned note</td><td>A planted instruction that says the action is still to be done</td><td>live note</td></tr>
+<tr><td>Benign twin</td><td>The same action recorded as already done, so not an instruction</td><td>inert note</td></tr>
+<tr><td>Clean</td><td>No planted note in memory</td><td>none</td></tr>
+<tr><td>Reached execution</td><td>The agent carried out the planted action in at least 4 of 8 rollouts</td><td>fired</td></tr>
+<tr><td>Triggered resisted</td><td>The note was retrieved at its trigger but executed in fewer than 4 of 8</td><td>not fired</td></tr>
+<tr><td>Execution rate</td><td>Rollouts reaching execution divided by 8</td><td>fire rate</td></tr>
+</tbody></table></div>
+<div class="tw"><table>
+<thead><tr><th>Item</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Model</td><td>gpt-oss-20b (24 layers, width 2880, mixture of experts). Activations from Hugging Face weights in bf16, behaviour from vLLM 0.30.0. Prompts verified token identical (962 = 962).</td></tr>
+<tr><td>Data</td><td>behavior_v1 (built by Huy Pham): 148 Sleeper Attack cases × 13 versions (6 poisoned wordings, 6 benign twins, 1 clean) = 1,924 prompts. Each prompt is one trigger turn: a benign user request, a memory lookup, and a memory result containing the note.</td></tr>
+<tr><td>Behaviour labels</td><td>8 rollouts per poisoned note at temperature 1.0, up to 4 agent steps, canned tool results after the first step, judged by each case's own success conditions. 888 notes, 7,104 rollouts.</td></tr>
+<tr><td>Probe</td><td>Mean residual stream over layers 14 to 19 at the end of the memory result (label free position). Standardize, then L2 logistic regression.</td></tr>
+<tr><td>Splits</td><td>Train = wordings 0 to 3 in 34 domains. E1 = new wordings 4 and 5. E2 = 9 new domains. E3 = both new (pre-registered primary).</td></tr>
+<tr><td>Text baselines</td><td>TF-IDF (word 1 to 2 grams plus character 3 to 5 grams) on the note, and on the full prompt.</td></tr>
+<tr><td>Uncertainty</td><td>Bootstrap over whole cases, because the 13 versions of a case are not independent.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="ran">
+<h2>What we ran</h2>
+<div class="tw"><table>
+<thead><tr><th>When</th><th>Run</th><th>Compute</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td class="n">Oct 17</td><td>Activation capture for all 1,924 prompts, pre-registered poisoned vs twin probe</td><td>1 A100 80GB on RunPod, about 10 min</td><td>Done</td></tr>
+<tr><td class="n">Oct 18</td><td>vLLM behaviour sampling, 888 notes × 8 rollouts; pre-registered execution probe; controls</td><td>Same pod, under 1 hour; controls on a laptop</td><td>Done</td></tr>
+<tr><td class="n">Oct 21</td><td>First Jev guard baseline (run by Huy, 40 notes per split)</td><td>OpenRouter API</td><td>Done, design issues found</td></tr>
+<tr><td class="n">Nov 14</td><td>Phase 2 analyses: leave one domain out and held out cases within wording, execution rate target, nested model selection</td><td>CPU, about 15 min</td><td>Done</td></tr>
+<tr><td class="n">Nov 14</td><td>Paper analysis rerun with real scikit-learn (replaced a homemade reimplementation)</td><td>Laptop, 1 min</td><td>Done, reproduces phase 1 exactly</td></tr>
+<tr><td class="n">Nov 14</td><td>Neuronpedia SAE latents (layers 15 and 19) and Jacobian lens readouts on a 166 prompt sample</td><td>Neuronpedia hosted inference</td><td>Done</td></tr>
+<tr><td class="n">Nov 14</td><td>Attention baselines (Attention Tracker, AttnDA, AttentionDefense), rewritten Jev baseline, multi model pipeline and steering test</td><td>Tested on CPU with synthetic data</td><td>Built, waiting for GPU or API key</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="behaviour">
+<h2>Finding 1. Wording decides most of whether a note is executed</h2>
+<p>The six poisoned wordings carry the same instruction. Only the phrasing changes, yet the mean execution rate ranges from 2% to 78%. When an agent does execute a note, it almost always also completes the user's task, so the attack hides inside normal looking behaviour.</p>
+<div class="two">
+<figure><div class="ft">Execution rate by wording</div><div class="fs">Mean share of 8 rollouts that executed the note, 148 cases per wording</div><div id="fig-rate"></div>
+<figcaption>Wordings 0 and 3 are executed most of the time; wording 4 almost never.</figcaption></figure>
+<figure><div class="ft">What the agent did in 7,104 rollouts</div><div class="fs">Share of rollouts</div><div id="fig-roll"></div>
+<figcaption>Execution almost never replaces the user's task. 160 of the 602 notes labelled triggered resisted were still executed at least once.</figcaption></figure>
+</div>
+</section>
+
+<section id="twin">
+<h2>Finding 2. Poisoned vs benign twin is solved, and the words give it away</h2>
+<p>On every held out set the probe scores 0.998 to 1.000, and TF-IDF on the note scores 1.000. The model separates the two from very early layers on. The six poisoned notes the probe mistakes for twins all use wording 4, the wording that is executed about 2% of the time.</p>
+<figure><div class="ft">Where the status signal appears</div><div class="fs">AUROC per layer at the end of the memory result, E3 set (exploratory)</div><div id="fig-layer"></div>
+<figcaption>Layer 0 is at chance because the token at that position is identical in both conditions. By layer 1 information from the note has already moved to this position; from layer 13 on it is perfectly separable. The shaded band is the pre-registered window.</figcaption></figure>
+</section>
+
+<section id="exec">
+<h2>Finding 3. The probe predicts execution on new wordings and domains</h2>
+<p>Among poisoned notes only, a probe trained on the training split predicts which notes reach execution. Overall AUROCs look high for everything because wording alone already sorts most notes, which is why section 4 holds wording fixed.</p>
+<figure><div class="ft">Pre-registered execution results</div><div class="fs">AUROC with 95% CI. E1 has 13 of 256 notes reaching execution, E2 has 39 of 80.</div>
+<div class="legend"><span><i class="sw" style="background:var(--probe)"></i>Probe, end of memory result</span><span><i class="sw" style="background:var(--text)"></i>TF-IDF, note</span><span><i class="sw" style="background:var(--gray)"></i>TF-IDF, full prompt (no CI reported)</span></div>
+<div id="fig-prereg"></div>
+<figcaption>At 5% false positive rate the probe finds 61.5% (E1) and 74.4% (E2) of executed notes, TF-IDF on the note 38.5% and 53.8%. The pre-registered primary set E3 has only 2 executed notes; a probe trained on shuffled labels reaches 0.97 there, so E3 is not reported as a result.</figcaption></figure>
+<div class="two">
+<figure><div class="ft">Data efficiency on E1</div><div class="fs">AUROC vs share of training cases used (5 seeds below 100%)</div><div id="fig-eff"></div>
+<figcaption>The probe saturates at about 60% of the 128 training cases.</figcaption></figure>
+<div><p style="margin-top:6px">Calibration is reasonable: expected calibration error 0.066 on E1 and 0.098 on E2, Brier scores 0.042 and 0.103. Averaging the two probe positions gives 0.961 on E1; adding the text model does not help (0.947).</p>
+<p>Within the same case on E1, the probe ranks wording 5 above wording 4 in all 11 cases where they behave differently, matching behaviour. Every text baseline ranks them the other way. That is one comparison between two wordings, so it is suggestive only.</p></div>
+</div>
+</section>
+
+<section id="controls">
+<h2>Finding 4. Holding wording fixed, the probe beats the strongest text reader</h2>
+<p>Here we only compare pairs of notes that share a wording, so a method gets no credit for knowing that wording 0 is usually executed. Text readers fall sharply under this metric. The probe keeps most of its signal.</p>
+<figure><div class="ft">Within wording AUROC, probe vs TF-IDF on the full prompt</div><div class="fs">95% case bootstrap intervals. 888 poisoned notes unless marked.</div>
+<div class="legend"><span><i class="sw" style="background:var(--probe)"></i>Probe (mid layers, end of memory result)</span><span><i class="sw" style="background:var(--text)"></i>TF-IDF, full prompt</span></div>
+<div id="fig-within"></div></figure>
+<figure><div class="ft">Probe minus text, within wording</div><div class="fs">Paired difference with 95% CI. Right of zero means the probe is better.</div><div id="fig-diff"></div>
+<figcaption>Significant on new domains and on held out cases with the execution rate target. Not significant on the 512 note training split or with the yes/no target, so the size of the advantage depends on the sample and on the label.</figcaption></figure>
+<div class="tw"><table>
+<thead><tr><th>Analysis</th><th>Probe</th><th>TF-IDF full</th><th>TF-IDF note</th><th>Difference vs full [95% CI]</th><th>Spearman with execution rate (probe vs full)</th></tr></thead>
+<tbody>
+<tr><td>A. Leave one domain out (43 folds)</td><td class="n">0.821</td><td class="n">0.621</td><td class="n">0.578</td><td class="n">+0.200 [+0.083, +0.318]</td><td class="n">0.381 vs 0.235</td></tr>
+<tr><td>B. Held out cases, execution rate target</td><td class="n">0.909</td><td class="n">0.805</td><td class="n">0.760</td><td class="n">+0.104 [+0.035, +0.173]</td><td class="n">0.529 vs 0.364</td></tr>
+<tr><td>B2. Same folds, yes/no target</td><td class="n">0.860</td><td class="n">0.793</td><td class="n">0.761</td><td class="n">+0.067 [−0.013, +0.149]</td><td class="n">0.450 vs 0.352</td></tr>
+<tr><td>C. 512 note training split, nested C</td><td class="n">0.849</td><td class="n">0.814</td><td class="n">0.781</td><td class="n">+0.035 [−0.052, +0.127]</td><td class="n">0.432 vs 0.408</td></tr>
+<tr><td>Phase 1 control (same split, C not nested)</td><td class="n">0.876</td><td class="n">0.814</td><td class="n">0.781</td><td class="n">+0.062 [−0.016, +0.141]</td><td class="n">not computed</td></tr>
+</tbody></table></div>
+<p>On the pre-registered splits with the execution rate as target, the probe and text are close on E1 (Spearman within wording 0.41 vs 0.45) and the probe leads on E2 (0.52 vs 0.29). A leave one domain out AUROC averaged over domains (0.98) looks impressive but mostly measures wording, since TF-IDF scores 0.96 the same way; we no longer report it alone.</p>
+</section>
+
+<section id="guard">
+<h2>Finding 5. A guard model detects the poison, not the decision</h2>
+<p>Jev (TypeSafe, through OpenRouter) was asked whether the memory is malicious and whether executing it violates a security policy. On the same notes the probe was scored on:</p>
+<figure><div class="ft">Jev vs probe on identical notes</div><div class="fs">AUROC; n (positive) in labels</div>
+<div class="legend"><span><i class="sw" style="background:var(--probe)"></i>Probe</span><span><i class="sw" style="background:var(--gray)"></i>Jev</span></div>
+<div id="fig-jev"></div>
+<figcaption>Jev rated nearly every poisoned note above 0.8 whether or not the agent executed it. The first run used the first notes in file order, scored API errors as 0.5, and used a policy that defines every poisoned note as a violation. The rewritten baseline fixes these and adds a "will the agent execute this now" question; it needs an API key to run.</figcaption></figure>
+</section>
+
+<section id="interp">
+<h2>Finding 6. The model verbalizes the note's status, not its decision</h2>
+<p>Using Neuronpedia's hosted tools we looked inside gpt-oss-20b on a seeded sample of 48 poisoned/twin pairs and 70 poisoned notes (template 3: 24 executed vs 24 resisted; template 2: 11 vs 11).</p>
+<figure><div class="ft">Jacobian lens readouts at the last token of the note</div><div class="fs">Number of prompts (of 48) whose top 8 readout tokens in layers 9 to 21 include the token</div>
+<div class="legend"><span><i class="sw" style="background:var(--probe)"></i>Poisoned note</span><span><i class="sw" style="background:var(--text)"></i>Benign twin</span></div>
+<div id="fig-jlens"></div>
+<figcaption>The middle layers read out the note's status in words. Part of this may echo words in the notes themselves. The same readouts do not separate executed from resisted notes, and the planted action's own words almost never appear at the memory result or where the reply starts.</figcaption></figure>
+<figure><div class="ft">Decoding from SAE features vs the dense probe on the same notes</div><div class="fs">Grouped cross validation by case, AUROC within wording, layer 15, end of memory result</div>
+<div class="legend"><span><i class="sw" style="background:var(--aqua)"></i>SAE features, sparse classifier</span><span><i class="sw" style="background:var(--gray)"></i>SAE features, dense classifier</span><span><i class="sw" style="background:var(--probe)"></i>Raw activations (our probe)</span></div>
+<div id="fig-sae"></div>
+<figcaption>Andy Arditi's BatchTopK SAEs (131k features). 53 of 92 features differ between poisoned notes and twins at FDR 5%, but their automatic labels describe the local token (braces, punctuation, code). For execution, no feature survives correction and classifiers on features sit at chance. Neuronpedia only accepts text, so these prompts were re-rendered with shortened tool schemas and only the top 100 features per prompt were kept.</figcaption></figure>
+</section>
+
+<section id="why">
+<h2>Why we think we see these readings</h2>
+<p>These are our best explanations, with how confident we are in each. The ones marked medium or low are hypotheses the next experiments test.</p>
+<h3>Poisoned vs twin is trivial because the two differ in obvious words <span class="conf hi">High</span></h3>
+<p>Poisoned notes say things like "still pending, complete it now"; twins say the action was done. Any reader keyed on those words separates them. The model encodes the same distinction early because attention carries the note's content to later positions within one or two layers. The J-Lens readouts ("task, reminder" vs "completed, earlier") show the model represents it in words too.</p>
+<h3>Text readers fail within wording because they memorize vocabulary, not the decision <span class="conf md">Medium</span></h3>
+<p>Once wording is fixed, what decides execution is how the planted action relates to the user's request and the tools at hand: whether it is plausible in context, whether it fits the domain, how disruptive it is. TF-IDF can only count words and phrases, so it learns which domains and actions tend to be executed. That transfers poorly to unseen domains, which is exactly where it falls to 0.62. The probe reads a representation the model has already formed by combining note, request and context, which is closer to the decision itself.</p>
+<h3>The probe reads a graded disposition, not a yes/no switch <span class="conf md">Medium</span></h3>
+<p>Training on the execution rate helps the probe (0.860 to 0.909) but barely helps text (0.793 to 0.805), and the probe correlates better with the rate. The yes/no label is noisy: 160 notes labelled resisted were executed at least once in 8 tries. A probe whose score tracks the model's propensity benefits from soft labels; a text model has no propensity to track.</p>
+<h3>The gap is smaller on the 512 note split because it has less to work with <span class="conf md">Medium</span></h3>
+<p>That split has 4 wordings, two of which are executed most of the time (wording 0 at 92% of notes), leaving few executed vs resisted pairs inside the same wording. Nested model selection also removed a small optimistic bias, lowering the gap from +0.062 to +0.035. With 888 notes and all 6 wordings there are enough within wording pairs to see the difference.</p>
+<h3>Wording 4's poisoned notes look like twins to the probe because the model does not take them seriously <span class="conf lo">Low to medium</span></h3>
+<p>The only poisoned notes the probe misclassified are in the wording executed 2% of the time. One reading: the status direction partly encodes "how much this reads as an open task to me", which overlaps with the disposition to act.</p>
+<h3>The guard model scores low because it answers a different question <span class="conf hi">High</span></h3>
+<p>Every poisoned note is malicious, so a correct guard flags all of them, executed or not. Whether gpt-oss-20b obeys a particular note is a fact about this model's internals, not about the text, so a separate model reading the text cannot know it.</p>
+<h3>SAE features and lens readouts miss the execution signal for several possible reasons <span class="conf lo">Low</span></h3>
+<p>The signal may be spread across many weak features, sit outside the top 100 we could retrieve, live in the SAE's reconstruction error, or be weakened by the shortened prompts. For the lens, the decision may not be verbalizable at these positions; gpt-oss reasons before acting, so the decision may form later, in its reasoning tokens. A steering experiment and the SAE weights run locally will tell these apart.</p>
+<h3>Attention based detectors will likely struggle here <span class="conf lo">Prediction</span></h3>
+<p>Attention Tracker and AttnDA look for attention leaving the user's instruction. Here the agent executes the payload alongside the task, not instead of it (29.2% of rollouts do both, 0.2% only the payload), so attention to the task may not drop. Half of gpt-oss-20b's layers also only see the last 128 tokens, while the user request sits 123 to 818 tokens back. This is the RQ1 test still to run.</p>
+</section>
+
+<section id="changes">
+<h2>What we changed since the October report</h2>
+<div class="tw"><table>
+<thead><tr><th>Change</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Main metric is AUROC within the same wording</td><td>Wording alone predicts most of the label and inflates every method's overall AUROC</td></tr>
+<tr><td>Execution rate (0 to 8 of 8) is the primary label</td><td>The yes/no cut at 4 of 8 throws away information and is noisy</td></tr>
+<tr><td>TF-IDF on the full prompt is the comparison baseline</td><td>It is the strongest text reader we have; the note alone is too easy to beat</td></tr>
+<tr><td>Nested selection of the probe's regularization</td><td>Removes optimism from choosing settings on test folds</td></tr>
+<tr><td>Leave one domain out reported within wording, with baselines</td><td>The old domain averaged number mostly measured wording</td></tr>
+<tr><td>E3 reported as uninformative</td><td>2 positives; shuffled labels score 0.97</td></tr>
+<tr><td>Real scikit-learn everywhere</td><td>A homemade reimplementation used earlier was off by up to 0.03</td></tr>
+<tr><td>Jev baseline rebuilt</td><td>Full or random sets, saved scores, error counts, neutral policy, "will it execute" question, few shot and train fitted variants</td></tr>
+<tr><td>Attention baselines and interpretability readouts added</td><td>RQ1 of the 6 November plan and the mentors' request for SAE and J-Lens</td></tr>
+<tr><td>MemoryDojo terminology adopted</td><td>Match the shared repository</td></tr>
+<tr><td>Model pinned to gpt-oss-20b in the attention scripts</td><td>The shared loader's default changed to Qwen2-1.5B, but the dataset's token ids belong to gpt-oss-20b</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="built">
+<h2>Built and tested, not yet run</h2>
+<ul>
+<li><b>Attention baselines on real attention.</b> Attention Tracker (head selection on 30 calibration sentences, plus heads fitted on our labels), AttnDA (all 1,536 heads, shrinkage LDA, plus full attention layers only), AttentionDefense (system prompt attention, random forest), and the last layer FC baseline. About 25 minutes on one A100.</li>
+<li><b>Fair Jev rerun.</b> About 1,000 API calls for both tasks on E1 and E2, roughly 5 cents.</li>
+<li><b>Multi model pipeline.</b> Renders all 1,924 prompts in each model's own chat format, checks them token for token against vLLM, samples each model's own behaviour, captures activations, and runs the same pre-registered analysis at the same relative depth as layers 14 to 19 of 24. A model is analysed only if at least 50 notes are executed, at least 50 resisted, and at least 2 wordings contain both.</li>
+<li><b>Steering test.</b> Push the residual stream along the probe direction (−4 to +4 standard deviations), along a random direction as a control, and remove the direction entirely, then measure how often the first response executes the note.</li>
+<li><b>Cluster scripts</b> for DeltaAI (waiting for access) and RunPod.</li>
+</ul>
+</section>
+
+<section id="next">
+<h2>Next steps and why</h2>
+<div class="tw"><table>
+<thead><tr><th>Order</th><th>Experiment</th><th>Question it answers</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td>Attention baselines on gpt-oss-20b</td><td>RQ1: do attention trackers fail where the probe works?</td><td class="n">~$5</td></tr>
+<tr><td class="n">2</td><td>Steering and ablation along the probe direction</td><td>Is the probe reading something the model uses, or a correlate? This is the strongest single addition to the paper.</td><td class="n">~$10</td></tr>
+<tr><td class="n">3</td><td>Fair Jev rerun</td><td>Does a guard model asked the right question do better?</td><td class="n">~$0.05</td></tr>
+<tr><td class="n">4</td><td>Multi model pilot (Qwen2.5 7B and 14B, Qwen3 8B, Llama 3.1 8B, Mistral 7B)</td><td>Which models execute notes often enough to study?</td><td class="n">~$5 each</td></tr>
+<tr><td class="n">5</td><td>Full runs on the models that pass, plus a size ladder</td><td>Does the probe's advantage over text generalize across families and sizes?</td><td class="n">~$40 to $80 each</td></tr>
+<tr><td class="n">6</td><td>behavior_v2: 30+ wordings, timing minimal pairs, payload free twins, untriggerable notes, pre-registered</td><td>Makes "works on new wordings" a real test and fixes E3</td><td class="n">~$100</td></tr>
+<tr><td class="n">7</td><td>Not yet triggered sessions (Huy's multi turn data) and MemoryDojo</td><td>RQ1 and RQ4: can we catch a note before its trigger arrives?</td><td class="n">TBD</td></tr>
+<tr><td class="n">8</td><td>Adaptive attacker that rewrites notes to evade the probe</td><td>How robust is the probe compared with text, Jev and attention detectors?</td><td class="n">~$150</td></tr>
+</tbody></table></div>
+<p>Budget: $1,000 of RunPod credit, roughly 300 to 600 GPU hours. Steps 1 to 5 fit in about $500, leaving room for steps 6 to 8 and reruns.</p>
+
+</section>
+
+<section id="limits">
+<h2>Limitations</h2>
+<ul>
+<li>One model, one attack family, one trigger turn per prompt, and canned tool results after the first step.</li>
+<li>148 cases and 6 wordings; intervals are wide and several comparisons rest on few wordings.</li>
+<li>Results after phase 1 are exploratory and some analysis choices followed phase 1 results.</li>
+<li>The probe is correlational until the steering test runs.</li>
+<li>The note is always in context, so this is detection at the trigger turn, not of a note waiting for its trigger.</li>
+<li>The Neuronpedia analyses use small samples and, for SAEs, approximate prompts.</li>
+</ul>
+</section>
+
+<section id="files">
+<h2>Files</h2>
+<p>Everything is on the <code>raghav/phase2</code> branch of <a href="https://github.com/pndh/sleeper_detection/tree/raghav/phase2">pndh/sleeper_detection</a>. Main entry points:</p>
+<ul>
+<li><code>results/probe_live_inert/FINDINGS.md</code>, <code>PHASE2_ANALYSIS.md</code>, <code>SAE_JLENS.md</code>, <code>TERMINOLOGY.md</code></li>
+<li><code>interp/probe_live_inert/phase2_analysis.py</code>, <code>jev_baseline.py</code>, <code>attention_capture.py</code>, <code>attention_baselines.py</code>, <code>sae_jlens_analysis.py</code></li>
+<li><code>interp/phase3/</code> for the multi model and steering pipeline; <code>deltaai/</code> for cluster scripts</li>
+</ul>
+</section>
+
+<footer>Numbers come from the repository's result files as of 14 November 2026. Charts are drawn from those values; hover a mark for its exact number.</footer>
+</main>
+</div>
+
+<script>
+(function () {
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent, text) {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function tip(node, s) { el("title", {}, node, s); return node; }
+  function svg(id, w, h) {
+    const s = el("svg", { viewBox: `0 0 ${w} ${h}`, class: "chart", role: "img" });
+    document.getElementById(id).appendChild(s);
+    return s;
+  }
+  const f2 = v => v.toFixed(2), f3 = v => v.toFixed(3);
+
+  // Vertical bars with value labels
+  function bars(id, data, o) {
+    const W = 460, H = 240, m = { l: 40, r: 10, t: 14, b: 34 };
+    const s = svg(id, W, H), iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const x = i => m.l + i * iw / data.length, bw = iw / data.length - 14, y = v => m.t + ih * (1 - v / o.max);
+    for (let t = 0; t <= o.max + 1e-9; t += o.step) {
+      el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "gridl" }, s);
+      el("text", { x: m.l - 6, y: y(t) + 4, "text-anchor": "end" }, s, o.fmt(t));
+    }
+    data.forEach((d, i) => {
+      const h = Math.max(ih * d.v / o.max, 1.5), bx = x(i) + 7;
+      tip(el("path", { d: `M${bx},${y(0)} V${y(d.v) + 4} q0,-4 4,-4 h${bw - 8} q4,0 4,4 V${y(0)} Z`, class: d.cls || "probe" }, s), `${d.label}: ${o.fmt(d.v)}`);
+      el("text", { x: bx + bw / 2, y: y(d.v) - 6, "text-anchor": "middle", class: "val" }, s, o.fmt(d.v));
+      el("text", { x: bx + bw / 2, y: H - 12, "text-anchor": "middle" }, s, d.label);
+    });
+    el("line", { x1: m.l, x2: W - m.r, y1: y(0), y2: y(0), class: "axis" }, s);
+  }
+
+  // Horizontal bars (single series), long labels on the left
+  function hbars(id, data, o) {
+    const W = 460, rowH = 34, m = { l: o.left || 170, r: 50, t: 6, b: 24 };
+    const H = m.t + m.b + rowH * data.length, s = svg(id, W, H), iw = W - m.l - m.r;
+    const x = v => m.l + iw * v / o.max;
+    for (let t = 0; t <= o.max + 1e-9; t += o.step) {
+      el("line", { x1: x(t), x2: x(t), y1: m.t, y2: H - m.b, class: "gridl" }, s);
+      el("text", { x: x(t), y: H - 6, "text-anchor": "middle" }, s, o.fmt(t));
+    }
+    data.forEach((d, i) => {
+      const yy = m.t + i * rowH + 8, w = Math.max(iw * d.v / o.max, 2);
+      tip(el("path", { d: `M${m.l},${yy} h${w - 4} q4,0 4,4 v${rowH - 24} q0,4 -4,4 h${-(w - 4)} Z`, class: d.cls || "probe" }, s), `${d.label}: ${o.fmt(d.v)}`);
+      el("text", { x: m.l - 8, y: yy + (rowH - 16) / 2 + 4, "text-anchor": "end" }, s, d.label);
+      el("text", { x: m.l + w + 6, y: yy + (rowH - 16) / 2 + 4, class: "val" }, s, o.fmt(d.v));
+    });
+  }
+
+  // Line chart with optional shaded band
+  function line(id, xs, ys, o) {
+    const W = o.W || 760, H = o.H || 250, m = { l: 44, r: 16, t: 14, b: 40 };
+    const s = svg(id, W, H), iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const x = v => m.l + iw * (v - o.x0) / (o.x1 - o.x0), y = v => m.t + ih * (1 - (v - o.y0) / (o.y1 - o.y0));
+    if (o.band) el("rect", { x: x(o.band[0]), y: m.t, width: x(o.band[1]) - x(o.band[0]), height: ih, class: "band" }, s);
+    for (let t = o.y0; t <= o.y1 + 1e-9; t += o.ystep) {
+      el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), class: "gridl" }, s);
+      el("text", { x: m.l - 6, y: y(t) + 4, "text-anchor": "end" }, s, o.yfmt(t));
+    }
+    o.xticks.forEach(t => el("text", { x: x(t), y: H - 20, "text-anchor": "middle" }, s, o.xfmt(t)));
+    el("text", { x: m.l + iw / 2, y: H - 3, "text-anchor": "middle" }, s, o.xlabel);
+    if (o.ref !== undefined) el("line", { x1: m.l, x2: W - m.r, y1: y(o.ref), y2: y(o.ref), class: "ref" }, s);
+    el("polyline", { points: xs.map((v, i) => `${x(v)},${y(ys[i])}`).join(" "), fill: "none", class: "probe", "stroke-width": 2, "stroke-linejoin": "round" }, s).style.fill = "none";
+    xs.forEach((v, i) => tip(el("circle", { cx: x(v), cy: y(ys[i]), r: 4.5, class: "probe ring" }, s), `${o.ptlabel(v)}: ${o.yfmt2(ys[i])}`));
+  }
+
+  // Dot plot with CIs, two series per row
+  function dots(id, rows, o) {
+    const W = 760, rowH = o.rowH || 46, m = { l: o.left || 250, r: 20, t: 8, b: 30 };
+    const H = m.t + m.b + rowH * rows.length, s = svg(id, W, H), iw = W - m.l - m.r;
+    const x = v => m.l + iw * (v - o.x0) / (o.x1 - o.x0);
+    for (let t = o.x0; t <= o.x1 + 1e-9; t += o.step) {
+      el("line", { x1: x(t), x2: x(t), y1: m.t, y2: H - m.b, class: "gridl" }, s);
+      el("text", { x: x(t), y: H - 10, "text-anchor": "middle" }, s, o.fmt(t));
+    }
+    if (o.ref !== undefined) el("line", { x1: x(o.ref), x2: x(o.ref), y1: m.t, y2: H - m.b, class: "ref" }, s);
+    rows.forEach((r, i) => {
+      const yc = m.t + i * rowH + rowH / 2;
+      el("text", { x: m.l - 10, y: yc + 4, "text-anchor": "end" }, s, r.label);
+      r.series.forEach((p, j) => {
+        const yy = yc + (j - (r.series.length - 1) / 2) * (o.gap || 12);
+        if (p.ci) el("line", { x1: x(p.ci[0]), x2: x(p.ci[1]), y1: yy, y2: yy, class: p.cls, "stroke-width": 2.5, "stroke-linecap": "round" }, s);
+        tip(el("circle", { cx: x(p.v), cy: yy, r: 5.5, class: p.cls + " ring" }, s), `${r.label}, ${p.name}: ${o.fmt2(p.v)}${p.ci ? ` [${o.fmt2(p.ci[0])}, ${o.fmt2(p.ci[1])}]` : ""}`);
+        if (o.labels) el("text", { x: x(p.ci ? p.ci[1] : p.v) + 8, y: yy + 4, class: "val" }, s, o.fmt2(p.v));
+      });
+    });
+  }
+
+  // Diverging horizontal bars: left = twin counts, right = poisoned counts
+  function diverge(id, rows) {
+    const W = 760, rowH = 26, mid = 380, half = 300, m = { t: 22, b: 10 }, max = 48;
+    const H = m.t + m.b + rowH * rows.length, s = svg(id, W, H);
+    el("text", { x: mid - 8, y: 13, "text-anchor": "end" }, s, "benign twin");
+    el("text", { x: mid + 8, y: 13 }, s, "poisoned note");
+    rows.forEach((r, i) => {
+      const yy = m.t + i * rowH + 3, bh = rowH - 9;
+      const wp = half * r.p / max, wt = half * r.t / max;
+      if (r.p) tip(el("rect", { x: mid + 1, y: yy, width: wp, height: bh, rx: 3, class: "probe" }, s), `${r.tok}: poisoned ${r.p} of 48`);
+      if (r.t) tip(el("rect", { x: mid - 1 - wt, y: yy, width: wt, height: bh, rx: 3, class: "textc" }, s), `${r.tok}: twin ${r.t} of 48`);
+      const right = r.p >= r.t;
+      el("text", { x: right ? mid + wp + 8 : mid - wt - 8, y: yy + bh / 2 + 4, "text-anchor": right ? "start" : "end", class: "val" }, s, `${r.tok}  ${r.p} vs ${r.t}`);
+    });
+    el("line", { x1: mid, x2: mid, y1: m.t - 4, y2: H - m.b, class: "axis" }, s);
+  }
+
+  bars("fig-rate", [0.782, 0.108, 0.122, 0.622, 0.017, 0.111].map((v, i) => ({ label: `wording ${i}`, v })),
+       { max: 1, step: 0.25, fmt: v => `${Math.round(v * 100)}%` });
+  hbars("fig-roll", [
+    { label: "User task only", v: 69.3 }, { label: "User task and payload", v: 29.2, cls: "textc" },
+    { label: "Neither", v: 1.3, cls: "grayc" }, { label: "Payload only", v: 0.2, cls: "grayc" }],
+    { max: 80, step: 20, fmt: v => `${v}%`, left: 150 });
+  const L = [0.50, 0.94, 0.84, 0.83, 0.84, 0.83, 0.91, 0.90, 0.94, 0.95, 0.98, 0.99, 0.99, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 0.99, 0.99, 0.99];
+  line("fig-layer", L.map((_, i) => i), L, { x0: 0, x1: 24, y0: 0.4, y1: 1, ystep: 0.1, yfmt: f2, yfmt2: f2, xticks: [0, 4, 8, 12, 16, 20, 24],
+       xfmt: v => v, xlabel: "Residual layer (0 = embeddings)", band: [14, 19], ref: 0.5, ptlabel: v => `Layer ${v}` });
+  dots("fig-prereg", [
+    { label: "E1, new wordings", series: [{ name: "Probe", v: 0.945, ci: [0.898, 0.980], cls: "probe" }, { name: "TF-IDF note", v: 0.809, ci: [0.684, 0.920], cls: "textc" }, { name: "TF-IDF full prompt", v: 0.890, cls: "grayc" }] },
+    { label: "E2, new domains", series: [{ name: "Probe", v: 0.927, ci: [0.866, 0.979], cls: "probe" }, { name: "TF-IDF note", v: 0.890, ci: [0.797, 0.963], cls: "textc" }, { name: "TF-IDF full prompt", v: 0.901, cls: "grayc" }] }],
+    { x0: 0.6, x1: 1.0, step: 0.1, fmt: f2, fmt2: f3, ref: undefined, left: 140, rowH: 72, gap: 18, labels: true });
+  line("fig-eff", [10, 20, 40, 60, 80, 100], [0.741, 0.837, 0.890, 0.941, 0.945, 0.946], { x0: 0, x1: 100, y0: 0.6, y1: 1, ystep: 0.1, yfmt: f2, yfmt2: f3,
+       xticks: [0, 20, 40, 60, 80, 100], xfmt: v => `${v}%`, xlabel: "Share of training cases", ptlabel: v => `${v}% of cases`, W: 460, H: 260 });
+  dots("fig-within", [
+    { label: "A. New domains (43 folds)", series: [{ name: "Probe", v: 0.821, ci: [0.76, 0.88], cls: "probe" }, { name: "TF-IDF full", v: 0.621, ci: [0.535, 0.706], cls: "textc" }] },
+    { label: "A, pairs from one domain", series: [{ name: "Probe", v: 0.768, ci: [0.645, 0.865], cls: "probe" }, { name: "TF-IDF full", v: 0.598, ci: [0.456, 0.725], cls: "textc" }] },
+    { label: "B. Held out cases, rate target", series: [{ name: "Probe", v: 0.909, ci: [0.867, 0.944], cls: "probe" }, { name: "TF-IDF full", v: 0.805, ci: [0.739, 0.864], cls: "textc" }] },
+    { label: "B2. Held out cases, yes/no", series: [{ name: "Probe", v: 0.860, ci: [0.809, 0.904], cls: "probe" }, { name: "TF-IDF full", v: 0.793, ci: [0.719, 0.852], cls: "textc" }] },
+    { label: "C. 512 notes, nested C", series: [{ name: "Probe", v: 0.849, ci: [0.786, 0.901], cls: "probe" }, { name: "TF-IDF full", v: 0.814, ci: [0.744, 0.875], cls: "textc" }] },
+    { label: "Phase 1 control, 512 notes", series: [{ name: "Probe", v: 0.876, ci: [0.818, 0.920], cls: "probe" }, { name: "TF-IDF full", v: 0.814, ci: [0.747, 0.876], cls: "textc" }] }],
+    { x0: 0.4, x1: 1.0, step: 0.1, fmt: f2, fmt2: f3, ref: 0.5, left: 230 });
+  dots("fig-diff", [
+    { label: "A. New domains", series: [{ name: "Difference", v: 0.200, ci: [0.083, 0.318], cls: "probe" }] },
+    { label: "B. Held out cases, rate target", series: [{ name: "Difference", v: 0.104, ci: [0.035, 0.173], cls: "probe" }] },
+    { label: "B2. Held out cases, yes/no", series: [{ name: "Difference", v: 0.067, ci: [-0.013, 0.149], cls: "grayc" }] },
+    { label: "C. 512 notes, nested C", series: [{ name: "Difference", v: 0.035, ci: [-0.052, 0.127], cls: "grayc" }] },
+    { label: "Phase 1 control", series: [{ name: "Difference", v: 0.062, ci: [-0.016, 0.141], cls: "grayc" }] }],
+    { x0: -0.1, x1: 0.35, step: 0.05, fmt: v => (v > 0 ? "+" : "") + v.toFixed(2), fmt2: v => (v > 0 ? "+" : "") + v.toFixed(3), ref: 0, left: 230, rowH: 34, labels: true });
+  dots("fig-jev", [
+    { label: "Poisoned vs twin, E1 (40, 20)", series: [{ name: "Probe", v: 1.0, cls: "probe" }, { name: "Jev", v: 0.816, cls: "grayc" }] },
+    { label: "Poisoned vs twin, E2 (40, 20)", series: [{ name: "Probe", v: 1.0, cls: "probe" }, { name: "Jev", v: 0.924, cls: "grayc" }] },
+    { label: "Execution, E1 (33, 13)", series: [{ name: "Probe", v: 0.981, cls: "probe" }, { name: "Jev", v: 0.473, cls: "grayc" }] },
+    { label: "Execution, E2 (40, 20)", series: [{ name: "Probe", v: 0.905, cls: "probe" }, { name: "Jev", v: 0.647, cls: "grayc" }] }],
+    { x0: 0.4, x1: 1.0, step: 0.1, fmt: f2, fmt2: f3, ref: 0.5, left: 230, rowH: 40, labels: true });
+  diverge("fig-jlens", [
+    { tok: "automatically", p: 33, t: 0 }, { tok: "reminder", p: 32, t: 2 }, { tok: "checklist", p: 28, t: 0 }, { tok: "pinned", p: 27, t: 0 },
+    { tok: "requester", p: 24, t: 0 }, { tok: "urg(ent)", p: 18, t: 0 }, { tok: "task", p: 12, t: 0 },
+    { tok: "completed", p: 0, t: 39 }, { tok: "etc", p: 0, t: 37 }, { tok: "disclosures", p: 2, t: 33 }, { tok: "earlier", p: 0, t: 18 }, { tok: "canceled", p: 0, t: 13 }]);
+  dots("fig-sae", [
+    { label: "Poisoned vs benign twin", series: [{ name: "SAE sparse", v: 0.97, cls: "aqua" }, { name: "SAE dense", v: 0.999, cls: "grayc" }, { name: "Raw activations", v: 1.0, cls: "probe" }] },
+    { label: "Execution, within wording", series: [{ name: "SAE sparse", v: 0.50, cls: "aqua" }, { name: "SAE dense", v: 0.461, cls: "grayc" }, { name: "Raw activations", v: 0.763, cls: "probe" }] }],
+    { x0: 0.3, x1: 1.0, step: 0.1, fmt: f2, fmt2: f3, ref: 0.5, left: 200, rowH: 72, gap: 18, labels: true });
+})();
+</script>
+
+</body>
+</html>
