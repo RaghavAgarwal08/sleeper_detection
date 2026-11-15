@@ -16,7 +16,7 @@ fired) and triggered resisted (formerly not fired).
      **+0.200 [+0.083, +0.318]**.
    * Held out cases, execution rate as the training target (all 888 notes): probe 0.909 vs 0.805, difference
      **+0.104 [+0.035, +0.173]**; Spearman with the execution rate 0.529 vs 0.364.
-   * The original 512 note control, now with nested choice of C: 0.849 vs 0.814, difference +0.035 [−0.043, +0.132],
+   * The original 512 note control, now with nested choice of C: 0.849 vs 0.814, difference +0.035 [−0.052, +0.127],
      not significant.
    These analyses were run after the pre-registered report and are exploratory.
 3. **A strong guard model does not see it.** Jev (TypeSafe) scored 0.473 on the execution task on E1, where the probe scores
@@ -102,7 +102,7 @@ fold; TF-IDF uses C = 1.0, the value its pre-registered search picked. Full tabl
 | A, only pairs from the same held out domain | 0.768 | 0.598 | wide intervals |
 | B. Held out cases, trained on execution rate, 888 notes | 0.909 | 0.805 | **+0.104 [+0.035, +0.173]** |
 | B2. Same folds, trained on reached execution yes/no | 0.860 | 0.793 | +0.067 [−0.013, +0.149] |
-| C. Phase 1 control rerun with nested C, 512 notes | 0.849 | 0.814 | +0.035 [−0.043, +0.132] |
+| C. Phase 1 control rerun with nested C, 512 notes | 0.849 | 0.814 | +0.035 [−0.052, +0.127] |
 
 Spearman correlation with the execution rate, within wording: A 0.381 vs 0.235 (difference +0.146 [+0.033, +0.257]);
 B 0.529 vs 0.364 (+0.165 [+0.091, +0.240]); B2 0.450 vs 0.352 (+0.098 [+0.017, +0.186]).
