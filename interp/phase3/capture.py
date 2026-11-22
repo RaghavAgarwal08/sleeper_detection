@@ -8,7 +8,7 @@ Saves interp/data/phase3/<model>/activations.npz with
   window         the residual indices averaged
   sweep_window_mean [n, P, d] float16      window mean at the SWEEP positions (always saved; Ashok and May 2025 found
                                           that the position read matters), names in sweep_positions
-The probes in analyze.py read window_mean; the layer sweep and trajectory.py read layers; sweeps.py reads sweep_*.
+The probes in analyze.py read window_mean; the layer sweep and the trajectory geometry in sweeps.py read layers; the position sweep in sweeps.py reads sweep_*.
 
     python interp/phase3/capture.py --model qwen2.5-7b                   # about 10 to 30 minutes per model
 """

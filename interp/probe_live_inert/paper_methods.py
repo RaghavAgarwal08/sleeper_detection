@@ -15,7 +15,7 @@
      defers otherwise. Thresholds are chosen on half of the cases (split conformal style) to reach a target accuracy,
      then coverage and accuracy are measured on the other half; 200 random case splits.
   4. Layer and position sweeps and trajectory geometry (Ashok and May; Pandey et al. 2026) need every layer and more
-     positions: interp/phase3/capture.py --positions sweep and interp/phase3/trajectory.py on the pod.
+     positions: interp/phase3/capture.py (saves the sweep positions) then interp/phase3/sweeps.py on the pod.
 
 Population: the 888 poisoned notes. Folds: 5 fold GroupKFold by case, the same folds as PHASE2_ANALYSIS.md section B.
 Uncertainty: 1,000 case resamples, 95% percentile intervals.
@@ -332,7 +332,7 @@ for k, c in defer["wording_3_only"].items():
 L += ["", "## 4. Needs the GPU", "",
       "* Generic yes/no defection probe (MacDiarmid et al.): `interp/phase3/generic_probe.py`, then rerun this script.",
       "* Position and layer sweeps (Ashok and May) and trajectory geometry (Pandey et al.): "
-      "`interp/phase3/capture.py --positions sweep`, then `interp/phase3/trajectory.py`.",
+      "`interp/phase3/capture.py` (always saves the sweep positions), then `interp/phase3/sweeps.py`.",
       "* Function vectors (Todd et al.): head level activation patching, a later session."]
 (RES / "PAPER_METHODS.md").write_text("\n".join(L) + "\n")
 log("wrote", RES / "PAPER_METHODS.md")

@@ -189,6 +189,8 @@ or altered by the shortened prompts. Checking which needs the SAE weights on a G
 
 ## 8b. Methods from four papers (exploratory, CPU, `PAPER_METHODS.md`)
 
+Full write up with figures: `PAPER_METHODS_REPORT.md`.
+
 **Conditional probing (Hewitt et al. 2021).** A probe on the wording, TF-IDF on the full prompt and the activations
 together beats the same probe without the activations by 0.035 bits per note [0.021, 0.049] in held out cross entropy
 and by 0.089 [0.046, 0.130] in AUROC within wording. The activations carry information about execution that the

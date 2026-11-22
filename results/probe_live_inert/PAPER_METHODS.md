@@ -59,5 +59,5 @@ Within wording 3 only (where wording cannot help), accuracy of the most confiden
 ## 4. Needs the GPU
 
 * Generic yes/no defection probe (MacDiarmid et al.): `interp/phase3/generic_probe.py`, then rerun this script.
-* Position and layer sweeps (Ashok and May) and trajectory geometry (Pandey et al.): `interp/phase3/capture.py --positions sweep`, then `interp/phase3/trajectory.py`.
+* Position and layer sweeps (Ashok and May) and trajectory geometry (Pandey et al.): `interp/phase3/capture.py` (always saves the sweep positions), then `interp/phase3/sweeps.py`.
 * Function vectors (Todd et al.): head level activation patching, a later session.
