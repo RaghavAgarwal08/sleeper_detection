@@ -8,8 +8,11 @@ if [[ ! -d sleeper_detection ]]; then
   git clone --branch raghav/phase2 --single-branch https://github.com/pndh/sleeper_detection.git
 fi
 cd sleeper_detection && git pull -q
-export HF_HOME=/workspace/hf HF_HUB_ENABLE_HF_TRANSFER=1
-pip install -q -U "transformers>=4.56" accelerate "huggingface_hub[hf_transfer]" scikit-learn scipy matplotlib \
+export HF_HOME=/workspace/hf PIP_BREAK_SYSTEM_PACKAGES=1
+# Keep the template's torch (no surprise CUDA upgrade) and replace Debian's PyJWT, which pip cannot uninstall.
+python -c "import torch; print('torch==' + torch.__version__.split('+')[0])" > /tmp/pin.txt
+pip install -q --ignore-installed PyJWT
+pip install -q -U -c /tmp/pin.txt "transformers>=4.56" accelerate huggingface_hub scikit-learn scipy matplotlib \
     openai "openai-agents>=0.14.0" pydantic json-repair
 python -c "import torch; assert torch.cuda.is_available(); print('GPU', torch.cuda.get_device_name(0), round(torch.cuda.get_device_properties(0).total_memory/2**30), 'GB')"
 python -c "from huggingface_hub import snapshot_download as s; print(s('openai/gpt-oss-20b', ignore_patterns=['original/*','metal/*']))"
