@@ -187,6 +187,25 @@ result). Neuronpedia only accepts text, so prompts were re-rendered with tool sc
 So the execution signal is either spread across many small latents, outside the top 100, in the SAE's reconstruction error,
 or altered by the shortened prompts. Checking which needs the SAE weights on a GPU with the exact prompts.
 
+## 8b. Methods from four papers (exploratory, CPU, `PAPER_METHODS.md`)
+
+**Conditional probing (Hewitt et al. 2021).** A probe on the wording, TF-IDF on the full prompt and the activations
+together beats the same probe without the activations by 0.035 bits per note [0.021, 0.049] in held out cross entropy
+and by 0.089 [0.046, 0.130] in AUROC within wording. The activations carry information about execution that the
+words and the wording do not. The reverse is not true: adding TF-IDF to the activations does not help (−0.018 bits
+[−0.035, −0.001]). The activations alone reach 0.47 bits against 0.52 for text and 0.87 for a constant guess.
+
+**Directions never trained on execution (MacDiarmid et al. 2024).** The poisoned vs benign twin direction, trained
+without any execution labels, predicts execution within wording at 0.695 [0.619, 0.762], above the 95th percentile
+of 1,000 random directions (0.647, best 0.707 even with the sign chosen after the fact). A poisoned minus clean
+difference of means points the wrong way (0.364). The post's difference of means estimator, which separated their
+sleeper agents almost perfectly, reaches only 0.563 here; a trained probe on the same folds reaches 0.885. The
+generic yes/no defection probe from the post needs the GPU (`interp/phase3/generic_probe.py`).
+
+**Confidence based deferral (Ashok and May 2025).** If the detector may defer when unsure, at 98% accuracy the probe
+answers 74% of notes and full prompt TF-IDF 46%; at 95% accuracy, 90% vs 73%. Within wording 3 alone, the probe's
+most confident half is 92% accurate, TF-IDF's 87%.
+
 ## 9. What this does and does not show
 
 It shows that gpt-oss-20b represents whether a memory note is pending, and that within a wording its activations at the

@@ -54,3 +54,11 @@ Everything else (layer sweeps, probes at other positions, J-lens or SAE follow u
 | Reserve for reruns | | $150 |
 
 Every pod is stopped when its script ends; scripts write a results archive to download before stopping.
+
+## 5. Additions after this plan (22 November 2026, exploratory)
+
+Added after reading MacDiarmid et al. 2024, Ashok and May 2025, Hewitt et al. 2021, Todd et al. 2024 and Pandey et
+al. 2026, before any GPU run: conditional probing, directions not trained on execution and confidence based
+deferral (`interp/probe_live_inert/paper_methods.py`, CPU); the generic yes/no defection probe
+(`generic_probe.py`), a position sweep over 8 label free positions and trajectory geometry (`sweeps.py`) on the pod.
+All are exploratory and do not change H1 to H5.

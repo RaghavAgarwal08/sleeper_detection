@@ -1,0 +1,243 @@
+{
+ "conditional_probing": {
+  "entropy_bits_constant_predictor": 0.8737,
+  "feature_sets": {
+   "word": {
+    "ce_bits": 0.5641,
+    "auroc_within_wording": 0.422,
+    "auroc_overall": 0.912
+   },
+   "text": {
+    "ce_bits": 0.5203,
+    "auroc_within_wording": 0.811,
+    "auroc_overall": 0.958
+   },
+   "word+text": {
+    "ce_bits": 0.5247,
+    "auroc_within_wording": 0.793,
+    "auroc_overall": 0.954
+   },
+   "act": {
+    "ce_bits": 0.4724,
+    "auroc_within_wording": 0.908,
+    "auroc_overall": 0.978
+   },
+   "word+act": {
+    "ce_bits": 0.4646,
+    "auroc_within_wording": 0.914,
+    "auroc_overall": 0.979
+   },
+   "text+act": {
+    "ce_bits": 0.4846,
+    "auroc_within_wording": 0.892,
+    "auroc_overall": 0.974
+   },
+   "word+text+act": {
+    "ce_bits": 0.4902,
+    "auroc_within_wording": 0.882,
+    "auroc_overall": 0.971
+   },
+   "word+text+act_note": {
+    "ce_bits": 0.4961,
+    "auroc_within_wording": 0.868,
+    "auroc_overall": 0.968
+   }
+  },
+  "gains": {
+   "word+act over word": {
+    "bits": 0.0995,
+    "bits_ci": [
+     0.074,
+     0.131
+    ],
+    "auroc_within_wording": 0.492,
+    "auroc_ci": [
+     0.404,
+     0.58
+    ]
+   },
+   "text+act over text": {
+    "bits": 0.0357,
+    "bits_ci": [
+     0.022,
+     0.051
+    ],
+    "auroc_within_wording": 0.081,
+    "auroc_ci": [
+     0.041,
+     0.124
+    ]
+   },
+   "word+text+act over word+text": {
+    "bits": 0.0345,
+    "bits_ci": [
+     0.021,
+     0.049
+    ],
+    "auroc_within_wording": 0.089,
+    "auroc_ci": [
+     0.046,
+     0.13
+    ]
+   },
+   "word+text+act_note over word+text": {
+    "bits": 0.0286,
+    "bits_ci": [
+     0.016,
+     0.042
+    ],
+    "auroc_within_wording": 0.075,
+    "auroc_ci": [
+     0.033,
+     0.12
+    ]
+   },
+   "word+text+act over act": {
+    "bits": -0.0178,
+    "bits_ci": [
+     -0.035,
+     -0.001
+    ],
+    "auroc_within_wording": -0.026,
+    "auroc_ci": [
+     -0.068,
+     0.015
+    ]
+   }
+  }
+ },
+ "directions": {
+  "poisoned_vs_twin_probe": {
+   "auroc_within_wording": 0.695,
+   "ci": [
+    0.619,
+    0.762
+   ],
+   "auroc_overall": 0.914
+  },
+  "poisoned_minus_clean_means": {
+   "auroc_within_wording": 0.364,
+   "ci": [
+    0.282,
+    0.454
+   ],
+   "auroc_overall": 0.677
+  },
+  "random_1000": {
+   "mean_auroc_sign_free": 0.562,
+   "p95": 0.647,
+   "best_of_1000": 0.707
+  },
+  "execution_diff_of_means": {
+   "auroc_within_wording": 0.563,
+   "ci": [
+    0.463,
+    0.666
+   ]
+  },
+  "execution_trained_probe_C0.01": {
+   "auroc_within_wording": 0.885,
+   "ci": [
+    0.832,
+    0.927
+   ]
+  }
+ },
+ "deferral": {
+  "probe_mre": {
+   "target_0.9": {
+    "coverage": 0.997,
+    "accuracy": 0.916,
+    "coverage_ci": [
+     0.986,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.899,
+    "accuracy": 0.95,
+    "coverage_ci": [
+     0.842,
+     0.944
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.737,
+    "accuracy": 0.979,
+    "coverage_ci": [
+     0.633,
+     0.836
+    ]
+   }
+  },
+  "text_full": {
+   "target_0.9": {
+    "coverage": 0.993,
+    "accuracy": 0.912,
+    "coverage_ci": [
+     0.955,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.727,
+    "accuracy": 0.949,
+    "coverage_ci": [
+     0.524,
+     0.901
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.46,
+    "accuracy": 0.975,
+    "coverage_ci": [
+     0.367,
+     0.651
+    ]
+   }
+  },
+  "probe_plus_text (conditional)": {
+   "target_0.9": {
+    "coverage": 0.997,
+    "accuracy": 0.918,
+    "coverage_ci": [
+     0.984,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.862,
+    "accuracy": 0.948,
+    "coverage_ci": [
+     0.768,
+     0.966
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.681,
+    "accuracy": 0.978,
+    "coverage_ci": [
+     0.608,
+     0.784
+    ]
+   }
+  },
+  "wording_3_only": {
+   "probe_mre": {
+    "most_confident_25pct_accuracy": 0.919,
+    "most_confident_50pct_accuracy": 0.919,
+    "most_confident_100pct_accuracy": 0.784
+   },
+   "text_full": {
+    "most_confident_25pct_accuracy": 0.865,
+    "most_confident_50pct_accuracy": 0.865,
+    "most_confident_100pct_accuracy": 0.791
+   },
+   "probe_plus_text (conditional)": {
+    "most_confident_25pct_accuracy": 0.946,
+    "most_confident_50pct_accuracy": 0.878,
+    "most_confident_100pct_accuracy": 0.851
+   }
+  }
+ }
+}

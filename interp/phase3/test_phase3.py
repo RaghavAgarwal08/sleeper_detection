@@ -129,6 +129,14 @@ def test_pipeline():
     a = json.load(open(f"{d}/out/qwen2.5-7b/analysis_pilot.json"))
     assert "H1_heldout_cases_rate" in a and a["n_poisoned"] > 50, a.keys()
     print("analyze ok", a["n_poisoned"], a["H1_heldout_cases_rate"]["probe_mre_minus_text_full"]["auroc_within_wording"])
+    r = run(str(HERE / "sweeps.py"), "--model", "qwen2.5-7b", "--pilot")
+    sw = json.load(open(f"{d}/out/qwen2.5-7b/sweeps.json"))
+    assert len(sw["position_sweep_execution_auroc_within_wording"]) == 8 and "path_length" in sw["trajectory_auroc_within_wording_sign_free"]
+    print("sweeps ok", sw["position_sweep_execution_auroc_within_wording"])
+    r = run(str(HERE / "generic_probe.py"), "--model", "qwen2.5-7b")
+    g = np.load(f"{d}/out/qwen2.5-7b/generic_probe_directions.npz")
+    assert "dir_mean_of_six" in g.files and g["dir_mean_of_six"].shape == (64,)
+    print("generic probe ok", sorted(g.files))
     r = run(str(HERE / "steering.py"), "--model", "qwen2.5-7b", "--dry-run", "--notes", "4", "--k", "2", "--batch", "4",
             "--max-new-tokens", "8")
     s = json.load(open(f"{d}/out/qwen2.5-7b/steering_dryrun.json"))

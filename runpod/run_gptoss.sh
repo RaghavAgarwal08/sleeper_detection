@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# All gpt-oss-20b GPU work for phase 3, in order, on one pod (about 3 to 4 hours on an H100, roughly $10 to $12):
-#   1. attention baselines (RQ1)          2. activations at every layer + pre-registered analysis and layer sweep
+# All gpt-oss-20b GPU work for phase 3, in order, on one pod (about 3 to 4 hours on an H100, roughly $10 to $15):
+#   1. attention baselines (RQ1)
+#   2. activations at every layer and 8 positions, pre-registered analysis, layer and position sweeps, trajectory
+#      geometry, and the generic yes/no defection probe (MacDiarmid et al.)
 #   3. steering test (H5, the causal check)          4. report and figures
 # Each step writes its results before the next starts, so a crash loses at most one step. Run inside tmux:
 #   tmux new -s run   then   bash runpod/run_gptoss.sh 2>&1 | tee /workspace/run_gptoss.log
@@ -22,6 +24,8 @@ if (( STEP <= 2 )); then
   python interp/phase3/build_prompts.py --model gpt-oss-20b
   python interp/phase3/capture.py --model gpt-oss-20b
   python interp/phase3/analyze.py --model gpt-oss-20b
+  python interp/phase3/sweeps.py --model gpt-oss-20b
+  python interp/phase3/generic_probe.py --model gpt-oss-20b
 fi
 if (( STEP <= 3 )); then
   stamp "3/4 steering"
@@ -30,5 +34,6 @@ fi
 stamp "4/4 report"
 python interp/phase3/report.py
 tar czf /workspace/results_gptoss.tar.gz results/phase3 results/probe_live_inert/ATTENTION_BASELINES.md \
-    results/probe_live_inert/attention_baselines.json /workspace/attn/at_calibration.json 2>/dev/null || true
+    results/probe_live_inert/attention_baselines.json results/probe_live_inert/generic_probe_directions.npz \
+    /workspace/attn/at_calibration.json 2>/dev/null || true
 stamp "DONE. Download /workspace/results_gptoss.tar.gz, then stop the pod."
