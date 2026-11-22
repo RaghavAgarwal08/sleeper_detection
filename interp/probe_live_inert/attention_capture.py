@@ -127,7 +127,14 @@ def main() -> None:
     import os
     os.environ["MODEL_ID"] = GPT_OSS
     import gptoss as gp
-    m, tok = gp.model(GPT_OSS)
+    # Load through the phase 3 loader so MXFP4 weights are dequantized to bf16 (as in the phase 1 capture) on any
+    # software stack, then hand the model to gptoss.py's cache so its forward() uses it.
+    sys.path.insert(0, str(INTERP / "phase3"))
+    import models as M3
+    from transformers import AutoTokenizer
+    gp.MODEL_ID = GPT_OSS
+    gp._MODEL, gp._TOK = M3.load_hf(M3.get("gpt-oss-20b")), AutoTokenizer.from_pretrained(GPT_OSS)
+    m, tok = gp.model()
     assert m.config.model_type == "gpt_oss", f"expected gpt-oss-20b, got {m.config.model_type}"
     # output_attentions needs the eager attention implementation
     try:

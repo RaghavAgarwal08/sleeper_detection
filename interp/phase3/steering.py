@@ -180,9 +180,9 @@ def main():
         from test_phase3 import tiny_model  # noqa: E402
         model, tok = tiny_model()
     else:
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from transformers import AutoTokenizer
         tok = AutoTokenizer.from_pretrained(spec["hf"])
-        model = AutoModelForCausalLM.from_pretrained(spec["hf"], torch_dtype=torch.bfloat16, device_map="cuda:0")
+        model = M.load_hf(spec)
     model.eval()
     n_layers = model.config.num_hidden_layers
     win = M.window_layers(n_layers)

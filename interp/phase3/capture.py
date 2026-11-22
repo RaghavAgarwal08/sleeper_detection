@@ -35,11 +35,7 @@ def load(spec):
     if os.environ.get("PHASE3_TINY"):  # tests only: tiny random model on CPU
         from test_phase3 import tiny_model
         return tiny_model()[0]
-    from transformers import AutoModelForCausalLM
-    m = AutoModelForCausalLM.from_pretrained(spec["hf"], torch_dtype=torch.bfloat16, device_map="cuda:0",
-                                             low_cpu_mem_usage=True)
-    m.eval()
-    return m
+    return M.load_hf(spec)
 
 
 def main():

@@ -41,3 +41,19 @@ def get(key: str) -> dict:
     if key not in MODELS:
         raise SystemExit(f"unknown model {key}; choose from {', '.join(MODELS)}")
     return {"key": key, **MODELS[key]}
+
+
+def load_hf(spec: dict, device: str = "cuda:0"):
+    """Load a model in bf16. gpt-oss-20b ships MXFP4 weights; they are dequantized to bf16 so activations match the
+    phase 1 capture (which ran on a stack that always dequantized)."""
+    import torch
+    from transformers import AutoModelForCausalLM
+    kw = dict(torch_dtype=torch.bfloat16, device_map=device, low_cpu_mem_usage=True)
+    if spec["key"].startswith("gpt-oss"):
+        try:
+            from transformers import Mxfp4Config
+            kw["quantization_config"] = Mxfp4Config(dequantize=True)
+        except ImportError:
+            pass
+    m = AutoModelForCausalLM.from_pretrained(spec["hf"], **kw)
+    return m.eval()
