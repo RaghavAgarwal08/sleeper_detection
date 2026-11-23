@@ -32,3 +32,6 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# phase 3 per prompt features (20 MB, kept on the RunPod volume)
+results/phase3/*/window_features.npz

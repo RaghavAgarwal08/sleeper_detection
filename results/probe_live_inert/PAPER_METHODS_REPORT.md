@@ -113,6 +113,8 @@ Shaded bands in the left panel are the 10th to 90th percentile over splits. Comb
 
 ## 5. Methods that need the GPU
 
+**Update, November 23.** These ran on RunPod; full results in `results/phase3/GPTOSS_GPU_REPORT.md`. The generic yes/no directions score 0.52 to 0.57 within wording, inside the random range, so MacDiarmid's label free trick does not carry over. The position sweep puts the signal at the note (0.89) rather than the last prompt token (0.84). Trajectory geometry tops out at 0.64. Steering along the probe direction does not change execution (H5 fails).
+
 These are written, tested on a tiny random model on the CPU (`interp/phase3/test_phase3.py`), and run in order by `runpod/run_gptoss.sh`.
 
 | Paper | What we will measure | Script | Rough H100 time |

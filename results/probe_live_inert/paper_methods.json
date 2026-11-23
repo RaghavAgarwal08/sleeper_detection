@@ -123,23 +123,79 @@
    ],
    "auroc_overall": 0.677
   },
+  "generic_a_helpful_ai": {
+   "auroc_within_wording": 0.532,
+   "ci": [
+    0.449,
+    0.609
+   ],
+   "auroc_overall": 0.378
+  },
+  "generic_a_harmless_ai": {
+   "auroc_within_wording": 0.554,
+   "ci": [
+    0.465,
+    0.635
+   ],
+   "auroc_overall": 0.615
+  },
+  "generic_an_honest_ai": {
+   "auroc_within_wording": 0.539,
+   "ci": [
+    0.464,
+    0.623
+   ],
+   "auroc_overall": 0.452
+  },
+  "generic_doing_something_dangerous": {
+   "auroc_within_wording": 0.52,
+   "ci": [
+    0.43,
+    0.615
+   ],
+   "auroc_overall": 0.449
+  },
+  "generic_doing_something_sneaky": {
+   "auroc_within_wording": 0.524,
+   "ci": [
+    0.442,
+    0.611
+   ],
+   "auroc_overall": 0.551
+  },
+  "generic_trying_to_deceive_the_human": {
+   "auroc_within_wording": 0.532,
+   "ci": [
+    0.452,
+    0.621
+   ],
+   "auroc_overall": 0.403
+  },
+  "generic_mean_of_six": {
+   "auroc_within_wording": 0.566,
+   "ci": [
+    0.486,
+    0.648
+   ],
+   "auroc_overall": 0.441
+  },
   "random_1000": {
-   "mean_auroc_sign_free": 0.562,
-   "p95": 0.647,
-   "best_of_1000": 0.707
+   "mean_auroc_sign_free": 0.56,
+   "p95": 0.643,
+   "best_of_1000": 0.715
   },
   "execution_diff_of_means": {
    "auroc_within_wording": 0.563,
    "ci": [
-    0.463,
-    0.666
+    0.462,
+    0.657
    ]
   },
   "execution_trained_probe_C0.01": {
    "auroc_within_wording": 0.885,
    "ci": [
     0.832,
-    0.927
+    0.924
    ]
   }
  },

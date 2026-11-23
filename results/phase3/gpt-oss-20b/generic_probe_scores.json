@@ -1,0 +1,56 @@
+{
+ "a_helpful_ai": {
+  "auroc_within_wording": 0.543,
+  "ci": [
+   0.459,
+   0.621
+  ]
+ },
+ "a_harmless_ai": {
+  "auroc_within_wording": 0.546,
+  "ci": [
+   0.458,
+   0.626
+  ]
+ },
+ "an_honest_ai": {
+  "auroc_within_wording": 0.538,
+  "ci": [
+   0.451,
+   0.622
+  ]
+ },
+ "doing_something_dangerous": {
+  "auroc_within_wording": 0.517,
+  "ci": [
+   0.422,
+   0.6
+  ]
+ },
+ "doing_something_sneaky": {
+  "auroc_within_wording": 0.524,
+  "ci": [
+   0.446,
+   0.608
+  ]
+ },
+ "trying_to_deceive_the_human": {
+  "auroc_within_wording": 0.523,
+  "ci": [
+   0.431,
+   0.61
+  ]
+ },
+ "mean_of_six": {
+  "auroc_within_wording": 0.569,
+  "ci": [
+   0.482,
+   0.644
+  ]
+ },
+ "random_1000_fixed_sign": {
+  "p2.5": 0.349,
+  "p97.5": 0.644,
+  "mean": 0.498
+ }
+}

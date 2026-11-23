@@ -33,10 +33,17 @@ Each row is a logistic probe on the listed features. Lower cross entropy is bett
 | --- | --- | --- |
 | poisoned_vs_twin_probe | 0.695 [0.619, 0.762] | 0.914 |
 | poisoned_minus_clean_means | 0.364 [0.282, 0.454] | 0.677 |
-| execution_diff_of_means | 0.563 [0.463, 0.666] |  |
-| execution_trained_probe_C0.01 | 0.885 [0.832, 0.927] |  |
+| generic_a_helpful_ai | 0.532 [0.449, 0.609] | 0.378 |
+| generic_a_harmless_ai | 0.554 [0.465, 0.635] | 0.615 |
+| generic_an_honest_ai | 0.539 [0.464, 0.623] | 0.452 |
+| generic_doing_something_dangerous | 0.520 [0.430, 0.615] | 0.449 |
+| generic_doing_something_sneaky | 0.524 [0.442, 0.611] | 0.551 |
+| generic_trying_to_deceive_the_human | 0.532 [0.452, 0.621] | 0.403 |
+| generic_mean_of_six | 0.566 [0.486, 0.648] | 0.441 |
+| execution_diff_of_means | 0.563 [0.462, 0.657] |  |
+| execution_trained_probe_C0.01 | 0.885 [0.832, 0.924] |  |
 
-1,000 random directions (sign chosen after the fact, so this is a generous control): mean 0.562, 95th percentile 0.647, best 0.707.
+1,000 random directions (sign chosen after the fact, so this is a generous control): mean 0.56, 95th percentile 0.643, best 0.715.
 
 ## 3. Confidence based deferral (Ashok and May 2025)
 

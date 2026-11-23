@@ -236,3 +236,8 @@ setting in the 6 November plan) needs Huy's multi turn data.
     python interp/probe_live_inert/sae_jlens_analysis.py        # uses neuronpedia/export.json
     python interp/probe_live_inert/test_attention_baselines.py --e2e
     python interp/probe_live_inert/jev_baseline.py --task both --mock    # dry run, no API calls
+
+## 9. RunPod run on gpt-oss-20b (November 23, `results/phase3/GPTOSS_GPU_REPORT.md`)
+
+Pre-registered H1 to H4 hold: probe vs full prompt TF-IDF within wording +0.099 [0.031, 0.167] on held out cases and +0.142 [0.017, 0.265] on held out domains. H5 (steering) fails: execution moves by at most 0.03 under ±4 SD pushes along the probe direction or its removal, no more than random directions. Attention Tracker and AttnDA are at chance within wording (0.49), AttentionDefense 0.67, FC 0.85, probe 0.88. Generic yes/no directions 0.52 to 0.57. The signal appears at the note's last token (0.89, from 0.67 before the note) and peaks at layer 17.
+
