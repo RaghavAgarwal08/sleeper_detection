@@ -9,7 +9,7 @@
 # When it prints DONE, download /workspace/results_gptoss.tar.gz (Jupyter file browser) and STOP THE POD.
 set -euo pipefail
 cd /workspace/sleeper_detection
-export HF_HOME=/workspace/hf HF_HUB_OFFLINE=1 MODEL_ID=openai/gpt-oss-20b PYTHONPATH=/workspace/sleeper_detection
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True HF_HOME=/workspace/hf HF_HUB_OFFLINE=1 MODEL_ID=openai/gpt-oss-20b PYTHONPATH=/workspace/sleeper_detection
 STEP=${STEP:-1}
 t0=$(date +%s); stamp() { echo "[$(( ($(date +%s) - t0) / 60 )) min] $*"; }
 
@@ -29,7 +29,7 @@ if (( STEP <= 2 )); then
 fi
 if (( STEP <= 3 )); then
   stamp "3/4 steering"
-  python interp/phase3/steering.py --model gpt-oss-20b --notes 48 --k 8 --batch 32 --max-new-tokens 1536
+  python interp/phase3/steering.py --model gpt-oss-20b --notes 48 --k 8 --batch 16 --max-new-tokens 1536
 fi
 stamp "4/4 report"
 python interp/phase3/report.py
