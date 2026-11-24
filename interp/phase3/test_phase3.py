@@ -97,6 +97,22 @@ def test_hooks():
     print("hooks ok")
 
 
+def test_patch_hook():
+    import torch
+    from causal_v2 import Patch
+    m, tok = tiny_model()
+    ids = torch.tensor([[5, 6, 7, 8, 9, 10], [4, 4, 5, 6, 7, 8]])
+    donor = [torch.full((2, 64), 3.0), torch.full((3, 64), -1.0)]
+    with torch.no_grad():
+        p = Patch(m, 2); p.donor = donor
+        hs = m(ids, output_hidden_states=True).hidden_states
+        p.remove()
+        base = m(ids, output_hidden_states=True).hidden_states
+    assert torch.allclose(hs[3][0, -2:], donor[0]) and torch.allclose(hs[3][1, -3:], donor[1])
+    assert torch.allclose(hs[3][0, :-2], base[3][0, :-2]) and torch.allclose(hs[3][1, :-3], base[3][1, :-3])
+    print("patch hook ok")
+
+
 def test_pipeline():
     d = tempfile.mkdtemp()
     env = dict(os.environ, PHASE3_DATA=f"{d}/data", PHASE3_OUT=f"{d}/out", PHASE3_TINY="1")
@@ -142,6 +158,12 @@ def test_pipeline():
     s = json.load(open(f"{d}/out/qwen2.5-7b/steering_dryrun.json"))
     assert set(s["summary"]) == {"add_-4", "add_-2", "add_+0", "add_+2", "add_+4", "random_-4", "random_+4", "ablate"}
     print("steering dry run ok")
+    r = run(str(HERE / "causal_v2.py"), "--model", "qwen2.5-7b", "--dry-run", "--notes", "4", "--k", "2", "--batch", "4",
+            "--max-new-tokens", "8")
+    cv = json.load(open(f"{d}/out/qwen2.5-7b/causal_v2_dryrun.json"))
+    assert {"base", "probe_all_+4", "dom_all_-4", "random_all_+4", "twin_prompt"} <= set(cv["summary"]), cv["summary"].keys()
+    assert sum(k.startswith("patch_twin_L") for k in cv["summary"]) == 4, cv["summary"].keys()
+    print("causal v2 dry run ok", sorted(cv["summary"]))
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)
@@ -158,5 +180,6 @@ def test_pipeline():
 if __name__ == "__main__":
     test_parse()
     test_hooks()
+    test_patch_hook()
     test_pipeline()
     print("all phase 3 tests passed")
