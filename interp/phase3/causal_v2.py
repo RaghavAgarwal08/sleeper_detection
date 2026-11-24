@@ -99,6 +99,11 @@ def main():
     ap.add_argument("--max-new-tokens", type=int, default=1536)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--only", default="", help="comma separated condition names (base always runs)")
+    ap.add_argument("--probe-alphas", default="2,4,-4", help="SD per window layer along the probe direction")
+    ap.add_argument("--dom-alphas", default="4,-4", help="SD per window layer along the difference of means direction")
+    ap.add_argument("--random-alphas", default="4", help="SD (probe units) per window layer along a random direction")
+    ap.add_argument("--patch-layers", default="6,12,17,22", help="residual indices to patch from the twin (24 layer model)")
+    ap.add_argument("--resume", action="store_true", help="keep conditions already in the results file instead of rerunning them")
     ap.add_argument("--dry-run", action="store_true", help="tiny random model on CPU, for tests only")
     args = ap.parse_args()
     import torch
@@ -147,7 +152,8 @@ def main():
     n_layers = model.config.num_hidden_layers
     win = M.window_layers(n_layers)
     win_dec = [l - 1 for l in win]  # decoder layer whose output is residual index l
-    patch_layers = PATCH_LAYERS if n_layers == 24 else sorted({min(n_layers - 1, max(1, round(p * n_layers / 24))) for p in PATCH_LAYERS})
+    pl = [int(x) for x in args.patch_layers.split(",") if x]
+    patch_layers = pl if n_layers == 24 else sorted({min(n_layers - 1, max(1, round(p * n_layers / 24))) for p in pl})
     args.patch_layers = patch_layers
     if args.dry_run:
         g = np.random.default_rng(1)
@@ -160,11 +166,13 @@ def main():
     r = np.random.default_rng(12345).normal(size=len(u)); r -= (r @ u) * u; r /= np.linalg.norm(r)
 
     conds = {"base": ("none", None)}
-    for a in (2, 4, -4):
-        conds[f"probe_all_{a:+d}"] = ("steer", ({l: ("add", a * sigma) for l in win_dec}, u))
-    for a in (4, -4):
-        conds[f"dom_all_{a:+d}"] = ("steer", ({l: ("add", a * sigma_dom) for l in win_dec}, v))
-    conds["random_all_+4"] = ("steer", ({l: ("add", 4 * sigma) for l in win_dec}, r))
+    al = lambda s: [float(x) for x in s.split(",") if x]  # noqa: E731
+    for a in al(args.probe_alphas):
+        conds[f"probe_all_{a:+g}"] = ("steer", ({l: ("add", a * sigma) for l in win_dec}, u))
+    for a in al(args.dom_alphas):
+        conds[f"dom_all_{a:+g}"] = ("steer", ({l: ("add", a * sigma_dom) for l in win_dec}, v))
+    for a in al(args.random_alphas):
+        conds[f"random_all_{a:+g}"] = ("steer", ({l: ("add", a * sigma) for l in win_dec}, r))
     conds["twin_prompt"] = ("twin", None)
     for L in patch_layers:
         conds[f"patch_twin_L{L}"] = ("patch", L)
@@ -194,8 +202,15 @@ def main():
     o.mkdir(parents=True, exist_ok=True)
     fn = o / ("causal_v2_dryrun.json" if args.dry_run else "causal_v2.json")
     results = {}
+    if args.resume and fn.exists():
+        old = json.load(open(fn))
+        if old.get("notes") == notes:
+            results = {c: r for c, r in old["per_note"].items() if c in conds and len(r) == len(notes)}
+            print("resuming, already done:", sorted(results), flush=True)
     t0 = time.time()
     for c, (kind, cfg) in conds.items():
+        if c in results:
+            continue
         hook = None
         if kind == "steer":
             hook = Steer(model, cfg[1], cfg[0])

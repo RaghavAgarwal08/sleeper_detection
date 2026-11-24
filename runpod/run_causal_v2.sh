@@ -16,7 +16,9 @@ pip install -q -U -c /tmp/pin.txt "transformers>=4.56" accelerate huggingface_hu
     openai "openai-agents>=0.14.0" pydantic json-repair
 python -c "import torch; assert torch.cuda.is_available(); print('GPU', torch.cuda.get_device_name(0))"
 python -c "from huggingface_hub import snapshot_download as s; s('openai/gpt-oss-20b', ignore_patterns=['original/*','metal/*'])"
-python interp/phase3/test_phase3.py > /workspace/test_phase3.log 2>&1 && echo "CPU tests passed" || { tail -20 /workspace/test_phase3.log; exit 1; }
+if [[ -z "${SKIP_TESTS:-}" ]]; then
+  python interp/phase3/test_phase3.py > /workspace/test_phase3.log 2>&1 && echo "CPU tests passed" || { tail -20 /workspace/test_phase3.log; exit 1; }
+fi
 export HF_HUB_OFFLINE=1 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 D=interp/data/phase3/gpt-oss-20b
 if [[ ! -f $D/activations.npz ]]; then
@@ -25,6 +27,6 @@ if [[ ! -f $D/activations.npz ]]; then
   python interp/phase3/capture.py --model gpt-oss-20b
 fi
 stamp "causal v2"
-python interp/phase3/causal_v2.py --model gpt-oss-20b --notes 48 --k 8 --batch 16 --max-new-tokens 1536
+python interp/phase3/causal_v2.py --model gpt-oss-20b --notes 48 --k 8 --batch 16 --max-new-tokens 1536 ${CAUSAL_ARGS:-}
 tar czf /workspace/results_causal_v2.tar.gz results/phase3/gpt-oss-20b/causal_v2.json
 stamp "DONE. Download /workspace/results_causal_v2.tar.gz, then stop the pod."
