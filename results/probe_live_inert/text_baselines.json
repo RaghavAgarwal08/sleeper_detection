@@ -1,0 +1,136 @@
+{
+ "labels": "namefix",
+ "n": 888,
+ "n_reached": 297,
+ "chosen_C": {
+  "probe_mre": [
+   0.01,
+   0.1,
+   0.01,
+   0.01,
+   0.01
+  ],
+  "tfidf_fixed": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "tfidf_tuned": [
+   100.0,
+   100.0,
+   10.0,
+   1.0,
+   100.0
+  ],
+  "tfidf_svd_gbm": [
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "conv_stats": [
+   0.1,
+   0.1,
+   1.0,
+   0.1,
+   0.1
+  ],
+  "tfidf_plus_stats": [
+   100.0,
+   10.0,
+   10.0,
+   10.0,
+   10.0
+  ]
+ },
+ "methods": {
+  "probe_mre": {
+   "auroc_within_wording": 0.888,
+   "auroc_within_wording_ci": [
+    0.845,
+    0.927
+   ],
+   "spearman_within_wording": 0.532
+  },
+  "tfidf_fixed": {
+   "auroc_within_wording": 0.786,
+   "auroc_within_wording_ci": [
+    0.712,
+    0.851
+   ],
+   "spearman_within_wording": 0.372
+  },
+  "tfidf_tuned": {
+   "auroc_within_wording": 0.741,
+   "auroc_within_wording_ci": [
+    0.646,
+    0.816
+   ],
+   "spearman_within_wording": 0.314
+  },
+  "tfidf_svd_gbm": {
+   "auroc_within_wording": 0.713,
+   "auroc_within_wording_ci": [
+    0.63,
+    0.783
+   ],
+   "spearman_within_wording": 0.302
+  },
+  "conv_stats": {
+   "auroc_within_wording": 0.578,
+   "auroc_within_wording_ci": [
+    0.493,
+    0.662
+   ],
+   "spearman_within_wording": 0.093
+  },
+  "tfidf_plus_stats": {
+   "auroc_within_wording": 0.772,
+   "auroc_within_wording_ci": [
+    0.698,
+    0.838
+   ],
+   "spearman_within_wording": 0.362
+  }
+ },
+ "probe_minus": {
+  "tfidf_fixed": {
+   "auroc_within_wording": 0.102,
+   "ci": [
+    0.031,
+    0.181
+   ]
+  },
+  "tfidf_tuned": {
+   "auroc_within_wording": 0.147,
+   "ci": [
+    0.068,
+    0.238
+   ]
+  },
+  "tfidf_svd_gbm": {
+   "auroc_within_wording": 0.175,
+   "ci": [
+    0.099,
+    0.257
+   ]
+  },
+  "conv_stats": {
+   "auroc_within_wording": 0.31,
+   "ci": [
+    0.219,
+    0.403
+   ]
+  },
+  "tfidf_plus_stats": {
+   "auroc_within_wording": 0.116,
+   "ci": [
+    0.048,
+    0.193
+   ]
+  }
+ }
+}
