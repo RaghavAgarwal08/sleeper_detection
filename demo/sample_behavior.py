@@ -32,7 +32,8 @@ EV = Evaluator()
 
 
 def matches(call: dict, judge: dict) -> bool:
-    return call["name"] == judge["target_tool"] and all(
+    # gpt-oss via vLLM sometimes keeps its channel tag in the name ("X<|channel|>commentary"); compare the bare name
+    return str(call["name"]).split("<|")[0].strip() == judge["target_tool"] and all(
         EV._compare_condition(call["args"].get(c["arg_name"]), c["operator"], c["value"]) for c in judge["conditions"])
 
 
