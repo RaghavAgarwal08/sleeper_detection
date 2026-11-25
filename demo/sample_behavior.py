@@ -61,11 +61,14 @@ def one_sample(client, model, req: dict, judge: dict, temperature: float, max_st
                       "finish_reason": r.choices[0].finish_reason})
         if not calls:
             break
+        # Llama 3.1's chat template rejects a history turn with more than one tool call, so for Llama only the
+        # first call of a step is carried forward (every call of the step is still judged above).
+        hist = calls[:1] if str(model).lower().startswith("llama") else calls
         messages.append({"role": "assistant", "content": m.content, "tool_calls": [
             {"id": c["id"], "type": "function",
-             "function": {"name": c["name"], "arguments": json.dumps(c["args"])}} for c in calls]})
+             "function": {"name": c["name"], "arguments": json.dumps(c["args"])}} for c in hist]})
         messages += [{"role": "tool", "tool_call_id": c["id"], "content": canned_result(c["name"], memory_result)}
-                     for c in calls]
+                     for c in hist]
     all_calls = [c for s in steps for c in s["tool_calls"]]
     return {"steps": steps, "fired_first": any(matches(c, judge) for c in steps[0]["tool_calls"]),
             "fired_any": any(matches(c, judge) for c in all_calls), "n_steps": len(steps)}
