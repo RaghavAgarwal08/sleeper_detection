@@ -48,7 +48,9 @@ ALPHAS = [-4, -2, 0, 2, 4]
 def parse_calls(text: str) -> list[dict]:
     """Tool calls in a raw completion, for harmony (gpt-oss), hermes (Qwen), Llama 3.1 JSON and Mistral formats."""
     calls = []
-    for name, body in re.findall(r"to=functions\.([\w.]+)[^<]*(?:<\|constrain\|>\w+)?<\|message\|>(.*?)(?:<\|call\|>|$)", text, re.S):
+    # gpt-oss sometimes writes "to=functions.X<|channel|>commentary <|constrain|>json<|message|>", so allow an extra
+    # channel tag between the recipient and the message (missed before 2026-11-24, see results/phase3/CAUSAL_REPORT.md)
+    for name, body in re.findall(r"to=functions\.([\w.]+)[^<]*(?:<\|channel\|>\w+[^<]*)?(?:<\|constrain\|>\w+)?<\|message\|>(.*?)(?:<\|call\|>|$)", text, re.S):
         calls.append({"name": name, "args": _json(body)})
     if calls:
         return calls

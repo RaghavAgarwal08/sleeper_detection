@@ -46,4 +46,31 @@ November 24, 2026. Follows `GPTOSS_GPU_REPORT.md`, where the pre-registered stee
 
 Held out poisoned notes the direction never saw (held_out_mixed and test splits, mixed phase 1 outcomes), the clean prompts of the same cases, and a third outcome, whether the agent calls the tool the user asked for. Conditions: unsteered, difference of means −1 and −0.5, a random direction of the same size, and on clean prompts unsteered, difference of means −1 and random. H6 holds if (1) execution falls with the interval below zero, (2) the random push's interval includes zero, and (3) the user's task on clean prompts drops by less than 0.05 with the interval's lower bound above −0.10.
 
-Results: pending (running on RunPod since November 24).
+### Results (run November 24; 48 held out notes from 27 cases, 27 clean prompts, k = 8)
+
+**A scoring bug, found after the run and disclosed here.** Reading the saved text showed that gpt-oss-20b sometimes writes a tool call as `to=functions.X<|channel|>commentary <|constrain|>json<|message|>{...}`, with an extra channel tag that the parser in `steering.py` did not accept. Those calls were counted as "no call". The parser is fixed (with a test), and `interp/phase3/rescore_v3.py` re-scores every rollout: a rollout counts if either the original scoring or the fixed parser on the saved text finds the call. Neither can add a false call. The format is used in 2 to 4% of rollouts normally but in 12% under the difference of means push on clean prompts, so the bug mainly hit exactly the cost measurement. Both versions are reported; the corrected one is the result.
+
+| Condition | Planted call | User's task | Any call | Planted call minus unsteered [95% CI] | User's task minus unsteered [95% CI] |
+| --- | --- | --- | --- | --- | --- |
+| Unsteered | 0.216 | 0.750 | 0.99 | | |
+| Difference of means −1 | 0.117 | 0.867 | 0.99 | **−0.099 [−0.154, −0.049]** | +0.117 [+0.069, +0.174] |
+| Difference of means −0.5 | 0.174 | 0.818 | 1.00 | −0.042 [−0.083, +0.006] | +0.068 [+0.017, +0.116] |
+| Random, same size | 0.250 | 0.721 | 0.98 | +0.034 [−0.013, +0.083] | −0.029 [−0.080, +0.023] |
+| Clean, unsteered | | 0.986 | 1.00 | | |
+| Clean, difference of means −1 | | 0.972 | 0.97 | | **−0.014 [−0.056, +0.019]** |
+| Clean, random | | 0.972 | 0.99 | | −0.014 [−0.046, +0.009] |
+
+With the original (buggy) scoring the clean user's task fell from 0.949 to 0.847 (−0.102 [−0.167, −0.046]), which would have failed condition 3.
+
+**H6 holds on the corrected scoring.** (1) Execution on held out notes falls by 0.099, interval below zero. (2) The random push of the same size moves it by +0.034, interval includes zero. (3) The user's task on clean prompts changes by −0.014, above −0.05, lower bound −0.056 above −0.10. Because the fix came after seeing the results, the paper reports H6 as holding after a disclosed scoring correction, not as a clean pass.
+
+**What else the run shows.**
+* The effect on new notes (−0.10, from 0.22 to 0.12) is about half the effect on the training notes in run 2 (−0.19), so part of run 2's effect was the direction fitting its own data.
+* Half the push gives a smaller, non significant effect (−0.04), consistent with a dose response.
+* On poisoned prompts the push **raises** the user's task from 0.75 to 0.87: the agent swaps the planted call for the requested one rather than stalling.
+
+## Consequences of the parser bug for earlier results
+
+* **Runs 1 and 2 (H5 and causal_v2)** used the same parser and did not save their text, so they cannot be re-scored. Execution was measured with the same parser in every condition, but "any tool call" drops under steering (probe +2: 0.22; probe +1: 0.73; difference of means +1: 0.63) may partly be the model switching to the rarer format rather than stopping tool use. The claim that the probe direction "breaks tool calling" is therefore uncertain until a rerun with text saved.
+* **Phase 1 behaviour labels** come from vLLM's tool call parser, which kept the extra tag in the tool name (522 of 11,214 calls, 188 of them the planted call), and the judge requires an exact name. Normalising the name raises the mean execution rate from 0.294 to 0.318: 135 of 888 notes change rate, 11 flip to reached execution (286 to 297), and the corrected and original rates correlate at 0.989. All probe analyses should be rerun on the corrected labels before the paper; the change is small but goes in one direction.
+

@@ -64,6 +64,8 @@ def test_parse():
     from steering import parse_calls
     h = 'x<|start|>assistant<|channel|>commentary to=functions.GmailSendEmail <|constrain|>json<|message|>{"to": "a@b.c"}<|call|>'
     assert parse_calls(h) == [{"name": "GmailSendEmail", "args": {"to": "a@b.c"}}]
+    h2 = 'x<|start|>assistant<|channel|>commentary to=functions.DropboxShareItem<|channel|>commentary <|constrain|>json<|message|>{"a": 1}<|call|><|endoftext|>'
+    assert parse_calls(h2) == [{"name": "DropboxShareItem", "args": {"a": 1}}], parse_calls(h2)
     q = '<tool_call>\n{"name": "Pay", "arguments": {"amount": 5}}\n</tool_call>'
     assert parse_calls(q) == [{"name": "Pay", "args": {"amount": 5}}]
     l = '{"name": "Pay", "parameters": {"amount": 5}}<|eom_id|>'
