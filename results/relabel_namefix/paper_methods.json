@@ -1,0 +1,299 @@
+{
+ "conditional_probing": {
+  "entropy_bits_constant_predictor": 0.9019,
+  "feature_sets": {
+   "word": {
+    "ce_bits": 0.5425,
+    "auroc_within_wording": 0.416,
+    "auroc_overall": 0.908
+   },
+   "text": {
+    "ce_bits": 0.4896,
+    "auroc_within_wording": 0.79,
+    "auroc_overall": 0.953
+   },
+   "word+text": {
+    "ce_bits": 0.4945,
+    "auroc_within_wording": 0.761,
+    "auroc_overall": 0.946
+   },
+   "act": {
+    "ce_bits": 0.4348,
+    "auroc_within_wording": 0.905,
+    "auroc_overall": 0.976
+   },
+   "word+act": {
+    "ce_bits": 0.4279,
+    "auroc_within_wording": 0.904,
+    "auroc_overall": 0.975
+   },
+   "text+act": {
+    "ce_bits": 0.4406,
+    "auroc_within_wording": 0.886,
+    "auroc_overall": 0.971
+   },
+   "word+text+act": {
+    "ce_bits": 0.4445,
+    "auroc_within_wording": 0.878,
+    "auroc_overall": 0.97
+   },
+   "word+text+act_note": {
+    "ce_bits": 0.4614,
+    "auroc_within_wording": 0.85,
+    "auroc_overall": 0.964
+   }
+  },
+  "gains": {
+   "word+act over word": {
+    "bits": 0.1146,
+    "bits_ci": [
+     0.087,
+     0.148
+    ],
+    "auroc_within_wording": 0.487,
+    "auroc_ci": [
+     0.403,
+     0.572
+    ]
+   },
+   "text+act over text": {
+    "bits": 0.049,
+    "bits_ci": [
+     0.031,
+     0.07
+    ],
+    "auroc_within_wording": 0.096,
+    "auroc_ci": [
+     0.054,
+     0.148
+    ]
+   },
+   "word+text+act over word+text": {
+    "bits": 0.0501,
+    "bits_ci": [
+     0.033,
+     0.071
+    ],
+    "auroc_within_wording": 0.117,
+    "auroc_ci": [
+     0.065,
+     0.172
+    ]
+   },
+   "word+text+act_note over word+text": {
+    "bits": 0.0332,
+    "bits_ci": [
+     0.018,
+     0.049
+    ],
+    "auroc_within_wording": 0.089,
+    "auroc_ci": [
+     0.039,
+     0.143
+    ]
+   },
+   "word+text+act over act": {
+    "bits": -0.0096,
+    "bits_ci": [
+     -0.03,
+     0.009
+    ],
+    "auroc_within_wording": -0.027,
+    "auroc_ci": [
+     -0.069,
+     0.014
+    ]
+   }
+  }
+ },
+ "directions": {
+  "poisoned_vs_twin_probe": {
+   "auroc_within_wording": 0.691,
+   "ci": [
+    0.612,
+    0.761
+   ],
+   "auroc_overall": 0.91
+  },
+  "poisoned_minus_clean_means": {
+   "auroc_within_wording": 0.367,
+   "ci": [
+    0.278,
+    0.458
+   ],
+   "auroc_overall": 0.672
+  },
+  "generic_a_helpful_ai": {
+   "auroc_within_wording": 0.535,
+   "ci": [
+    0.454,
+    0.612
+   ],
+   "auroc_overall": 0.382
+  },
+  "generic_a_harmless_ai": {
+   "auroc_within_wording": 0.55,
+   "ci": [
+    0.468,
+    0.631
+   ],
+   "auroc_overall": 0.613
+  },
+  "generic_an_honest_ai": {
+   "auroc_within_wording": 0.537,
+   "ci": [
+    0.46,
+    0.622
+   ],
+   "auroc_overall": 0.451
+  },
+  "generic_doing_something_dangerous": {
+   "auroc_within_wording": 0.522,
+   "ci": [
+    0.435,
+    0.613
+   ],
+   "auroc_overall": 0.453
+  },
+  "generic_doing_something_sneaky": {
+   "auroc_within_wording": 0.515,
+   "ci": [
+    0.436,
+    0.596
+   ],
+   "auroc_overall": 0.547
+  },
+  "generic_trying_to_deceive_the_human": {
+   "auroc_within_wording": 0.535,
+   "ci": [
+    0.451,
+    0.627
+   ],
+   "auroc_overall": 0.406
+  },
+  "generic_mean_of_six": {
+   "auroc_within_wording": 0.57,
+   "ci": [
+    0.487,
+    0.65
+   ],
+   "auroc_overall": 0.444
+  },
+  "random_1000": {
+   "mean_auroc_sign_free": 0.559,
+   "p95": 0.643,
+   "best_of_1000": 0.714
+  },
+  "execution_diff_of_means": {
+   "auroc_within_wording": 0.559,
+   "ci": [
+    0.456,
+    0.655
+   ]
+  },
+  "execution_trained_probe_C0.01": {
+   "auroc_within_wording": 0.88,
+   "ci": [
+    0.83,
+    0.917
+   ]
+  }
+ },
+ "deferral": {
+  "probe_mre": {
+   "target_0.9": {
+    "coverage": 0.997,
+    "accuracy": 0.919,
+    "coverage_ci": [
+     0.986,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.902,
+    "accuracy": 0.95,
+    "coverage_ci": [
+     0.84,
+     0.959
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.717,
+    "accuracy": 0.979,
+    "coverage_ci": [
+     0.626,
+     0.831
+    ]
+   }
+  },
+  "text_full": {
+   "target_0.9": {
+    "coverage": 0.991,
+    "accuracy": 0.91,
+    "coverage_ci": [
+     0.947,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.705,
+    "accuracy": 0.949,
+    "coverage_ci": [
+     0.419,
+     0.892
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.423,
+    "accuracy": 0.973,
+    "coverage_ci": [
+     0.329,
+     0.692
+    ]
+   }
+  },
+  "probe_plus_text (conditional)": {
+   "target_0.9": {
+    "coverage": 0.997,
+    "accuracy": 0.916,
+    "coverage_ci": [
+     0.984,
+     1.0
+    ]
+   },
+   "target_0.95": {
+    "coverage": 0.874,
+    "accuracy": 0.949,
+    "coverage_ci": [
+     0.786,
+     0.973
+    ]
+   },
+   "target_0.98": {
+    "coverage": 0.686,
+    "accuracy": 0.978,
+    "coverage_ci": [
+     0.572,
+     0.806
+    ]
+   }
+  },
+  "wording_3_only": {
+   "probe_mre": {
+    "most_confident_25pct_accuracy": 1.0,
+    "most_confident_50pct_accuracy": 0.932,
+    "most_confident_100pct_accuracy": 0.804
+   },
+   "text_full": {
+    "most_confident_25pct_accuracy": 0.892,
+    "most_confident_50pct_accuracy": 0.905,
+    "most_confident_100pct_accuracy": 0.824
+   },
+   "probe_plus_text (conditional)": {
+    "most_confident_25pct_accuracy": 1.0,
+    "most_confident_50pct_accuracy": 0.919,
+    "most_confident_100pct_accuracy": 0.831
+   }
+  }
+ }
+}

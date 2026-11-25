@@ -1,0 +1,1063 @@
+{
+ "notes": {
+  "execution_rate": "rate = fired_any / 8 (rollouts reaching execution); binary label reached_execution = rate >= 0.5, else triggered_resisted",
+  "text_C": 1.0,
+  "probe_C": "nested GroupKFold(4) by case inside each training fold, grid [0.0001, 0.001, 0.01, 0.1, 1.0]",
+  "bootstrap": "1000 case resamples, 95% percentile intervals"
+ },
+ "execution_rate_by_template_mean": {
+  "0": 0.847,
+  "1": 0.111,
+  "2": 0.133,
+  "3": 0.68,
+  "4": 0.018,
+  "5": 0.117
+ },
+ "binary_vs_rate": {
+  "resisted_notes_executed_at_least_once": 155,
+  "resisted_notes": 591
+ },
+ "A_lodo_binary": {
+  "n_notes": 888,
+  "n_reached_execution": 297,
+  "n_cases": 148,
+  "n_domains": 43,
+  "methods": {
+   "probe_mre": {
+    "auroc_overall": 0.961,
+    "auroc_within_wording": 0.818,
+    "auroc_within_wording_ci": [
+     0.756,
+     0.874
+    ],
+    "auroc_within_wording_and_fold": 0.748,
+    "auroc_within_wording_and_fold_ci": [
+     0.621,
+     0.852
+    ],
+    "spearman_rate_overall": 0.795,
+    "spearman_rate_within_wording": 0.367,
+    "spearman_rate_within_wording_ci": [
+     0.286,
+     0.446
+    ]
+   },
+   "probe_note": {
+    "auroc_overall": 0.959,
+    "auroc_within_wording": 0.817,
+    "auroc_within_wording_ci": [
+     0.76,
+     0.867
+    ],
+    "auroc_within_wording_and_fold": 0.694,
+    "auroc_within_wording_and_fold_ci": [
+     0.587,
+     0.799
+    ],
+    "spearman_rate_overall": 0.788,
+    "spearman_rate_within_wording": 0.387,
+    "spearman_rate_within_wording_ci": [
+     0.294,
+     0.464
+    ]
+   },
+   "text_full": {
+    "auroc_overall": 0.926,
+    "auroc_within_wording": 0.639,
+    "auroc_within_wording_ci": [
+     0.551,
+     0.721
+    ],
+    "auroc_within_wording_and_fold": 0.641,
+    "auroc_within_wording_and_fold_ci": [
+     0.503,
+     0.764
+    ],
+    "spearman_rate_overall": 0.748,
+    "spearman_rate_within_wording": 0.254,
+    "spearman_rate_within_wording_ci": [
+     0.15,
+     0.353
+    ]
+   },
+   "text_note": {
+    "auroc_overall": 0.917,
+    "auroc_within_wording": 0.578,
+    "auroc_within_wording_ci": [
+     0.483,
+     0.664
+    ],
+    "auroc_within_wording_and_fold": 0.513,
+    "auroc_within_wording_and_fold_ci": [
+     0.394,
+     0.639
+    ],
+    "spearman_rate_overall": 0.717,
+    "spearman_rate_within_wording": 0.145,
+    "spearman_rate_within_wording_ci": [
+     0.045,
+     0.227
+    ]
+   },
+   "template": {
+    "auroc_overall": 0.877,
+    "auroc_within_wording": 0.144,
+    "auroc_within_wording_ci": [
+     0.099,
+     0.209
+    ],
+    "auroc_within_wording_and_fold": 0.5,
+    "auroc_within_wording_and_fold_ci": [
+     0.5,
+     0.5
+    ],
+    "spearman_rate_overall": 0.643,
+    "spearman_rate_within_wording": -0.399,
+    "spearman_rate_within_wording_ci": [
+     -0.483,
+     -0.302
+    ]
+   }
+  },
+  "paired_differences": {
+   "probe_mre_minus_text_full": {
+    "auroc_within_wording": 0.178,
+    "auroc_within_wording_ci": [
+     0.058,
+     0.296
+    ],
+    "spearman_within_wording": 0.113,
+    "spearman_within_wording_ci": [
+     -0.001,
+     0.226
+    ]
+   },
+   "probe_mre_minus_text_note": {
+    "auroc_within_wording": 0.239,
+    "auroc_within_wording_ci": [
+     0.117,
+     0.358
+    ],
+    "spearman_within_wording": 0.222,
+    "spearman_within_wording_ci": [
+     0.095,
+     0.349
+    ]
+   },
+   "probe_note_minus_text_full": {
+    "auroc_within_wording": 0.178,
+    "auroc_within_wording_ci": [
+     0.061,
+     0.298
+    ],
+    "spearman_within_wording": 0.133,
+    "spearman_within_wording_ci": [
+     0.017,
+     0.266
+    ]
+   },
+   "probe_note_minus_text_note": {
+    "auroc_within_wording": 0.239,
+    "auroc_within_wording_ci": [
+     0.129,
+     0.358
+    ],
+    "spearman_within_wording": 0.242,
+    "spearman_within_wording_ci": [
+     0.115,
+     0.362
+    ]
+   }
+  },
+  "probe_C_chosen": {
+   "probe_mre": [
+    0.01
+   ],
+   "probe_note": [
+    0.01,
+    0.1,
+    1.0
+   ]
+  },
+  "per_domain_auroc": {
+   "AmazonAddToCart": {
+    "probe_mre": 0.963,
+    "probe_note": 1.0,
+    "text_full": 0.963,
+    "text_note": 0.981,
+    "template": 0.981,
+    "n": 12
+   },
+   "AmazonRemoveFromCart": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "AugustSmartLockRevokeGuestAccess": {
+    "probe_mre": 1.0,
+    "probe_note": 0.971,
+    "text_full": 0.829,
+    "text_note": 0.871,
+    "template": 0.871,
+    "n": 12
+   },
+   "AugustSmartLockRevokeTemporaryAccessCode": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "BankManagerPayBill": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "BankManagerTransferFunds": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 0.986,
+    "template": 0.986,
+    "n": 12
+   },
+   "BinanceCancelOrder": {
+    "probe_mre": 0.972,
+    "probe_note": 1.0,
+    "text_full": 0.972,
+    "text_note": 0.889,
+    "template": 0.889,
+    "n": 12
+   },
+   "BinanceDeposit": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "BinanceModifyOrder": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 0.943,
+    "text_note": 0.986,
+    "template": 0.986,
+    "n": 12
+   },
+   "BinancePlaceOrder": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "BinanceWithdraw": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 0.981,
+    "template": 0.981,
+    "n": 12
+   },
+   "CiscoUmbrellaCreatePolicy": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 0.886,
+    "text_note": 0.929,
+    "template": 0.929,
+    "n": 12
+   },
+   "CiscoUmbrellaUnblockDomain": {
+    "probe_mre": 0.944,
+    "probe_note": 1.0,
+    "text_full": 0.889,
+    "text_note": 0.889,
+    "template": 0.889,
+    "n": 12
+   },
+   "DatabaseExecuteSQL": {
+    "probe_mre": 0.7,
+    "probe_note": 0.45,
+    "text_full": 0.65,
+    "text_note": 0.7,
+    "template": 0.7,
+    "n": 12
+   },
+   "DeepfakeGeneratorGenerateAudioDeepfake": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "DropboxDisableLink": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 0.981,
+    "template": 0.981,
+    "n": 12
+   },
+   "DropboxMoveItem": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "EthereumManagerCompileSolidity": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "EthereumManagerDeploySmartContract": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "EthereumManagerTransferEther": {
+    "probe_mre": 1.0,
+    "probe_note": 0.943,
+    "text_full": 1.0,
+    "text_note": 0.986,
+    "template": 0.986,
+    "n": 12
+   },
+   "EvernoteManagerDeleteNote": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "EvernoteManagerDeleteNotebook": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 0.871,
+    "template": 0.871,
+    "n": 12
+   },
+   "EvernoteManagerUpdateNotebook": {
+    "probe_mre": 0.984,
+    "probe_note": 0.922,
+    "text_full": 0.969,
+    "text_note": 0.984,
+    "template": 0.969,
+    "n": 24
+   },
+   "ExpediaCancelReservations": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "GitHubDeleteRepository": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "GmailDeleteContact": {
+    "probe_mre": 0.914,
+    "probe_note": 0.943,
+    "text_full": 0.886,
+    "text_note": 0.757,
+    "template": 0.757,
+    "n": 12
+   },
+   "GmailDeleteEmails": {
+    "probe_mre": 1.0,
+    "probe_note": 0.95,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "GmailSendEmail": {
+    "probe_mre": 0.964,
+    "probe_note": 0.961,
+    "text_full": 0.953,
+    "text_note": 0.949,
+    "template": 0.948,
+    "n": 372
+   },
+   "GoogleHomePlayMedia": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "IFTTTDeleteApplets": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "IndoorRobotFindObjects": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "IndoorRobotGoToRoom": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "InventoryManagementSystemDeleteItem": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 0.8,
+    "text_note": 0.871,
+    "template": 0.871,
+    "n": 12
+   },
+   "ShopifyDeleteProduct": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "SlackManageMembership": {
+    "probe_mre": 0.944,
+    "probe_note": 1.0,
+    "text_full": 0.944,
+    "text_note": 0.833,
+    "template": 0.833,
+    "n": 12
+   },
+   "TDAmeritradeTradeStock": {
+    "probe_mre": 0.943,
+    "probe_note": 0.914,
+    "text_full": 0.857,
+    "text_note": 0.814,
+    "template": 0.814,
+    "n": 12
+   },
+   "TerminalExecute": {
+    "probe_mre": 0.889,
+    "probe_note": 0.833,
+    "text_full": 0.972,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "TrafficControlGivePriorityToPublicTransportation": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 0.986,
+    "template": 0.986,
+    "n": 12
+   },
+   "TwilioCancelScheduledAction": {
+    "probe_mre": 0.971,
+    "probe_note": 0.971,
+    "text_full": 0.971,
+    "text_note": 0.929,
+    "template": 0.929,
+    "n": 12
+   },
+   "VenmoAddMoney": {
+    "probe_mre": 1.0,
+    "probe_note": 0.914,
+    "text_full": 0.857,
+    "text_note": 0.871,
+    "template": 0.871,
+    "n": 12
+   },
+   "VenmoHandleRequest": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   },
+   "VenmoRequestMoney": {
+    "probe_mre": 1.0,
+    "probe_note": 1.0,
+    "text_full": 1.0,
+    "text_note": 1.0,
+    "template": 1.0,
+    "n": 12
+   }
+  },
+  "macro_auroc_over_domains": {
+   "probe_mre": 0.981,
+   "probe_note": 0.971,
+   "text_full": 0.961,
+   "text_note": 0.953,
+   "template": 0.953
+  }
+ },
+ "B_heldout_cases_rate": {
+  "n_notes": 888,
+  "n_reached_execution": 297,
+  "n_cases": 148,
+  "n_domains": 43,
+  "methods": {
+   "probe_mre": {
+    "auroc_overall": 0.972,
+    "auroc_within_wording": 0.887,
+    "auroc_within_wording_ci": [
+     0.838,
+     0.927
+    ],
+    "auroc_within_wording_and_fold": 0.903,
+    "auroc_within_wording_and_fold_ci": [
+     0.854,
+     0.938
+    ],
+    "spearman_rate_overall": 0.835,
+    "spearman_rate_within_wording": 0.532,
+    "spearman_rate_within_wording_ci": [
+     0.462,
+     0.595
+    ]
+   },
+   "probe_note": {
+    "auroc_overall": 0.971,
+    "auroc_within_wording": 0.886,
+    "auroc_within_wording_ci": [
+     0.848,
+     0.92
+    ],
+    "auroc_within_wording_and_fold": 0.894,
+    "auroc_within_wording_and_fold_ci": [
+     0.845,
+     0.935
+    ],
+    "spearman_rate_overall": 0.836,
+    "spearman_rate_within_wording": 0.537,
+    "spearman_rate_within_wording_ci": [
+     0.462,
+     0.599
+    ]
+   },
+   "text_full": {
+    "auroc_overall": 0.95,
+    "auroc_within_wording": 0.782,
+    "auroc_within_wording_ci": [
+     0.708,
+     0.849
+    ],
+    "auroc_within_wording_and_fold": 0.781,
+    "auroc_within_wording_and_fold_ci": [
+     0.697,
+     0.855
+    ],
+    "spearman_rate_overall": 0.784,
+    "spearman_rate_within_wording": 0.365,
+    "spearman_rate_within_wording_ci": [
+     0.276,
+     0.458
+    ]
+   },
+   "text_note": {
+    "auroc_overall": 0.94,
+    "auroc_within_wording": 0.726,
+    "auroc_within_wording_ci": [
+     0.645,
+     0.803
+    ],
+    "auroc_within_wording_and_fold": 0.725,
+    "auroc_within_wording_and_fold_ci": [
+     0.625,
+     0.806
+    ],
+    "spearman_rate_overall": 0.75,
+    "spearman_rate_within_wording": 0.266,
+    "spearman_rate_within_wording_ci": [
+     0.162,
+     0.362
+    ]
+   },
+   "template": {
+    "auroc_overall": 0.907,
+    "auroc_within_wording": 0.409,
+    "auroc_within_wording_ci": [
+     0.335,
+     0.488
+    ],
+    "auroc_within_wording_and_fold": 0.5,
+    "auroc_within_wording_and_fold_ci": [
+     0.5,
+     0.5
+    ],
+    "spearman_rate_overall": 0.692,
+    "spearman_rate_within_wording": -0.108,
+    "spearman_rate_within_wording_ci": [
+     -0.181,
+     -0.034
+    ]
+   }
+  },
+  "paired_differences": {
+   "probe_mre_minus_text_full": {
+    "auroc_within_wording": 0.106,
+    "auroc_within_wording_ci": [
+     0.035,
+     0.178
+    ],
+    "spearman_within_wording": 0.166,
+    "spearman_within_wording_ci": [
+     0.085,
+     0.253
+    ]
+   },
+   "probe_mre_minus_text_note": {
+    "auroc_within_wording": 0.162,
+    "auroc_within_wording_ci": [
+     0.077,
+     0.25
+    ],
+    "spearman_within_wording": 0.266,
+    "spearman_within_wording_ci": [
+     0.172,
+     0.364
+    ]
+   },
+   "probe_note_minus_text_full": {
+    "auroc_within_wording": 0.104,
+    "auroc_within_wording_ci": [
+     0.04,
+     0.178
+    ],
+    "spearman_within_wording": 0.172,
+    "spearman_within_wording_ci": [
+     0.092,
+     0.256
+    ]
+   },
+   "probe_note_minus_text_note": {
+    "auroc_within_wording": 0.16,
+    "auroc_within_wording_ci": [
+     0.085,
+     0.237
+    ],
+    "spearman_within_wording": 0.272,
+    "spearman_within_wording_ci": [
+     0.185,
+     0.374
+    ]
+   }
+  },
+  "probe_C_chosen": {
+   "probe_mre": [
+    0.01,
+    0.1
+   ],
+   "probe_note": [
+    0.01
+   ]
+  }
+ },
+ "B2_heldout_cases_binary": {
+  "n_notes": 888,
+  "n_reached_execution": 297,
+  "n_cases": 148,
+  "n_domains": 43,
+  "methods": {
+   "probe_mre": {
+    "auroc_overall": 0.969,
+    "auroc_within_wording": 0.87,
+    "auroc_within_wording_ci": [
+     0.822,
+     0.912
+    ],
+    "auroc_within_wording_and_fold": 0.887,
+    "auroc_within_wording_and_fold_ci": [
+     0.831,
+     0.93
+    ],
+    "spearman_rate_overall": 0.811,
+    "spearman_rate_within_wording": 0.459,
+    "spearman_rate_within_wording_ci": [
+     0.375,
+     0.527
+    ]
+   },
+   "probe_note": {
+    "auroc_overall": 0.965,
+    "auroc_within_wording": 0.874,
+    "auroc_within_wording_ci": [
+     0.834,
+     0.911
+    ],
+    "auroc_within_wording_and_fold": 0.896,
+    "auroc_within_wording_and_fold_ci": [
+     0.851,
+     0.936
+    ],
+    "spearman_rate_overall": 0.801,
+    "spearman_rate_within_wording": 0.446,
+    "spearman_rate_within_wording_ci": [
+     0.373,
+     0.51
+    ]
+   },
+   "text_full": {
+    "auroc_overall": 0.948,
+    "auroc_within_wording": 0.777,
+    "auroc_within_wording_ci": [
+     0.698,
+     0.837
+    ],
+    "auroc_within_wording_and_fold": 0.792,
+    "auroc_within_wording_and_fold_ci": [
+     0.707,
+     0.864
+    ],
+    "spearman_rate_overall": 0.771,
+    "spearman_rate_within_wording": 0.33,
+    "spearman_rate_within_wording_ci": [
+     0.235,
+     0.419
+    ]
+   },
+   "text_note": {
+    "auroc_overall": 0.941,
+    "auroc_within_wording": 0.732,
+    "auroc_within_wording_ci": [
+     0.652,
+     0.807
+    ],
+    "auroc_within_wording_and_fold": 0.749,
+    "auroc_within_wording_and_fold_ci": [
+     0.654,
+     0.83
+    ],
+    "spearman_rate_overall": 0.745,
+    "spearman_rate_within_wording": 0.258,
+    "spearman_rate_within_wording_ci": [
+     0.161,
+     0.353
+    ]
+   },
+   "template": {
+    "auroc_overall": 0.907,
+    "auroc_within_wording": 0.374,
+    "auroc_within_wording_ci": [
+     0.307,
+     0.435
+    ],
+    "auroc_within_wording_and_fold": 0.5,
+    "auroc_within_wording_and_fold_ci": [
+     0.5,
+     0.5
+    ],
+    "spearman_rate_overall": 0.7,
+    "spearman_rate_within_wording": -0.052,
+    "spearman_rate_within_wording_ci": [
+     -0.114,
+     0.007
+    ]
+   }
+  },
+  "paired_differences": {
+   "probe_mre_minus_text_full": {
+    "auroc_within_wording": 0.093,
+    "auroc_within_wording_ci": [
+     0.016,
+     0.175
+    ],
+    "spearman_within_wording": 0.129,
+    "spearman_within_wording_ci": [
+     0.044,
+     0.224
+    ]
+   },
+   "probe_mre_minus_text_note": {
+    "auroc_within_wording": 0.139,
+    "auroc_within_wording_ci": [
+     0.053,
+     0.221
+    ],
+    "spearman_within_wording": 0.2,
+    "spearman_within_wording_ci": [
+     0.095,
+     0.3
+    ]
+   },
+   "probe_note_minus_text_full": {
+    "auroc_within_wording": 0.097,
+    "auroc_within_wording_ci": [
+     0.029,
+     0.174
+    ],
+    "spearman_within_wording": 0.116,
+    "spearman_within_wording_ci": [
+     0.029,
+     0.199
+    ]
+   },
+   "probe_note_minus_text_note": {
+    "auroc_within_wording": 0.143,
+    "auroc_within_wording_ci": [
+     0.074,
+     0.222
+    ],
+    "spearman_within_wording": 0.188,
+    "spearman_within_wording_ci": [
+     0.099,
+     0.275
+    ]
+   }
+  }
+ },
+ "C_train_split_nested": {
+  "n_notes": 512,
+  "n_reached_execution": 242,
+  "n_cases": 128,
+  "n_domains": 34,
+  "methods": {
+   "probe_mre": {
+    "auroc_overall": 0.944,
+    "auroc_within_wording": 0.815,
+    "auroc_within_wording_ci": [
+     0.737,
+     0.88
+    ],
+    "auroc_within_wording_and_fold": 0.862,
+    "auroc_within_wording_and_fold_ci": [
+     0.797,
+     0.919
+    ],
+    "spearman_rate_overall": 0.821,
+    "spearman_rate_within_wording": 0.44,
+    "spearman_rate_within_wording_ci": [
+     0.333,
+     0.528
+    ]
+   },
+   "probe_note": {
+    "auroc_overall": 0.955,
+    "auroc_within_wording": 0.853,
+    "auroc_within_wording_ci": [
+     0.784,
+     0.907
+    ],
+    "auroc_within_wording_and_fold": 0.878,
+    "auroc_within_wording_and_fold_ci": [
+     0.819,
+     0.93
+    ],
+    "spearman_rate_overall": 0.822,
+    "spearman_rate_within_wording": 0.443,
+    "spearman_rate_within_wording_ci": [
+     0.337,
+     0.533
+    ]
+   },
+   "text_full": {
+    "auroc_overall": 0.949,
+    "auroc_within_wording": 0.815,
+    "auroc_within_wording_ci": [
+     0.74,
+     0.88
+    ],
+    "auroc_within_wording_and_fold": 0.827,
+    "auroc_within_wording_and_fold_ci": [
+     0.746,
+     0.895
+    ],
+    "spearman_rate_overall": 0.818,
+    "spearman_rate_within_wording": 0.392,
+    "spearman_rate_within_wording_ci": [
+     0.278,
+     0.49
+    ]
+   },
+   "text_note": {
+    "auroc_overall": 0.941,
+    "auroc_within_wording": 0.763,
+    "auroc_within_wording_ci": [
+     0.684,
+     0.836
+    ],
+    "auroc_within_wording_and_fold": 0.777,
+    "auroc_within_wording_and_fold_ci": [
+     0.691,
+     0.85
+    ],
+    "spearman_rate_overall": 0.792,
+    "spearman_rate_within_wording": 0.297,
+    "spearman_rate_within_wording_ci": [
+     0.167,
+     0.41
+    ]
+   },
+   "template": {
+    "auroc_overall": 0.882,
+    "auroc_within_wording": 0.349,
+    "auroc_within_wording_ci": [
+     0.283,
+     0.431
+    ],
+    "auroc_within_wording_and_fold": 0.5,
+    "auroc_within_wording_and_fold_ci": [
+     0.5,
+     0.5
+    ],
+    "spearman_rate_overall": 0.709,
+    "spearman_rate_within_wording": -0.05,
+    "spearman_rate_within_wording_ci": [
+     -0.177,
+     0.066
+    ]
+   }
+  },
+  "paired_differences": {
+   "probe_mre_minus_text_full": {
+    "auroc_within_wording": 0.0,
+    "auroc_within_wording_ci": [
+     -0.083,
+     0.09
+    ],
+    "spearman_within_wording": 0.048,
+    "spearman_within_wording_ci": [
+     -0.062,
+     0.157
+    ]
+   },
+   "probe_mre_minus_text_note": {
+    "auroc_within_wording": 0.052,
+    "auroc_within_wording_ci": [
+     -0.034,
+     0.138
+    ],
+    "spearman_within_wording": 0.144,
+    "spearman_within_wording_ci": [
+     0.029,
+     0.272
+    ]
+   },
+   "probe_note_minus_text_full": {
+    "auroc_within_wording": 0.038,
+    "auroc_within_wording_ci": [
+     -0.026,
+     0.113
+    ],
+    "spearman_within_wording": 0.051,
+    "spearman_within_wording_ci": [
+     -0.03,
+     0.139
+    ]
+   },
+   "probe_note_minus_text_note": {
+    "auroc_within_wording": 0.091,
+    "auroc_within_wording_ci": [
+     0.01,
+     0.17
+    ],
+    "spearman_within_wording": 0.146,
+    "spearman_within_wording_ci": [
+     0.055,
+     0.247
+    ]
+   }
+  },
+  "probe_C_chosen": {
+   "probe_mre": [
+    0.01,
+    1.0
+   ],
+   "probe_note": [
+    0.01,
+    0.1,
+    1.0
+   ]
+  }
+ },
+ "D_preregistered_rate": {
+  "E1_new_templates": {
+   "probe_mre": {
+    "spearman_rate_overall": 0.458,
+    "spearman_rate_within_wording": 0.419,
+    "auroc_binary_overall": 0.938
+   },
+   "probe_note": {
+    "spearman_rate_overall": 0.468,
+    "spearman_rate_within_wording": 0.417,
+    "auroc_binary_overall": 0.961
+   },
+   "text_full": {
+    "spearman_rate_overall": 0.414,
+    "spearman_rate_within_wording": 0.449,
+    "auroc_binary_overall": 0.923
+   },
+   "text_note": {
+    "spearman_rate_overall": 0.303,
+    "spearman_rate_within_wording": 0.406,
+    "auroc_binary_overall": 0.849
+   },
+   "template": {
+    "spearman_rate_overall": NaN,
+    "spearman_rate_within_wording": NaN,
+    "auroc_binary_overall": 0.5
+   }
+  },
+  "E2_new_domains": {
+   "probe_mre": {
+    "spearman_rate_overall": 0.827,
+    "spearman_rate_within_wording": 0.587,
+    "auroc_binary_overall": 0.956
+   },
+   "probe_note": {
+    "spearman_rate_overall": 0.765,
+    "spearman_rate_within_wording": 0.371,
+    "auroc_binary_overall": 0.916
+   },
+   "text_full": {
+    "spearman_rate_overall": 0.785,
+    "spearman_rate_within_wording": 0.366,
+    "auroc_binary_overall": 0.927
+   },
+   "text_note": {
+    "spearman_rate_overall": 0.738,
+    "spearman_rate_within_wording": 0.141,
+    "auroc_binary_overall": 0.897
+   },
+   "template": {
+    "spearman_rate_overall": 0.724,
+    "spearman_rate_within_wording": NaN,
+    "auroc_binary_overall": 0.869
+   }
+  }
+ }
+}
