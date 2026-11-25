@@ -253,7 +253,10 @@ for k in METHODS:
     pm = res["probe_minus"].get(k)
     md.append(f"| {names[k]} | {m['auroc_within_wording']:.3f} [{m['auroc_within_wording_ci'][0]:.3f}, {m['auroc_within_wording_ci'][1]:.3f}] | "
               f"{m['spearman_within_wording']:.3f} | " + (f"{pm['auroc_within_wording']:+.3f} [{pm['ci'][0]:+.3f}, {pm['ci'][1]:+.3f}]" if pm else "") + " |")
-md += ["", "A neural text baseline (a small language model reading the same prompt) is in `runpod/text_baseline_lm.py` "
-       "because Hugging Face downloads are blocked in the environment that produced this file."]
+md += ["", ("Rows starting \"Other model reading the text\" use features from runpod/text_baseline_lm.py: another language model "
+        "reads exactly the text TF-IDF sees, averaged over the same relative depth as gpt-oss's window, at the last token or "
+        "averaged over all tokens; the same probe is then fitted on those features. See beyond_other_lm.json for whether "
+        "gpt-oss's own state adds information beyond another model's reading.") if LM else
+       "A neural text baseline (another language model reading the same prompt) needs runpod/text_baseline_lm.py on a GPU."]
 (RES / f"TEXT_BASELINES{tag}.md").write_text("\n".join(md) + "\n")
 log("wrote", RES / f"TEXT_BASELINES{tag}.md")

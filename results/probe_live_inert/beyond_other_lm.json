@@ -1,0 +1,59 @@
+{
+ "other_model": "Qwen/Qwen3-8B",
+ "feature_sets": {
+  "qwen_mean": {
+   "ce_bits": 0.4691,
+   "auroc_within_wording": 0.852
+  },
+  "gptoss": {
+   "ce_bits": 0.4346,
+   "auroc_within_wording": 0.901
+  },
+  "qwen_mean+gptoss": {
+   "ce_bits": 0.4309,
+   "auroc_within_wording": 0.905
+  },
+  "qwen_mean+qwen_last": {
+   "ce_bits": 0.4621,
+   "auroc_within_wording": 0.854
+  }
+ },
+ "gains": {
+  "qwen_mean+gptoss over qwen_mean": {
+   "bits": 0.0382,
+   "bits_ci": [
+    0.0237,
+    0.0564
+   ],
+   "auroc": 0.053,
+   "auroc_ci": [
+    0.021,
+    0.091
+   ]
+  },
+  "qwen_mean+gptoss over gptoss": {
+   "bits": 0.0037,
+   "bits_ci": [
+    -0.0072,
+    0.0142
+   ],
+   "auroc": 0.005,
+   "auroc_ci": [
+    -0.017,
+    0.027
+   ]
+  },
+  "qwen_mean+qwen_last over qwen_mean": {
+   "bits": 0.007,
+   "bits_ci": [
+    -0.0056,
+    0.0199
+   ],
+   "auroc": 0.002,
+   "auroc_ci": [
+    -0.031,
+    0.029
+   ]
+  }
+ }
+}
