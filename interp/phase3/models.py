@@ -9,6 +9,8 @@ window: the pre-registered probe window, the same relative depth as gpt-oss-20b'
 """
 from __future__ import annotations
 
+import os
+
 MODELS = {
     # key: hf id, vLLM extra args, gated, approx bf16 GB, GPU to use, family/size for the figures
     "gpt-oss-20b": dict(hf="openai/gpt-oss-20b", vllm=["--tool-call-parser", "openai", "--reasoning-parser", "openai_gptoss"],
@@ -40,7 +42,12 @@ def window_layers(n_layers: int) -> list[int]:
 def get(key: str) -> dict:
     if key not in MODELS:
         raise SystemExit(f"unknown model {key}; choose from {', '.join(MODELS)}")
-    return {"key": key, **MODELS[key]}
+    spec = {"key": key, **MODELS[key]}
+    # Same weights from another repository, e.g. an ungated mirror of a gated model:
+    #   MODEL_HF_REPO=unsloth/Meta-Llama-3.1-8B-Instruct MODEL=llama3.1-8b bash runpod/run_model.sh
+    if os.environ.get("MODEL_HF_REPO"):
+        spec["hf"], spec["gated"] = os.environ["MODEL_HF_REPO"], False
+    return spec
 
 
 def load_hf(spec: dict, device: str = "cuda:0"):
