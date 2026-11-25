@@ -1,0 +1,124 @@
+{
+ "n": 888,
+ "reached": {
+  "gpt-oss-20b": 297,
+  "qwen3-8b": 128
+ },
+ "rate_correlation": 0.646,
+ "matrix": {
+  "tfidf -> gpt-oss-20b": {
+   "auroc_within_wording": 0.786,
+   "ci": [
+    0.712,
+    0.851
+   ],
+   "ce_bits": 0.5126
+  },
+  "gptoss_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.901,
+   "ci": [
+    0.86,
+    0.937
+   ],
+   "ce_bits": 0.4346
+  },
+  "qwen_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.787,
+   "ci": [
+    0.721,
+    0.841
+   ],
+   "ce_bits": 0.4967
+  },
+  "qwen_reads -> gpt-oss-20b": {
+   "auroc_within_wording": 0.852,
+   "ci": [
+    0.802,
+    0.893
+   ],
+   "ce_bits": 0.4691
+  },
+  "tfidf -> qwen3-8b": {
+   "auroc_within_wording": 0.727,
+   "ci": [
+    0.629,
+    0.812
+   ],
+   "ce_bits": 0.3871
+  },
+  "gptoss_state -> qwen3-8b": {
+   "auroc_within_wording": 0.717,
+   "ci": [
+    0.634,
+    0.787
+   ],
+   "ce_bits": 0.38
+  },
+  "qwen_state -> qwen3-8b": {
+   "auroc_within_wording": 0.737,
+   "ci": [
+    0.653,
+    0.805
+   ],
+   "ce_bits": 0.3678
+  },
+  "qwen_reads -> qwen3-8b": {
+   "auroc_within_wording": 0.774,
+   "ci": [
+    0.703,
+    0.833
+   ],
+   "ce_bits": 0.3659
+  }
+ },
+ "conditional": {
+  "gpt-oss-20b: gptoss_state beyond qwen_state": {
+   "bits": 0.0609,
+   "bits_ci": [
+    0.045,
+    0.079
+   ],
+   "auroc": 0.112,
+   "auroc_ci": [
+    0.076,
+    0.151
+   ]
+  },
+  "gpt-oss-20b: qwen_state beyond gptoss_state": {
+   "bits": -0.0012,
+   "bits_ci": [
+    -0.012,
+    0.009
+   ],
+   "auroc": -0.002,
+   "auroc_ci": [
+    -0.022,
+    0.017
+   ]
+  },
+  "qwen3-8b: gptoss_state beyond qwen_state": {
+   "bits": 0.0011,
+   "bits_ci": [
+    -0.006,
+    0.008
+   ],
+   "auroc": 0.022,
+   "auroc_ci": [
+    -0.02,
+    0.059
+   ]
+  },
+  "qwen3-8b: qwen_state beyond gptoss_state": {
+   "bits": 0.0133,
+   "bits_ci": [
+    0.005,
+    0.023
+   ],
+   "auroc": 0.042,
+   "auroc_ci": [
+    -0.017,
+    0.096
+   ]
+  }
+ }
+}

@@ -38,3 +38,9 @@ results/phase3/*/window_features.npz
 
 # other models reading the prompt text (runpod/text_baseline_lm.py; 28 MB, kept in results_text_lm.tar.gz)
 results/probe_live_inert/lm_text_*.npz
+
+# phase 3 behaviour files are committed gzipped
+interp/data/phase3/*/behavior.jsonl
+interp/data/phase3/*/behavior_pilot.jsonl
+interp/data/phase3/*/requests.jsonl
+interp/data/phase3/*/activations.npz

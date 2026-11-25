@@ -87,3 +87,23 @@ Run 3 (`interp/phase3/causal_v3.py`), written and fixed before it runs:
 3. Cost, user's task on clean prompts, difference of means −1 minus unsteered: point estimate above −0.05 and 95%
    interval lower bound above −0.10.
 The −0.5 condition (dose) and the user's task on poisoned prompts are reported as descriptive.
+
+## 7. Qwen3-8B result and H7, written before any third model (25 November 2026)
+
+**Qwen3-8B (run_model.sh).** Pilot gate passed (21 of 120 reached execution). Full run: 888 notes, k = 8, 128 reached
+execution (mean rate 0.152; by wording 0.65, 0.05, 0.03, 0.13, 0.01, 0.04). Tokenization check 20 of 20. **H1 does not
+hold for Qwen3-8B**: probe 0.720 vs TF-IDF 0.729 within wording, difference −0.010 [−0.122, +0.104]; H2 −0.064
+[−0.189, +0.054]. H1 across models so far: 1 of 2.
+
+**Exploratory cross-model matrix** (`cross_model.py`, results/phase3/CROSS_MODEL.md). For gpt-oss-20b's behaviour,
+gpt-oss's own state adds +0.061 bits [+0.045, +0.079] beyond Qwen3-8B's state and Qwen's adds nothing. For Qwen3-8B's
+behaviour, Qwen's own state adds +0.013 bits [+0.005, +0.023] beyond gpt-oss's state and gpt-oss's adds nothing
+(+0.001 [−0.006, +0.008]). This looks like each model holding information about its own behaviour that the other does
+not. It was found after looking, on two models, so it is tested as H7 on new models before it is claimed.
+
+**H7 (self-advantage), fixed now.** For every new included model M and each previous model N, with both models' states
+read at the end of the memory result (window mean at the pre-registered relative depth) and the conditional probing
+procedure of `cross_model.py` (5 fold held out cases, nested C, execution rate target, 1,000 case resamples):
+(a) for M's behaviour, M's state beyond N's state has a cross entropy gain with a 95% interval above zero, and
+(b) N's state beyond M's state has an interval that includes zero or lies below it.
+H7 holds for a pair if both (a) and (b) hold; it is reported per pair, with no pooling.

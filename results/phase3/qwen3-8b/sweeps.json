@@ -1,0 +1,243 @@
+{
+ "model": "Qwen/Qwen3-8B",
+ "position_sweep_execution_auroc_within_wording": {
+  "user_end": 0.632,
+  "memory_result_start": 0.693,
+  "note": 0.678,
+  "memory_result_end": 0.669,
+  "message_end": 0.607,
+  "last_minus_2": 0.722,
+  "last_minus_1": 0.655,
+  "last_prompt": 0.777
+ },
+ "trajectory_auroc_within_wording_sign_free": {
+  "path_length": {
+   "poisoned_vs_twin": 0.517,
+   "execution": 0.502,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "mean_turning_angle": {
+   "poisoned_vs_twin": 0.687,
+   "execution": 0.516,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer1_vs_0": {
+   "poisoned_vs_twin": 0.524,
+   "execution": 0.611,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer2_vs_1": {
+   "poisoned_vs_twin": 0.613,
+   "execution": 0.654,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer3_vs_2": {
+   "poisoned_vs_twin": 0.675,
+   "execution": 0.566,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer4_vs_3": {
+   "poisoned_vs_twin": 0.557,
+   "execution": 0.581,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer5_vs_4": {
+   "poisoned_vs_twin": 0.518,
+   "execution": 0.511,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer6_vs_5": {
+   "poisoned_vs_twin": 0.566,
+   "execution": 0.507,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer7_vs_6": {
+   "poisoned_vs_twin": 0.578,
+   "execution": 0.581,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer8_vs_7": {
+   "poisoned_vs_twin": 0.533,
+   "execution": 0.521,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer9_vs_8": {
+   "poisoned_vs_twin": 0.648,
+   "execution": 0.571,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer10_vs_9": {
+   "poisoned_vs_twin": 0.524,
+   "execution": 0.506,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer11_vs_10": {
+   "poisoned_vs_twin": 0.57,
+   "execution": 0.551,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer12_vs_11": {
+   "poisoned_vs_twin": 0.502,
+   "execution": 0.541,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer13_vs_12": {
+   "poisoned_vs_twin": 0.599,
+   "execution": 0.539,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer14_vs_13": {
+   "poisoned_vs_twin": 0.678,
+   "execution": 0.537,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer15_vs_14": {
+   "poisoned_vs_twin": 0.589,
+   "execution": 0.609,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer16_vs_15": {
+   "poisoned_vs_twin": 0.549,
+   "execution": 0.532,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer17_vs_16": {
+   "poisoned_vs_twin": 0.559,
+   "execution": 0.522,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer18_vs_17": {
+   "poisoned_vs_twin": 0.678,
+   "execution": 0.607,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer19_vs_18": {
+   "poisoned_vs_twin": 0.633,
+   "execution": 0.555,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer20_vs_19": {
+   "poisoned_vs_twin": 0.516,
+   "execution": 0.522,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer21_vs_20": {
+   "poisoned_vs_twin": 0.514,
+   "execution": 0.529,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer22_vs_21": {
+   "poisoned_vs_twin": 0.657,
+   "execution": 0.544,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer23_vs_22": {
+   "poisoned_vs_twin": 0.549,
+   "execution": 0.511,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer24_vs_23": {
+   "poisoned_vs_twin": 0.524,
+   "execution": 0.586,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer25_vs_24": {
+   "poisoned_vs_twin": 0.519,
+   "execution": 0.599,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer26_vs_25": {
+   "poisoned_vs_twin": 0.538,
+   "execution": 0.592,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer27_vs_26": {
+   "poisoned_vs_twin": 0.609,
+   "execution": 0.541,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer28_vs_27": {
+   "poisoned_vs_twin": 0.538,
+   "execution": 0.501,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer29_vs_28": {
+   "poisoned_vs_twin": 0.509,
+   "execution": 0.543,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": false
+  },
+  "cos_layer30_vs_29": {
+   "poisoned_vs_twin": 0.599,
+   "execution": 0.512,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer31_vs_30": {
+   "poisoned_vs_twin": 0.534,
+   "execution": 0.522,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  },
+  "cos_layer32_vs_31": {
+   "poisoned_vs_twin": 0.516,
+   "execution": 0.525,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": true
+  },
+  "cos_layer33_vs_32": {
+   "poisoned_vs_twin": 0.604,
+   "execution": 0.515,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer34_vs_33": {
+   "poisoned_vs_twin": 0.629,
+   "execution": 0.601,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer35_vs_34": {
+   "poisoned_vs_twin": 0.612,
+   "execution": 0.55,
+   "direction_poisoned_higher": true,
+   "direction_executed_higher": true
+  },
+  "cos_layer36_vs_35": {
+   "poisoned_vs_twin": 0.525,
+   "execution": 0.579,
+   "direction_poisoned_higher": false,
+   "direction_executed_higher": false
+  }
+ }
+}

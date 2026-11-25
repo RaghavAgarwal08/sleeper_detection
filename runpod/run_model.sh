@@ -20,7 +20,7 @@ VARGS=$(python -c "import sys; sys.path.insert(0,'interp/phase3'); import models
 stamp "install (vLLM brings its own torch)"
 pip install -q --ignore-installed PyJWT
 pip install -q vllm
-pip install -q scikit-learn scipy matplotlib openai "openai-agents>=0.14.0" pydantic json-repair hf_transfer
+pip install -q accelerate scikit-learn scipy matplotlib openai "openai-agents>=0.14.0" pydantic json-repair hf_transfer
 python -c "import torch, vllm, transformers; print('torch', torch.__version__, 'vllm', vllm.__version__, 'transformers', transformers.__version__)"
 
 stamp "render prompts for $MODEL"

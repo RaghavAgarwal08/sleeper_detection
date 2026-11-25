@@ -1,0 +1,152 @@
+{
+ "model": "Qwen/Qwen3-8B",
+ "key": "qwen3-8b",
+ "pilot": false,
+ "window": [
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28
+ ],
+ "n_poisoned": 888,
+ "n_reached_execution": 128,
+ "execution_rate_by_wording": {
+  "0": 0.649,
+  "1": 0.05,
+  "2": 0.026,
+  "3": 0.128,
+  "4": 0.014,
+  "5": 0.044
+ },
+ "mean_execution_rate": 0.152,
+ "included": true,
+ "H1_heldout_cases_rate": {
+  "probe_mre": {
+   "auroc_within_wording": 0.72,
+   "auroc_within_wording_ci": [
+    0.647,
+    0.785
+   ],
+   "auroc_overall": 0.958,
+   "spearman_within_wording": 0.297
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.704,
+   "auroc_within_wording_ci": [
+    0.621,
+    0.776
+   ],
+   "auroc_overall": 0.955,
+   "spearman_within_wording": 0.24
+  },
+  "text_full": {
+   "auroc_within_wording": 0.729,
+   "auroc_within_wording_ci": [
+    0.62,
+    0.827
+   ],
+   "auroc_overall": 0.948,
+   "spearman_within_wording": 0.2
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": -0.01,
+   "ci": [
+    -0.122,
+    0.104
+   ],
+   "spearman_diff": 0.097,
+   "spearman_diff_ci": [
+    0.009,
+    0.191
+   ]
+  }
+ },
+ "H2_lodo_binary": {
+  "probe_mre": {
+   "auroc_within_wording": 0.563,
+   "auroc_within_wording_ci": [
+    0.463,
+    0.671
+   ],
+   "auroc_overall": 0.918,
+   "spearman_within_wording": 0.09
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.592,
+   "auroc_within_wording_ci": [
+    0.494,
+    0.673
+   ],
+   "auroc_overall": 0.929,
+   "spearman_within_wording": 0.058
+  },
+  "text_full": {
+   "auroc_within_wording": 0.628,
+   "auroc_within_wording_ci": [
+    0.538,
+    0.705
+   ],
+   "auroc_overall": 0.937,
+   "spearman_within_wording": 0.12
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": -0.064,
+   "ci": [
+    -0.189,
+    0.054
+   ],
+   "spearman_diff": -0.03,
+   "spearman_diff_ci": [
+    -0.128,
+    0.061
+   ]
+  }
+ },
+ "H4_poisoned_vs_twin": {
+  "E1_new_templates": 0.9993,
+  "E2_new_domains": 1.0
+ },
+ "layer_sweep_within_wording_auroc": [
+  0.4346,
+  0.6077,
+  0.592,
+  0.6348,
+  0.6074,
+  0.5974,
+  0.6307,
+  0.6141,
+  0.6399,
+  0.6069,
+  0.616,
+  0.6365,
+  0.6206,
+  0.591,
+  0.6233,
+  0.5406,
+  0.4933,
+  0.5267,
+  0.5666,
+  0.586,
+  0.65,
+  0.6781,
+  0.6977,
+  0.7018,
+  0.6706,
+  0.6801,
+  0.6633,
+  0.661,
+  0.6558,
+  0.6382,
+  0.6437,
+  0.5992,
+  0.5969,
+  0.6098,
+  0.6281,
+  0.602,
+  0.5992
+ ]
+}
