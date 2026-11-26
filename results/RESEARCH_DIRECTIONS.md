@@ -5,7 +5,7 @@ November 25, 2026. Builds on `results/LITERATURE_REVIEW.md`. For each direction:
 ## What we can build on
 
 * **A monitor that predicts obedience before the agent acts.** Within wording, under a full prompt text baseline and pre-registered tests, it holds on corrected labels (+0.12 AUROC over text).
-* **The probe's position is not on the causal path.** The model reads the note directly.
+* **The tested probe direction and patching interventions did not change behaviour.** Whether later positions read the note directly is open (attention head and path patching).
 * **A difference of means direction suppresses obedience on new notes** (0.22 to 0.12) without costing the user's task. This is a replication of CounterSteer in the memory channel.
 * **A reusable pipeline** for any open model: prompts, capture, probes, steering, patching, saved generations.
 
