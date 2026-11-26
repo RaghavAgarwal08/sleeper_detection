@@ -175,6 +175,12 @@ def test_pipeline():
     assert {"base", "dom_-1", "dom_-0.5", "random_-1"} <= set(c3["summary"]), c3["summary"].keys()
     assert "user_task_rate" in c3["summary"]["base"]
     print("causal v3 dry run ok", sorted(c3["summary"]), c3["user_tool"])
+    r = run(str(HERE / "causal_v4.py"), "--model", "qwen2.5-7b", "--dry-run", "--k", "2", "--batch", "4", "--max-new-tokens", "8",
+            "--notes", "3")
+    c4 = json.load(open(f"{d}/out/qwen2.5-7b/causal_v4_dryrun.json"))
+    if c4["notes"]:
+        assert {"base", "dom_-1", "random_-1", "toolresult_-3", "clean_toolresult_-3"} <= set(c4["summary"]), c4["summary"].keys()
+    print("causal v4 dry run ok", len(c4["notes"]), "notes", sorted(c4["summary"]), c4["H6b"])
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)

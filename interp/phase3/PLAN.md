@@ -168,3 +168,34 @@ base and the full model alike.
 
 Both outcomes are reported whichever way they fall. If H8a fails and H8b holds, the paper says the acting model's state
 is not a better classifier than a fine tuned reader but carries information that reader lacks.
+
+## 11. H6b, cross fitted confirmation of the steering defense, written before the run (26 November 2026)
+
+**Why.** Mentor feedback: confirm the steering result on fresh held out examples with the corrected scorer from the
+start, saving all outputs, and compare clearly with CounterSteer. Under the corrected labels only 52 held out poisoned
+notes have mixed first step outcomes and run 3 used 48 of them; the other held out notes are almost all never executed
+on the first step, so nothing is left to suppress. We therefore cross fit.
+
+**Design, fixed now** (`interp/phase3/causal_v4.py`, `runpod/run_causal_v4.sh`).
+* Direction: difference of means of the window mean (layers 14 to 19) at the end of the memory result, reached
+  execution minus the rest, computed on the 376 held out poisoned notes (55 reached execution), corrected labels.
+* Test notes: training split poisoned notes with mixed phase 1 first step outcomes (corrected labels) that run 2 did
+  not use (69 notes on 45 cases, mean first step execution 0.34). No test note contributes to the direction.
+* Clean prompts of the same cases. k = 8 first responses, T = 1, up to 1,536 new tokens.
+* Scoring: the corrected parser from the start; the full text of every rollout saved.
+* Conditions: base; dom_-1 (the H6 recipe: −1 SD per window layer from the start of the memory result and on every
+  generated token); random_-1 (a fixed random direction orthogonal to it, same size); toolresult_-1 and
+  toolresult_-3 (CounterSteer style: the same direction only on the memory result's tokens and only during the prompt
+  pass); on clean prompts base, dom_-1, random_-1, toolresult_-3. SD is the projection's standard deviation over the
+  held out notes.
+
+**H6b holds** if, as in H6: (1) dom_-1 lowers execution with the 95% case bootstrap interval below zero; (2) the
+random push's interval includes zero; (3) on clean prompts dom_-1 changes the user's task by more than −0.05 with the
+interval's lower bound above −0.10.
+
+**Reported without a pass or fail:** the CounterSteer style conditions against the H6 recipe (execution, user task on
+poisoned and clean prompts, any call). If H6b fails, the steering result is reported as not replicated under cross
+fitting, alongside run 3.
+
+**Caveat stated in advance.** The training notes are on cases that are also in the training split for the probe; the
+direction does not come from them, but the alpha (−1) was chosen in run 2 on other training notes.
