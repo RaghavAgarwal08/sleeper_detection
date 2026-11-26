@@ -1,0 +1,113 @@
+{
+ "model": "unsloth/Meta-Llama-3.1-8B-Instruct",
+ "key": "llama3.1-8b",
+ "pilot": false,
+ "window": [
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25
+ ],
+ "n_poisoned": 888,
+ "n_reached_execution": 68,
+ "execution_rate_by_wording": {
+  "0": 0.103,
+  "1": 0.06,
+  "2": 0.149,
+  "3": 0.142,
+  "4": 0.07,
+  "5": 0.082
+ },
+ "mean_execution_rate": 0.101,
+ "included": true,
+ "H1_heldout_cases_rate": {
+  "probe_mre": {
+   "auroc_within_wording": 0.768,
+   "auroc_within_wording_ci": [
+    0.704,
+    0.822
+   ],
+   "auroc_overall": 0.781,
+   "spearman_within_wording": 0.366
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.676,
+   "auroc_within_wording_ci": [
+    0.604,
+    0.742
+   ],
+   "auroc_overall": 0.702,
+   "spearman_within_wording": 0.219
+  },
+  "text_full": {
+   "auroc_within_wording": 0.707,
+   "auroc_within_wording_ci": [
+    0.639,
+    0.777
+   ],
+   "auroc_overall": 0.729,
+   "spearman_within_wording": 0.321
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.061,
+   "ci": [
+    -0.013,
+    0.125
+   ],
+   "spearman_diff": 0.046,
+   "spearman_diff_ci": [
+    -0.043,
+    0.135
+   ]
+  }
+ },
+ "H2_lodo_binary": {
+  "probe_mre": {
+   "auroc_within_wording": 0.726,
+   "auroc_within_wording_ci": [
+    0.624,
+    0.818
+   ],
+   "auroc_overall": 0.738,
+   "spearman_within_wording": 0.334
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.54,
+   "auroc_within_wording_ci": [
+    0.445,
+    0.631
+   ],
+   "auroc_overall": 0.562,
+   "spearman_within_wording": 0.076
+  },
+  "text_full": {
+   "auroc_within_wording": 0.493,
+   "auroc_within_wording_ci": [
+    0.368,
+    0.63
+   ],
+   "auroc_overall": 0.603,
+   "spearman_within_wording": -0.005
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.232,
+   "ci": [
+    0.02,
+    0.418
+   ],
+   "spearman_diff": 0.339,
+   "spearman_diff_ci": [
+    0.173,
+    0.513
+   ]
+  }
+ },
+ "H4_poisoned_vs_twin": {
+  "E1_new_templates": 0.9512,
+  "E2_new_domains": 0.9995
+ },
+ "site": "last_prompt"
+}

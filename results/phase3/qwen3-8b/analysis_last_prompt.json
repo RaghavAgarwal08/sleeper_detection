@@ -1,0 +1,114 @@
+{
+ "model": "Qwen/Qwen3-8B",
+ "key": "qwen3-8b",
+ "pilot": false,
+ "window": [
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28
+ ],
+ "n_poisoned": 888,
+ "n_reached_execution": 128,
+ "execution_rate_by_wording": {
+  "0": 0.649,
+  "1": 0.05,
+  "2": 0.026,
+  "3": 0.128,
+  "4": 0.014,
+  "5": 0.044
+ },
+ "mean_execution_rate": 0.152,
+ "included": true,
+ "H1_heldout_cases_rate": {
+  "probe_mre": {
+   "auroc_within_wording": 0.797,
+   "auroc_within_wording_ci": [
+    0.72,
+    0.854
+   ],
+   "auroc_overall": 0.973,
+   "spearman_within_wording": 0.385
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.709,
+   "auroc_within_wording_ci": [
+    0.627,
+    0.78
+   ],
+   "auroc_overall": 0.955,
+   "spearman_within_wording": 0.245
+  },
+  "text_full": {
+   "auroc_within_wording": 0.729,
+   "auroc_within_wording_ci": [
+    0.62,
+    0.827
+   ],
+   "auroc_overall": 0.948,
+   "spearman_within_wording": 0.2
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.067,
+   "ci": [
+    -0.054,
+    0.191
+   ],
+   "spearman_diff": 0.185,
+   "spearman_diff_ci": [
+    0.089,
+    0.285
+   ]
+  }
+ },
+ "H2_lodo_binary": {
+  "probe_mre": {
+   "auroc_within_wording": 0.756,
+   "auroc_within_wording_ci": [
+    0.664,
+    0.836
+   ],
+   "auroc_overall": 0.965,
+   "spearman_within_wording": 0.261
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.58,
+   "auroc_within_wording_ci": [
+    0.483,
+    0.663
+   ],
+   "auroc_overall": 0.929,
+   "spearman_within_wording": 0.042
+  },
+  "text_full": {
+   "auroc_within_wording": 0.628,
+   "auroc_within_wording_ci": [
+    0.538,
+    0.705
+   ],
+   "auroc_overall": 0.937,
+   "spearman_within_wording": 0.12
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.129,
+   "ci": [
+    0.019,
+    0.225
+   ],
+   "spearman_diff": 0.141,
+   "spearman_diff_ci": [
+    0.036,
+    0.244
+   ]
+  }
+ },
+ "H4_poisoned_vs_twin": {
+  "E1_new_templates": 0.9956,
+  "E2_new_domains": 1.0
+ },
+ "site": "last_prompt"
+}

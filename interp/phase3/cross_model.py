@@ -181,4 +181,4 @@ for k, v in res["H7"].items():
     L.append(f"| {k} | {v['a_own_beyond_other_ci_above_zero']} | {v['b_other_beyond_own_not_above_zero']} | {v['holds']} |")
 L.insert(1, f"\nStates read at: {args.site}.")
 (out / f"CROSS_MODEL{TAG}.md").write_text("\n".join(L) + "\n")
-print("wrote", out / "CROSS_MODEL.md")
+print("wrote", out / f"CROSS_MODEL{TAG}.md")

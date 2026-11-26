@@ -34,7 +34,7 @@ Thumbs.db
 *.swo
 
 # phase 3 per prompt features (20 MB, kept on the RunPod volume)
-results/phase3/*/window_features.npz
+results/phase3/*/window_features*.npz
 
 # other models reading the prompt text (runpod/text_baseline_lm.py; 28 MB, kept in results_text_lm.tar.gz)
 results/probe_live_inert/lm_text_*.npz

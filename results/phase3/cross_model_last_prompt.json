@@ -1,0 +1,290 @@
+{
+ "n": 888,
+ "reached": {
+  "gpt-oss-20b": 297,
+  "qwen3-8b": 128,
+  "llama3.1-8b": 68
+ },
+ "rate_correlation": {
+  "gpt-oss-20b vs qwen3-8b": 0.646,
+  "gpt-oss-20b vs llama3.1-8b": 0.173,
+  "qwen3-8b vs llama3.1-8b": 0.152
+ },
+ "matrix": {
+  "tfidf -> gpt-oss-20b": {
+   "auroc_within_wording": 0.786,
+   "ci": [
+    0.712,
+    0.851
+   ],
+   "ce_bits": 0.5126
+  },
+  "gptoss_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.863,
+   "ci": [
+    0.795,
+    0.912
+   ],
+   "ce_bits": 0.4487
+  },
+  "qwen_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.834,
+   "ci": [
+    0.785,
+    0.874
+   ],
+   "ce_bits": 0.4743
+  },
+  "llama_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.717,
+   "ci": [
+    0.637,
+    0.79
+   ],
+   "ce_bits": 0.5604
+  },
+  "tfidf -> qwen3-8b": {
+   "auroc_within_wording": 0.727,
+   "ci": [
+    0.629,
+    0.812
+   ],
+   "ce_bits": 0.3871
+  },
+  "gptoss_state -> qwen3-8b": {
+   "auroc_within_wording": 0.624,
+   "ci": [
+    0.549,
+    0.706
+   ],
+   "ce_bits": 0.3934
+  },
+  "qwen_state -> qwen3-8b": {
+   "auroc_within_wording": 0.81,
+   "ci": [
+    0.739,
+    0.865
+   ],
+   "ce_bits": 0.346
+  },
+  "llama_state -> qwen3-8b": {
+   "auroc_within_wording": 0.63,
+   "ci": [
+    0.54,
+    0.707
+   ],
+   "ce_bits": 0.4108
+  },
+  "tfidf -> llama3.1-8b": {
+   "auroc_within_wording": 0.711,
+   "ci": [
+    0.646,
+    0.774
+   ],
+   "ce_bits": 0.4489
+  },
+  "gptoss_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.695,
+   "ci": [
+    0.624,
+    0.761
+   ],
+   "ce_bits": 0.4488
+  },
+  "qwen_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.691,
+   "ci": [
+    0.622,
+    0.756
+   ],
+   "ce_bits": 0.4511
+  },
+  "llama_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.762,
+   "ci": [
+    0.695,
+    0.823
+   ],
+   "ce_bits": 0.4336
+  }
+ },
+ "conditional": {
+  "gpt-oss-20b: gptoss_state beyond qwen_state": {
+   "bits": 0.0236,
+   "bits_ci": [
+    0.007,
+    0.037
+   ],
+   "auroc": 0.022,
+   "auroc_ci": [
+    -0.011,
+    0.05
+   ]
+  },
+  "gpt-oss-20b: qwen_state beyond gptoss_state": {
+   "bits": -0.0021,
+   "bits_ci": [
+    -0.014,
+    0.009
+   ],
+   "auroc": -0.006,
+   "auroc_ci": [
+    -0.032,
+    0.017
+   ]
+  },
+  "gpt-oss-20b: gptoss_state beyond llama_state": {
+   "bits": 0.0987,
+   "bits_ci": [
+    0.074,
+    0.124
+   ],
+   "auroc": 0.127,
+   "auroc_ci": [
+    0.081,
+    0.173
+   ]
+  },
+  "gpt-oss-20b: llama_state beyond gptoss_state": {
+   "bits": -0.013,
+   "bits_ci": [
+    -0.025,
+    -0.002
+   ],
+   "auroc": -0.019,
+   "auroc_ci": [
+    -0.044,
+    0.005
+   ]
+  },
+  "qwen3-8b: qwen_state beyond gptoss_state": {
+   "bits": 0.044,
+   "bits_ci": [
+    0.027,
+    0.064
+   ],
+   "auroc": 0.166,
+   "auroc_ci": [
+    0.071,
+    0.248
+   ]
+  },
+  "qwen3-8b: gptoss_state beyond qwen_state": {
+   "bits": -0.0034,
+   "bits_ci": [
+    -0.01,
+    0.003
+   ],
+   "auroc": -0.019,
+   "auroc_ci": [
+    -0.051,
+    0.016
+   ]
+  },
+  "qwen3-8b: qwen_state beyond llama_state": {
+   "bits": 0.0605,
+   "bits_ci": [
+    0.045,
+    0.077
+   ],
+   "auroc": 0.148,
+   "auroc_ci": [
+    0.084,
+    0.213
+   ]
+  },
+  "qwen3-8b: llama_state beyond qwen_state": {
+   "bits": -0.0043,
+   "bits_ci": [
+    -0.012,
+    0.003
+   ],
+   "auroc": -0.032,
+   "auroc_ci": [
+    -0.066,
+    0.001
+   ]
+  },
+  "llama3.1-8b: llama_state beyond gptoss_state": {
+   "bits": 0.0194,
+   "bits_ci": [
+    0.009,
+    0.032
+   ],
+   "auroc": 0.07,
+   "auroc_ci": [
+    0.029,
+    0.112
+   ]
+  },
+  "llama3.1-8b: gptoss_state beyond llama_state": {
+   "bits": 0.0042,
+   "bits_ci": [
+    -0.006,
+    0.015
+   ],
+   "auroc": 0.002,
+   "auroc_ci": [
+    -0.035,
+    0.04
+   ]
+  },
+  "llama3.1-8b: llama_state beyond qwen_state": {
+   "bits": 0.0184,
+   "bits_ci": [
+    0.006,
+    0.032
+   ],
+   "auroc": 0.064,
+   "auroc_ci": [
+    0.014,
+    0.118
+   ]
+  },
+  "llama3.1-8b: qwen_state beyond llama_state": {
+   "bits": 0.0009,
+   "bits_ci": [
+    -0.01,
+    0.011
+   ],
+   "auroc": -0.007,
+   "auroc_ci": [
+    -0.042,
+    0.029
+   ]
+  }
+ },
+ "H7": {
+  "gpt-oss-20b vs qwen3-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "gpt-oss-20b vs llama3.1-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "qwen3-8b vs gpt-oss-20b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "qwen3-8b vs llama3.1-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "llama3.1-8b vs gpt-oss-20b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "llama3.1-8b vs qwen3-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  }
+ },
+ "site": "last_prompt"
+}

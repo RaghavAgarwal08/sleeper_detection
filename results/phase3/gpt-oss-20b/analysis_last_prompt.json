@@ -1,0 +1,112 @@
+{
+ "model": "openai/gpt-oss-20b",
+ "key": "gpt-oss-20b",
+ "pilot": false,
+ "window": [
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ],
+ "n_poisoned": 888,
+ "n_reached_execution": 297,
+ "execution_rate_by_wording": {
+  "0": 0.847,
+  "1": 0.111,
+  "2": 0.133,
+  "3": 0.68,
+  "4": 0.018,
+  "5": 0.117
+ },
+ "mean_execution_rate": 0.318,
+ "included": true,
+ "H1_heldout_cases_rate": {
+  "probe_mre": {
+   "auroc_within_wording": 0.854,
+   "auroc_within_wording_ci": [
+    0.79,
+    0.904
+   ],
+   "auroc_overall": 0.968,
+   "spearman_within_wording": 0.48
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.897,
+   "auroc_within_wording_ci": [
+    0.859,
+    0.929
+   ],
+   "auroc_overall": 0.974,
+   "spearman_within_wording": 0.538
+  },
+  "text_full": {
+   "auroc_within_wording": 0.782,
+   "auroc_within_wording_ci": [
+    0.707,
+    0.85
+   ],
+   "auroc_overall": 0.95,
+   "spearman_within_wording": 0.365
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.072,
+   "ci": [
+    -0.008,
+    0.162
+   ],
+   "spearman_diff": 0.115,
+   "spearman_diff_ci": [
+    0.035,
+    0.201
+   ]
+  }
+ },
+ "H2_lodo_binary": {
+  "probe_mre": {
+   "auroc_within_wording": 0.795,
+   "auroc_within_wording_ci": [
+    0.732,
+    0.847
+   ],
+   "auroc_overall": 0.956,
+   "spearman_within_wording": 0.41
+  },
+  "probe_note": {
+   "auroc_within_wording": 0.818,
+   "auroc_within_wording_ci": [
+    0.753,
+    0.87
+   ],
+   "auroc_overall": 0.956,
+   "spearman_within_wording": 0.363
+  },
+  "text_full": {
+   "auroc_within_wording": 0.639,
+   "auroc_within_wording_ci": [
+    0.553,
+    0.718
+   ],
+   "auroc_overall": 0.926,
+   "spearman_within_wording": 0.254
+  },
+  "probe_mre_minus_text_full": {
+   "auroc_within_wording": 0.156,
+   "ci": [
+    0.057,
+    0.25
+   ],
+   "spearman_diff": 0.156,
+   "spearman_diff_ci": [
+    0.047,
+    0.251
+   ]
+  }
+ },
+ "H4_poisoned_vs_twin": {
+  "E1_new_templates": 0.9837,
+  "E2_new_domains": 1.0
+ },
+ "site": "last_prompt"
+}
