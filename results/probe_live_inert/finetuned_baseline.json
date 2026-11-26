@@ -1,0 +1,137 @@
+{
+ "n": 888,
+ "n_reached": 297,
+ "methods": {
+  "probe_mre": {
+   "auroc_within_wording": 0.888,
+   "ci": [
+    0.845,
+    0.927
+   ]
+  },
+  "tfidf_fixed": {
+   "auroc_within_wording": 0.786,
+   "ci": [
+    0.712,
+    0.851
+   ]
+  },
+  "lm_qwen3-8b_mean": {
+   "auroc_within_wording": 0.844,
+   "ci": [
+    0.793,
+    0.887
+   ]
+  },
+  "ft_modernbert-large": {
+   "auroc_within_wording": 0.763,
+   "ci": [
+    0.688,
+    0.828
+   ]
+  },
+  "ft_qwen3-0.6b": {
+   "auroc_within_wording": 0.776,
+   "ci": [
+    0.709,
+    0.835
+   ]
+  },
+  "ft_qwen3-8b_lora": {
+   "auroc_within_wording": 0.766,
+   "ci": [
+    0.698,
+    0.823
+   ]
+  }
+ },
+ "probe_minus": {
+  "tfidf_fixed": {
+   "auroc_within_wording": 0.102,
+   "ci": [
+    0.031,
+    0.181
+   ]
+  },
+  "lm_qwen3-8b_mean": {
+   "auroc_within_wording": 0.044,
+   "ci": [
+    -0.001,
+    0.094
+   ]
+  },
+  "ft_modernbert-large": {
+   "auroc_within_wording": 0.125,
+   "ci": [
+    0.056,
+    0.207
+   ]
+  },
+  "ft_qwen3-0.6b": {
+   "auroc_within_wording": 0.112,
+   "ci": [
+    0.048,
+    0.179
+   ]
+  },
+  "ft_qwen3-8b_lora": {
+   "auroc_within_wording": 0.122,
+   "ci": [
+    0.068,
+    0.184
+   ]
+  }
+ },
+ "best_finetuned": "qwen3-0.6b",
+ "H8a": {
+  "probe_minus_best": {
+   "auroc_within_wording": 0.112,
+   "ci": [
+    0.048,
+    0.179
+   ]
+  },
+  "holds": true
+ },
+ "conditional": {
+  "ft+gptoss over ft": {
+   "bits": 0.0503,
+   "bits_ci": [
+    0.0245,
+    0.0783
+   ],
+   "auroc": 0.101,
+   "auroc_ci": [
+    0.055,
+    0.153
+   ]
+  },
+  "ft+gptoss over gptoss": {
+   "bits": -0.0143,
+   "bits_ci": [
+    -0.0352,
+    0.0031
+   ],
+   "auroc": -0.027,
+   "auroc_ci": [
+    -0.059,
+    0.003
+   ]
+  }
+ },
+ "H8b": {
+  "gptoss_beyond_best": {
+   "bits": 0.0503,
+   "bits_ci": [
+    0.0245,
+    0.0783
+   ],
+   "auroc": 0.101,
+   "auroc_ci": [
+    0.055,
+    0.153
+   ]
+  },
+  "holds": true
+ }
+}
