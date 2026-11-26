@@ -138,3 +138,33 @@ zero. H2 is reported alongside.
 
 **For every model added after today** the primary position is the last prompt token, decided now, before any of its
 data exist. That makes the next model a clean, independent test of both H1-LP and H7-LP.
+
+## 10. Fine tuned text classifiers as the full prompt baseline, written before any fine tuning (26 November 2026)
+
+**Why.** Mentor feedback (Enyi Jiang): before expanding, add a stronger full prompt text baseline. So far the text
+baselines are frozen (TF-IDF variants, and other models' frozen readings with a linear probe; best Qwen3-8B mean pooled
+0.844 against the probe's 0.888). A classifier fine tuned end to end on the prompt is the baseline reviewers expect.
+
+**Setup, fixed now.** Population, labels and folds are those of `text_baselines.py`: the 888 poisoned notes, corrected
+labels, execution rate as a soft target, the same 5 outer folds over cases, saved before any fine tuning in
+`results/probe_live_inert/folds_heldout_cases.json`. Each classifier reads exactly the text TF-IDF reads (all message
+contents joined) and is trained with binary cross entropy against the rate. Inside each outer training fold, 20% of the
+cases are held out for choosing the epoch (lowest validation loss); test notes are never used for any choice. One seed.
+Hyperparameters are fixed in `runpod/run_finetune_baselines.sh` and not tuned:
+* ModernBERT-large, full fine tuning, learning rate 2e-5, 4 epochs.
+* Qwen3-0.6B with a classification head, full fine tuning, learning rate 1e-5, 4 epochs.
+* Qwen3-8B with a classification head, LoRA (rank 16 on all linear layers, head trained), learning rate 1e-4, 3 epochs.
+All use an effective batch of 8, 10% warmup, then linear decay. The strongest of the three by AUROC within wording is
+"the fine tuned baseline"; choosing the maximum favours the baseline, not the probe.
+
+**H8a.** The execution probe (gpt-oss-20b, end of the memory result) beats the fine tuned baseline: probe minus baseline,
+AUROC within wording, 1,000 case resamples, interval above zero.
+
+**H8b (the main one, the paper's story).** gpt-oss-20b's own state adds information beyond the fine tuned baseline:
+conditional probing as in `beyond_other_lm.py`, with the baseline's out of fold logit as the base feature and the
+gpt-oss window activations added; gain in cross entropy bits per note, interval above zero. Caveat stated in advance:
+the baseline's logits for training notes come from models trained on other folds, a mild stacking leak that affects the
+base and the full model alike.
+
+Both outcomes are reported whichever way they fall. If H8a fails and H8b holds, the paper says the acting model's state
+is not a better classifier than a fine tuned reader but carries information that reader lacks.
