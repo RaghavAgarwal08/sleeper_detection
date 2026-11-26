@@ -2,9 +2,14 @@
  "n": 888,
  "reached": {
   "gpt-oss-20b": 297,
-  "qwen3-8b": 128
+  "qwen3-8b": 128,
+  "llama3.1-8b": 68
  },
- "rate_correlation": 0.646,
+ "rate_correlation": {
+  "gpt-oss-20b vs qwen3-8b": 0.646,
+  "gpt-oss-20b vs llama3.1-8b": 0.173,
+  "qwen3-8b vs llama3.1-8b": 0.152
+ },
  "matrix": {
   "tfidf -> gpt-oss-20b": {
    "auroc_within_wording": 0.786,
@@ -29,6 +34,14 @@
     0.841
    ],
    "ce_bits": 0.4967
+  },
+  "llama_state -> gpt-oss-20b": {
+   "auroc_within_wording": 0.77,
+   "ci": [
+    0.707,
+    0.821
+   ],
+   "ce_bits": 0.5188
   },
   "qwen_reads -> gpt-oss-20b": {
    "auroc_within_wording": 0.852,
@@ -62,6 +75,14 @@
    ],
    "ce_bits": 0.3678
   },
+  "llama_state -> qwen3-8b": {
+   "auroc_within_wording": 0.661,
+   "ci": [
+    0.581,
+    0.736
+   ],
+   "ce_bits": 0.3907
+  },
   "qwen_reads -> qwen3-8b": {
    "auroc_within_wording": 0.774,
    "ci": [
@@ -69,6 +90,46 @@
     0.833
    ],
    "ce_bits": 0.3659
+  },
+  "tfidf -> llama3.1-8b": {
+   "auroc_within_wording": 0.711,
+   "ci": [
+    0.646,
+    0.774
+   ],
+   "ce_bits": 0.4489
+  },
+  "gptoss_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.671,
+   "ci": [
+    0.595,
+    0.742
+   ],
+   "ce_bits": 0.4527
+  },
+  "qwen_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.602,
+   "ci": [
+    0.514,
+    0.688
+   ],
+   "ce_bits": 0.4611
+  },
+  "llama_state -> llama3.1-8b": {
+   "auroc_within_wording": 0.661,
+   "ci": [
+    0.552,
+    0.758
+   ],
+   "ce_bits": 0.4502
+  },
+  "qwen_reads -> llama3.1-8b": {
+   "auroc_within_wording": 0.708,
+   "ci": [
+    0.605,
+    0.804
+   ],
+   "ce_bits": 0.4443
   }
  },
  "conditional": {
@@ -96,16 +157,28 @@
     0.017
    ]
   },
-  "qwen3-8b: gptoss_state beyond qwen_state": {
-   "bits": 0.0011,
+  "gpt-oss-20b: gptoss_state beyond llama_state": {
+   "bits": 0.0891,
    "bits_ci": [
-    -0.006,
-    0.008
+    0.07,
+    0.109
    ],
-   "auroc": 0.022,
+   "auroc": 0.132,
    "auroc_ci": [
-    -0.02,
-    0.059
+    0.084,
+    0.18
+   ]
+  },
+  "gpt-oss-20b: llama_state beyond gptoss_state": {
+   "bits": 0.0049,
+   "bits_ci": [
+    -0.004,
+    0.013
+   ],
+   "auroc": 0.001,
+   "auroc_ci": [
+    -0.019,
+    0.02
    ]
   },
   "qwen3-8b: qwen_state beyond gptoss_state": {
@@ -119,6 +192,122 @@
     -0.017,
     0.096
    ]
+  },
+  "qwen3-8b: gptoss_state beyond qwen_state": {
+   "bits": 0.0011,
+   "bits_ci": [
+    -0.006,
+    0.008
+   ],
+   "auroc": 0.022,
+   "auroc_ci": [
+    -0.02,
+    0.059
+   ]
+  },
+  "qwen3-8b: qwen_state beyond llama_state": {
+   "bits": 0.0265,
+   "bits_ci": [
+    0.015,
+    0.039
+   ],
+   "auroc": 0.088,
+   "auroc_ci": [
+    0.017,
+    0.161
+   ]
+  },
+  "qwen3-8b: llama_state beyond qwen_state": {
+   "bits": 0.0036,
+   "bits_ci": [
+    -0.003,
+    0.009
+   ],
+   "auroc": 0.012,
+   "auroc_ci": [
+    -0.022,
+    0.047
+   ]
+  },
+  "llama3.1-8b: llama_state beyond gptoss_state": {
+   "bits": 0.0062,
+   "bits_ci": [
+    -0.006,
+    0.017
+   ],
+   "auroc": 0.007,
+   "auroc_ci": [
+    -0.056,
+    0.06
+   ]
+  },
+  "llama3.1-8b: gptoss_state beyond llama_state": {
+   "bits": 0.0037,
+   "bits_ci": [
+    -0.012,
+    0.018
+   ],
+   "auroc": 0.017,
+   "auroc_ci": [
+    -0.046,
+    0.079
+   ]
+  },
+  "llama3.1-8b: llama_state beyond qwen_state": {
+   "bits": 0.0131,
+   "bits_ci": [
+    0.006,
+    0.02
+   ],
+   "auroc": 0.053,
+   "auroc_ci": [
+    0.006,
+    0.096
+   ]
+  },
+  "llama3.1-8b: qwen_state beyond llama_state": {
+   "bits": 0.0023,
+   "bits_ci": [
+    -0.011,
+    0.013
+   ],
+   "auroc": -0.007,
+   "auroc_ci": [
+    -0.066,
+    0.057
+   ]
+  }
+ },
+ "H7": {
+  "gpt-oss-20b vs qwen3-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "gpt-oss-20b vs llama3.1-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "qwen3-8b vs gpt-oss-20b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "qwen3-8b vs llama3.1-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
+  },
+  "llama3.1-8b vs gpt-oss-20b": {
+   "a_own_beyond_other_ci_above_zero": false,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": false
+  },
+  "llama3.1-8b vs qwen3-8b": {
+   "a_own_beyond_other_ci_above_zero": true,
+   "b_other_beyond_own_not_above_zero": true,
+   "holds": true
   }
  }
 }

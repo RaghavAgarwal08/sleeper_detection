@@ -1,0 +1,16 @@
+{
+ "notes": 888,
+ "reached_execution": 68,
+ "triggered_resisted": 820,
+ "execution_rate_by_wording": {
+  "0": 0.103,
+  "1": 0.06,
+  "2": 0.149,
+  "3": 0.142,
+  "4": 0.07,
+  "5": 0.082
+ },
+ "any_tool_call_rate": 0.999,
+ "wordings_with_both_outcomes": 6,
+ "passes_pilot_gate": false
+}

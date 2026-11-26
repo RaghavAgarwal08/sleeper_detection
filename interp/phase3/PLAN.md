@@ -107,3 +107,16 @@ procedure of `cross_model.py` (5 fold held out cases, nested C, execution rate t
 (a) for M's behaviour, M's state beyond N's state has a cross entropy gain with a 95% interval above zero, and
 (b) N's state beyond M's state has an interval that includes zero or lies below it.
 H7 holds for a pair if both (a) and (b) hold; it is reported per pair, with no pooling.
+
+## 8. Llama-3.1-8B results (25 November 2026, recorded after the run, nothing above changed)
+
+Weights from the ungated mirror unsloth/Meta-Llama-3.1-8B-Instruct (same weights as Meta's release). For Llama only,
+the agent loop carries the first tool call of a step into the history (its template rejects parallel calls); all calls
+are judged. Pilot gate passed (13 of 120). Full run: 68 of 888 reached execution (rate 0.101, flat across wordings
+0.06 to 0.15). Execution rates correlate 0.17 with gpt-oss-20b and 0.15 with Qwen3-8B.
+* **H1 does not hold for Llama**: probe 0.690 vs TF-IDF 0.707, difference −0.018 [−0.107, +0.061]. H1 across models: 1 of 3.
+* **H7 (Llama's behaviour)**: vs Qwen3-8B holds (Llama's state beyond Qwen's +0.013 bits [+0.006, +0.020]; reverse
+  +0.002 [−0.011, +0.013]). vs gpt-oss-20b does not hold (Llama's state beyond gpt-oss's +0.006 [−0.006, +0.017]).
+  H7: 1 of 2 pre-registered pairs.
+* Not pre-registered but new: for gpt-oss's and Qwen's behaviour, each model's own state also adds information beyond
+  Llama's state (+0.089 and +0.027 bits, intervals above zero) and not the reverse.

@@ -41,12 +41,18 @@ args = ap.parse_args()
 D = REPO / "interp/data/behavior_v1"
 labels, _ = P.load_labels(D)
 ids = np.array([l["id"] for l in labels])
-gb = {b["id"]: b for b in map(json.loads, gzip.open(D / "behavior_namefix.jsonl.gz", "rt"))}
-_q = REPO / "interp/data/phase3/qwen3-8b/behavior.jsonl"
-qb = {b["id"]: b for b in map(json.loads, open(_q) if _q.exists() else gzip.open(str(_q) + ".gz", "rt"))}
-POP = np.array([k for k, l in enumerate(labels) if l["framing"] == "live" and l["id"] in gb and l["id"] in qb])
-RATE = {"gpt-oss-20b": np.array([gb[ids[k]]["fired_any"] / gb[ids[k]]["k"] for k in POP]),
-        "qwen3-8b": np.array([qb[ids[k]]["fired_any"] / qb[ids[k]]["k"] for k in POP])}
+def load_beh(path):
+    path = Path(path)
+    return {b["id"]: b for b in map(json.loads, open(path) if path.exists() else gzip.open(str(path) + ".gz", "rt"))}
+
+
+BEH = {"gpt-oss-20b": {b["id"]: b for b in map(json.loads, gzip.open(D / "behavior_namefix.jsonl.gz", "rt"))}}
+OTHER = [m for m in ("qwen3-8b", "llama3.1-8b") if (REPO / f"interp/data/phase3/{m}/behavior.jsonl.gz").exists()
+         and (REPO / f"results/phase3/{m}/window_features.npz").exists()]
+for m in OTHER:
+    BEH[m] = load_beh(REPO / f"interp/data/phase3/{m}/behavior.jsonl")
+POP = np.array([k for k, l in enumerate(labels) if l["framing"] == "live" and all(l["id"] in b for b in BEH.values())])
+RATE = {m: np.array([b[ids[k]]["fired_any"] / b[ids[k]]["k"] for k in POP]) for m, b in BEH.items()}
 cases = np.array([labels[k]["case_id"] for k in POP]); tmpl = np.array([int(labels[k]["template_id"]) for k in POP])
 
 
@@ -57,8 +63,10 @@ def rows(path, key, slot=None):
 
 
 f = np.load(REPO / "results/probe_live_inert/features_window14_19.npz"); fp = {i: k for k, i in enumerate(f["ids"])}
-FEAT = {"gptoss_state": f["X"][list(f["sites"]).index("memory_result_end")][[fp[ids[k]] for k in POP]].astype(np.float64),
-        "qwen_state": rows(REPO / "results/phase3/qwen3-8b/window_features.npz", "window_mean", 0)}
+STATE = {"gpt-oss-20b": "gptoss_state", "qwen3-8b": "qwen_state", "llama3.1-8b": "llama_state"}
+FEAT = {"gptoss_state": f["X"][list(f["sites"]).index("memory_result_end")][[fp[ids[k]] for k in POP]].astype(np.float64)}
+for m in OTHER:
+    FEAT[STATE[m]] = rows(REPO / f"results/phase3/{m}/window_features.npz", "window_mean", 0)
 if args.qwen_reads:
     FEAT["qwen_reads"] = rows(args.qwen_reads, "mean")
 reqs = {r["id"]: r for r in map(json.loads, open(D / "requests.jsonl"))}
@@ -116,8 +124,9 @@ rng = np.random.default_rng(0); uc = np.unique(cases); by = {c: np.where(cases =
 BS = [np.concatenate([by[c] for c in rng.choice(uc, len(uc))]) for _ in range(1000)]
 ci = lambda fn: [round(float(x), 3) for x in np.percentile([fn(i) for i in BS], [2.5, 97.5])]  # noqa: E731
 res = {"n": int(len(POP)), "reached": {m: int((r >= 0.5).sum()) for m, r in RATE.items()},
-       "rate_correlation": round(float(np.corrcoef(RATE["gpt-oss-20b"], RATE["qwen3-8b"])[0, 1]), 3),
-       "matrix": {}, "conditional": {}}
+       "rate_correlation": {f"{a} vs {b}": round(float(np.corrcoef(RATE[a], RATE[b])[0, 1]), 3)
+                            for i, a in enumerate(RATE) for b in list(RATE)[i + 1:]},
+       "matrix": {}, "conditional": {}, "H7": {}}
 singles = ["tfidf"] + list(FEAT)
 S = {}
 for m, rate in RATE.items():
@@ -127,27 +136,42 @@ for m, rate in RATE.items():
         res["matrix"][f"{fs} -> {m}"] = {"auroc_within_wording": round(float(sauc(y, s, tmpl)), 3),
                                         "ci": ci(lambda i, s=s: sauc(y[i], s[i], tmpl[i])), "ce_bits": round(float(ce(s, rate).mean()), 4)}
         print(fs, "->", m, res["matrix"][f"{fs} -> {m}"], flush=True)
-    both = oof(["gptoss_state", "qwen_state"], rate)
-    for own, other in [("gptoss_state", "qwen_state"), ("qwen_state", "gptoss_state")]:
-        base = S[(other, m)]
-        g = lambda i, base=base: ce(base[i], rate[i]).mean() - ce(both[i], rate[i]).mean()  # noqa: E731
-        ga = lambda i, base=base: sauc(y[i], both[i], tmpl[i]) - sauc(y[i], base[i], tmpl[i])  # noqa: E731
-        res["conditional"][f"{m}: {own} beyond {other}"] = {"bits": round(float(g(np.arange(len(POP)))), 4), "bits_ci": ci(g),
+    own = STATE[m]
+    for other_m in RATE:
+        if other_m == m:
+            continue
+        other = STATE[other_m]
+        both = oof([own, other], rate)
+        for a_, b_ in [(own, other), (other, own)]:
+            base = S[(b_, m)]
+            g = lambda i, base=base, both=both: ce(base[i], rate[i]).mean() - ce(both[i], rate[i]).mean()  # noqa: E731
+            ga = lambda i, base=base, both=both: sauc(y[i], both[i], tmpl[i]) - sauc(y[i], base[i], tmpl[i])  # noqa: E731
+            res["conditional"][f"{m}: {a_} beyond {b_}"] = {"bits": round(float(g(np.arange(len(POP)))), 4), "bits_ci": ci(g),
                                                            "auroc": round(float(ga(np.arange(len(POP)))), 3), "auroc_ci": ci(ga)}
-        print(m, own, "beyond", other, res["conditional"][f"{m}: {own} beyond {other}"], flush=True)
+            print(m, a_, "beyond", b_, res["conditional"][f"{m}: {a_} beyond {b_}"], flush=True)
+        fwd, rev = res["conditional"][f"{m}: {own} beyond {other}"], res["conditional"][f"{m}: {other} beyond {own}"]
+        res["H7"][f"{m} vs {other_m}"] = {"a_own_beyond_other_ci_above_zero": fwd["bits_ci"][0] > 0,
+                                         "b_other_beyond_own_not_above_zero": rev["bits_ci"][0] <= 0,
+                                         "holds": bool(fwd["bits_ci"][0] > 0 and rev["bits_ci"][0] <= 0)}
 out = REPO / "results/phase3"
 (out / "cross_model.json").write_text(json.dumps(res, indent=1))
-nm = {"tfidf": "TF-IDF of the prompt", "gptoss_state": "gpt-oss-20b's own state", "qwen_state": "Qwen3-8B's own state",
-      "qwen_reads": "Qwen3-8B reading plain text"}
+nm = {"tfidf": "TF-IDF of the prompt", "gptoss_state": "gpt-oss-20b's state", "qwen_state": "Qwen3-8B's state",
+      "llama_state": "Llama-3.1-8B's state", "qwen_reads": "Qwen3-8B reading plain text"}
 L = ["# Cross-model matrix: whose state predicts whose behaviour", "",
-     f"{res['n']} poisoned notes; reached execution: gpt-oss-20b {res['reached']['gpt-oss-20b']}, Qwen3-8B {res['reached']['qwen3-8b']}; "
-     f"correlation of the two models' execution rates {res['rate_correlation']}. AUROC within wording, 5 fold held out cases, 95% CI over cases.", "",
-     "| Features | predicts gpt-oss-20b | predicts Qwen3-8B |", "| --- | --- | --- |"]
+     f"{res['n']} poisoned notes; reached execution: " + ", ".join(f"{m} {v}" for m, v in res["reached"].items()) +
+     "; correlations of execution rates: " + ", ".join(f"{k} {v}" for k, v in res["rate_correlation"].items()) +
+     ". AUROC within wording, 5 fold held out cases, 95% CI over cases.", "",
+     "| Features | " + " | ".join(f"predicts {m}" for m in RATE) + " |", "| --- |" + " --- |" * len(RATE)]
 for fs in singles:
-    a, b = res["matrix"][f"{fs} -> gpt-oss-20b"], res["matrix"][f"{fs} -> qwen3-8b"]
-    L.append(f"| {nm[fs]} | {a['auroc_within_wording']:.3f} [{a['ci'][0]:.3f}, {a['ci'][1]:.3f}] | {b['auroc_within_wording']:.3f} [{b['ci'][0]:.3f}, {b['ci'][1]:.3f}] |")
+    cells = [res["matrix"][f"{fs} -> {m}"] for m in RATE]
+    L.append(f"| {nm[fs]} | " + " | ".join(f"{c['auroc_within_wording']:.3f} [{c['ci'][0]:.3f}, {c['ci'][1]:.3f}]" for c in cells) + " |")
 L += ["", "| Conditional probing | Bits per note [95% CI] | AUROC within wording [95% CI] |", "| --- | --- | --- |"]
 for k, v in res["conditional"].items():
     L.append(f"| {k} | {v['bits']:+.4f} [{v['bits_ci'][0]:+.4f}, {v['bits_ci'][1]:+.4f}] | {v['auroc']:+.3f} [{v['auroc_ci'][0]:+.3f}, {v['auroc_ci'][1]:+.3f}] |")
+L += ["", "## H7 (pre-registered in PLAN.md section 7; applies to models added after gpt-oss-20b and Qwen3-8B)", "",
+      "| Pair (behaviour of the first) | (a) own beyond other, interval above zero | (b) other beyond own, not above zero | Holds |",
+      "| --- | --- | --- | --- |"]
+for k, v in res["H7"].items():
+    L.append(f"| {k} | {v['a_own_beyond_other_ci_above_zero']} | {v['b_other_beyond_own_not_above_zero']} | {v['holds']} |")
 (out / "CROSS_MODEL.md").write_text("\n".join(L) + "\n")
 print("wrote", out / "CROSS_MODEL.md")
