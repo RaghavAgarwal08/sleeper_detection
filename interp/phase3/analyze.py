@@ -60,7 +60,7 @@ def within_spearman(r, s, strata):
 
 
 class Analysis:
-    def __init__(self, key: str, pilot: bool, seed: int = 0):
+    def __init__(self, key: str, pilot: bool, seed: int = 0, site: str = "memory_result_end"):
         self.key = key
         d = DATA / key
         self.labels = [json.loads(l) for l in open(d / "labels.jsonl")]
@@ -79,6 +79,9 @@ class Analysis:
         self.ids = np.array(ids)
         order = [pos[i] for i in ids]
         self.W = z["window_mean"][order]                  # [n, 2, d]
+        if site != "memory_result_end":  # read the main probe at another label free position (PLAN.md section 9)
+            j = [str(x) for x in z["sweep_positions"]].index(site)
+            self.W = np.stack([z["sweep_window_mean"][order][:, j].astype(np.float32), self.W[:, 1]], axis=1)
         self.layers = z["layers"][order] if "layers" in z.files else None
         self.window = z["window"].tolist()
         self.poisoned = np.array([l["framing"] == "live" and l["id"] in beh for l in self.labels])
@@ -200,9 +203,11 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--pilot", action="store_true", help="use the pilot behaviour labels (fewer notes, k = 4)")
     ap.add_argument("--no-sweep", action="store_true")
+    ap.add_argument("--site", default="memory_result_end", help="position for the main probe (default: the pre-registered "
+                    "end of the memory result; last_prompt is the PLAN.md section 9 re-test)")
     args = ap.parse_args()
     spec = M.get(args.model)
-    A = Analysis(spec["key"], args.pilot)
+    A = Analysis(spec["key"], args.pilot, site=args.site)
     m = A.poisoned
     out = {"model": spec["hf"], "key": spec["key"], "pilot": args.pilot, "window": A.window,
            "n_poisoned": int(m.sum()), "n_reached_execution": int(A.y[m].sum()),
@@ -224,8 +229,10 @@ def main():
         out["layer_sweep_within_wording_auroc"] = A.layer_sweep()
     o = OUT / spec["key"]
     o.mkdir(parents=True, exist_ok=True)
-    (o / ("analysis_pilot.json" if args.pilot else "analysis.json")).write_text(json.dumps(out, indent=1))
-    np.savez_compressed(o / "window_features.npz", ids=A.ids, window_mean=A.W.astype(np.float16), window=np.array(A.window))
+    out["site"] = args.site
+    tag = "" if args.site == "memory_result_end" else f"_{args.site}"
+    (o / ("analysis_pilot.json" if args.pilot else f"analysis{tag}.json")).write_text(json.dumps(out, indent=1))
+    np.savez_compressed(o / f"window_features{tag}.npz", ids=A.ids, window_mean=A.W.astype(np.float16), window=np.array(A.window))
     print("wrote", o)
 
 

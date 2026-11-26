@@ -120,3 +120,21 @@ are judged. Pilot gate passed (13 of 120). Full run: 68 of 888 reached execution
   H7: 1 of 2 pre-registered pairs.
 * Not pre-registered but new: for gpt-oss's and Qwen's behaviour, each model's own state also adds information beyond
   Llama's state (+0.089 and +0.027 bits, intervals above zero) and not the reverse.
+
+## 9. Reading position re-test, written before the re-capture (25 November 2026)
+
+**Why.** The end of the memory result was chosen on gpt-oss-20b, where it is the best position. The exploratory
+position sweeps of the new models (sweeps.json, binary target, no nested C) put their best position elsewhere:
+Qwen3-8B 0.669 at the end of the memory result vs 0.777 at the last prompt token; Llama-3.1-8B 0.628 vs 0.740.
+Because this choice was informed by those sweeps on the same notes, the re-test below is **not independent** of the
+data that suggested it and is reported as a secondary, position-corrected analysis, not as a replacement for H1.
+
+**H1-LP.** Exactly the H1 procedure (5 fold held out cases, execution rate target, nested C, TF-IDF on the full prompt,
+AUROC within wording, 1,000 case resamples), with the probe reading the window mean at the **last prompt token**, for
+Qwen3-8B, Llama-3.1-8B and, for symmetry, gpt-oss-20b. Holds for a model if the probe minus TF-IDF interval is above
+zero. H2 is reported alongside.
+
+**H7-LP.** The H7 procedure with every model's state read at the last prompt token; reported for all six ordered pairs.
+
+**For every model added after today** the primary position is the last prompt token, decided now, before any of its
+data exist. That makes the next model a clean, independent test of both H1-LP and H7-LP.

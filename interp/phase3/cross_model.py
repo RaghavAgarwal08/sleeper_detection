@@ -37,6 +37,7 @@ import probe as P  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--qwen-reads", default=None)
+ap.add_argument("--site", default="memory_result_end", help="read every model's state here (last_prompt: PLAN.md section 9)")
 args = ap.parse_args()
 D = REPO / "interp/data/behavior_v1"
 labels, _ = P.load_labels(D)
@@ -47,8 +48,9 @@ def load_beh(path):
 
 
 BEH = {"gpt-oss-20b": {b["id"]: b for b in map(json.loads, gzip.open(D / "behavior_namefix.jsonl.gz", "rt"))}}
+TAG = "" if args.site == "memory_result_end" else f"_{args.site}"
 OTHER = [m for m in ("qwen3-8b", "llama3.1-8b") if (REPO / f"interp/data/phase3/{m}/behavior.jsonl.gz").exists()
-         and (REPO / f"results/phase3/{m}/window_features.npz").exists()]
+         and (REPO / f"results/phase3/{m}/window_features{TAG}.npz").exists()]
 for m in OTHER:
     BEH[m] = load_beh(REPO / f"interp/data/phase3/{m}/behavior.jsonl")
 POP = np.array([k for k, l in enumerate(labels) if l["framing"] == "live" and all(l["id"] in b for b in BEH.values())])
@@ -64,9 +66,12 @@ def rows(path, key, slot=None):
 
 f = np.load(REPO / "results/probe_live_inert/features_window14_19.npz"); fp = {i: k for k, i in enumerate(f["ids"])}
 STATE = {"gpt-oss-20b": "gptoss_state", "qwen3-8b": "qwen_state", "llama3.1-8b": "llama_state"}
-FEAT = {"gptoss_state": f["X"][list(f["sites"]).index("memory_result_end")][[fp[ids[k]] for k in POP]].astype(np.float64)}
+if TAG:
+    FEAT = {"gptoss_state": rows(REPO / f"results/phase3/gpt-oss-20b/window_features{TAG}.npz", "window_mean", 0)}
+else:
+    FEAT = {"gptoss_state": f["X"][list(f["sites"]).index("memory_result_end")][[fp[ids[k]] for k in POP]].astype(np.float64)}
 for m in OTHER:
-    FEAT[STATE[m]] = rows(REPO / f"results/phase3/{m}/window_features.npz", "window_mean", 0)
+    FEAT[STATE[m]] = rows(REPO / f"results/phase3/{m}/window_features{TAG}.npz", "window_mean", 0)
 if args.qwen_reads:
     FEAT["qwen_reads"] = rows(args.qwen_reads, "mean")
 reqs = {r["id"]: r for r in map(json.loads, open(D / "requests.jsonl"))}
@@ -154,7 +159,8 @@ for m, rate in RATE.items():
                                          "b_other_beyond_own_not_above_zero": rev["bits_ci"][0] <= 0,
                                          "holds": bool(fwd["bits_ci"][0] > 0 and rev["bits_ci"][0] <= 0)}
 out = REPO / "results/phase3"
-(out / "cross_model.json").write_text(json.dumps(res, indent=1))
+res["site"] = args.site
+(out / f"cross_model{TAG}.json").write_text(json.dumps(res, indent=1))
 nm = {"tfidf": "TF-IDF of the prompt", "gptoss_state": "gpt-oss-20b's state", "qwen_state": "Qwen3-8B's state",
       "llama_state": "Llama-3.1-8B's state", "qwen_reads": "Qwen3-8B reading plain text"}
 L = ["# Cross-model matrix: whose state predicts whose behaviour", "",
@@ -173,5 +179,6 @@ L += ["", "## H7 (pre-registered in PLAN.md section 7; applies to models added a
       "| --- | --- | --- | --- |"]
 for k, v in res["H7"].items():
     L.append(f"| {k} | {v['a_own_beyond_other_ci_above_zero']} | {v['b_other_beyond_own_not_above_zero']} | {v['holds']} |")
-(out / "CROSS_MODEL.md").write_text("\n".join(L) + "\n")
+L.insert(1, f"\nStates read at: {args.site}.")
+(out / f"CROSS_MODEL{TAG}.md").write_text("\n".join(L) + "\n")
 print("wrote", out / "CROSS_MODEL.md")

@@ -147,6 +147,9 @@ def test_pipeline():
     a = json.load(open(f"{d}/out/qwen2.5-7b/analysis_pilot.json"))
     assert "H1_heldout_cases_rate" in a and a["n_poisoned"] > 50, a.keys()
     print("analyze ok", a["n_poisoned"], a["H1_heldout_cases_rate"]["probe_mre_minus_text_full"]["auroc_within_wording"])
+    run(str(HERE / "analyze.py"), "--model", "qwen2.5-7b", "--pilot", "--site", "last_prompt", "--no-sweep")
+    assert Path(f"{d}/out/qwen2.5-7b/window_features_last_prompt.npz").exists()
+    print("analyze at last_prompt ok")
     r = run(str(HERE / "sweeps.py"), "--model", "qwen2.5-7b", "--pilot")
     sw = json.load(open(f"{d}/out/qwen2.5-7b/sweeps.json"))
     assert len(sw["position_sweep_execution_auroc_within_wording"]) == 8 and "path_length" in sw["trajectory_auroc_within_wording_sign_free"]
