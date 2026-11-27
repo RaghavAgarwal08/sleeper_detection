@@ -17,23 +17,26 @@ pip install -q accelerate scikit-learn scipy openai "openai-agents>=0.14.0" pyda
 python -c "import torch, vllm, transformers; print('torch', torch.__version__, 'vllm', vllm.__version__, 'transformers', transformers.__version__); assert torch.cuda.get_device_properties(0).total_memory > 130e9, 'needs an H200 (141 GB)'"
 python -c "from huggingface_hub import snapshot_download as s; s('openai/gpt-oss-20b', ignore_patterns=['original/*','metal/*']); s('Qwen/Qwen3-8B')"
 
-stamp "serve the agent (gpt-oss-20b, port 8000) and the attacker (Qwen3-8B, port 8001)"
+# The attacker uses port 8100: vLLM 0.34 also binds the port after the agent's (8001), so 8001 is taken.
+AP=8100
+stamp "serve the agent (gpt-oss-20b, port 8000) and the attacker (Qwen3-8B, port $AP)"
 vllm serve openai/gpt-oss-20b --served-model-name gpt-oss-20b --port 8000 --max-model-len 16384 \
     --gpu-memory-utilization 0.35 --enable-auto-tool-choice --tool-call-parser openai --reasoning-parser openai_gptoss \
     > /workspace/vllm_agent.log 2>&1 &
 P1=$!
 for i in $(seq 1 90); do curl -sf localhost:8000/health >/dev/null && break; sleep 10; done
 curl -sf localhost:8000/health >/dev/null || { echo "agent vLLM did not start"; tail -30 /workspace/vllm_agent.log; exit 1; }
-vllm serve Qwen/Qwen3-8B --served-model-name attacker --port 8001 --max-model-len 8192 --gpu-memory-utilization 0.2 \
+vllm serve Qwen/Qwen3-8B --served-model-name attacker --port $AP --max-model-len 8192 --gpu-memory-utilization 0.2 \
     > /workspace/vllm_attacker.log 2>&1 &
 P2=$!
 trap 'kill $P1 $P2 2>/dev/null || true' EXIT
-for i in $(seq 1 90); do curl -sf localhost:8001/health >/dev/null && break; sleep 10; done
-curl -sf localhost:8001/health >/dev/null || { echo "attacker vLLM did not start"; tail -30 /workspace/vllm_attacker.log; exit 1; }
+for i in $(seq 1 90); do curl -sf localhost:$AP/v1/models 2>/dev/null | grep -q '"attacker"' && break; kill -0 $P2 2>/dev/null || break; sleep 10; done
+curl -sf localhost:$AP/v1/models 2>/dev/null | grep -q '"attacker"' || { echo "attacker vLLM did not start"; tail -30 /workspace/vllm_attacker.log; exit 1; }
+curl -sf localhost:8000/v1/models | grep -q '"gpt-oss-20b"' || { echo "agent server is not gpt-oss-20b"; exit 1; }
 
 stamp "attack (monitor, targets, 6 rounds, final evaluation)"
 export HF_HUB_OFFLINE=1
-python interp/phase3/attack_probe.py --resume ${ATTACK_ARGS:-}
+python interp/phase3/attack_probe.py --resume --attacker-url http://localhost:$AP/v1 ${ATTACK_ARGS:-}
 stamp "analysis"
 python interp/phase3/analyze_attack.py || true
 tar czf /workspace/results_attack.tar.gz results/phase3/attack

@@ -1,7 +1,7 @@
 """GPU: black box adaptive attacker against the execution probe, pre-registered in PLAN.md section 12.
 
 Needs two vLLM servers (runpod/run_attack.sh starts both): the agent (gpt-oss-20b, port 8000) and the attacker
-(Qwen3-8B served as "attacker", port 8001), plus gpt-oss-20b in Hugging Face transformers for the monitor's features.
+(Qwen3-8B served as "attacker", port 8100), plus gpt-oss-20b in Hugging Face transformers for the monitor's features.
 
 Steps
   1. Monitor: tokenize all 888 original poisoned prompts with vLLM, read the window mean at the end of the memory
@@ -168,7 +168,7 @@ def main():
     ap.add_argument("--k-final", type=int, default=16)
     ap.add_argument("--max-targets", type=int, default=0, help="cap (0 = all eligible); tests only")
     ap.add_argument("--agent-url", default="http://localhost:8000/v1")
-    ap.add_argument("--attacker-url", default="http://localhost:8001/v1")
+    ap.add_argument("--attacker-url", default="http://localhost:8100/v1")
     ap.add_argument("--workers", type=int, default=64)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--resume", action="store_true")
