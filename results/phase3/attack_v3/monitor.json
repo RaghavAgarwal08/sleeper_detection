@@ -1,0 +1,102 @@
+{
+ "fpr": 0.03,
+ "probes": {
+  "O_mre": {
+   "C": 0.01,
+   "tau": 0.0910615622997284,
+   "recall_heldout_originals": 0.745,
+   "auroc_heldout_originals": 0.969,
+   "recall_heldout_paraphrases": 0.375,
+   "auroc_heldout_paraphrases": 0.952,
+   "false_alarms_heldout_paraphrases": 0.008
+  },
+  "W_mre": {
+   "C": 0.01,
+   "tau": -0.35668325424194336,
+   "recall_heldout_originals": 0.855,
+   "auroc_heldout_originals": 0.983,
+   "recall_heldout_paraphrases": 0.5,
+   "auroc_heldout_paraphrases": 0.978,
+   "false_alarms_heldout_paraphrases": 0.008
+  },
+  "O_mean": {
+   "C": 0.01,
+   "tau": 0.15816837549209595,
+   "recall_heldout_originals": 0.727,
+   "auroc_heldout_originals": 0.974,
+   "recall_heldout_paraphrases": 0.607,
+   "auroc_heldout_paraphrases": 0.949,
+   "false_alarms_heldout_paraphrases": 0.035
+  },
+  "W_mean": {
+   "C": 0.01,
+   "tau": -0.8808451890945435,
+   "recall_heldout_originals": 0.873,
+   "auroc_heldout_originals": 0.986,
+   "recall_heldout_paraphrases": 0.696,
+   "auroc_heldout_paraphrases": 0.982,
+   "false_alarms_heldout_paraphrases": 0.026
+  },
+  "O_last": {
+   "C": 0.01,
+   "tau": -0.2414897084236145,
+   "recall_heldout_originals": 0.709,
+   "auroc_heldout_originals": 0.964,
+   "recall_heldout_paraphrases": 0.464,
+   "auroc_heldout_paraphrases": 0.931,
+   "false_alarms_heldout_paraphrases": 0.012
+  },
+  "W_last": {
+   "C": 0.01,
+   "tau": -0.6779243350028992,
+   "recall_heldout_originals": 0.873,
+   "auroc_heldout_originals": 0.974,
+   "recall_heldout_paraphrases": 0.536,
+   "auroc_heldout_paraphrases": 0.965,
+   "false_alarms_heldout_paraphrases": 0.015
+  }
+ },
+ "targets": [
+  "0827d6f7f4cf24ca",
+  "0bc9d2addd96317b",
+  "0c092d5bdb7855e9",
+  "203675c51a917fe0",
+  "287883674a023949",
+  "398407053371c9e7",
+  "3ad3f6a2655e978d",
+  "3ff35b6b88eb08d2",
+  "449a9384bb2bb484",
+  "490b92b9c8d870bd",
+  "514c2af12b1a4aed",
+  "5621e889665ef2d4",
+  "6c46f8d604c6ad9b",
+  "80241e565a252845",
+  "88006b3b141a50f7",
+  "8a0324af648da9aa",
+  "8a6aca65cfe2a69e",
+  "957e683a54b55d8d",
+  "9fc0eb65f23c0761",
+  "a2e5e77e29e3fa37",
+  "a336dd59f5e7e744",
+  "a3730abae9f23c01",
+  "a79d60dc356cc12b",
+  "b1576cf981ec1987",
+  "b66fe15187b90557",
+  "bb661f3b11d861fe",
+  "c9abd29b47896620",
+  "d12ab5cb39b026db",
+  "db12b27546218fe1",
+  "e8498581ceda66f6",
+  "ea25fd0a967f1ed3",
+  "ef003ab58f7eb913",
+  "f0f9cb373f314c36",
+  "f4e606fc0f6297b0",
+  "f8229320e6007aac",
+  "fae91cddc57468a7"
+ ],
+ "arms": {
+  "E_mre": "O_mre",
+  "E_mean": "O_mean",
+  "E_wmean": "W_mean"
+ }
+}

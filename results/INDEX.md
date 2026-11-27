@@ -6,6 +6,7 @@ Every report and figure in one place, newest work first. Corrected execution lab
 
 | Topic | Report | Key figure |
 | --- | --- | --- |
+| Pooled probes as a defence (D1, D2) | [phase3/attack_v3/ATTACK_V3_REPORT.md](phase3/attack_v3/ATTACK_V3_REPORT.md) | |
 | Varied wording probe and small edit attacker (W1, A1v2, A3v2) | [phase3/attack_v2/ATTACK_V2_REPORT.md](phase3/attack_v2/ATTACK_V2_REPORT.md) | |
 | Adaptive attacker against the probe (A1, A2, run November 27) | [phase3/attack/ATTACK_REPORT.md](phase3/attack/ATTACK_REPORT.md) | |
 | Steering confirmed on fresh notes, with CounterSteer comparison (H6b, run 4) | [phase3/CAUSAL_REPORT.md](phase3/CAUSAL_REPORT.md#run-4-cross-fitted-confirmation-h6b-pre-registered-in-planmd-section-11) | ![](phase3/figures/causal_v4.png) |
