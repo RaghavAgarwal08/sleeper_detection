@@ -46,3 +46,5 @@ interp/data/phase3/*/requests.jsonl
 interp/data/phase3/*/activations.npz
 results/phase3/attack/*.npz
 results/phase3/attack/state.json
+results/phase3/attack_v2/*.npz
+results/phase3/attack_v2/state.json
