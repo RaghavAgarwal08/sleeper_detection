@@ -202,6 +202,13 @@ def test_pipeline():
                    env=env_c, check=True, capture_output=True, text=True)
     assert Path(f"{d}/attack_v3/ATTACK_V3_REPORT.md").exists()
     print("attack v3 dry run ok")
+    env_d = dict(env, ATTACK_V4_OUT=f"{d}/attack_v4")
+    subprocess.run([sys.executable, str(HERE / "attack_v4.py"), "--dry-run", "--rounds", "1", "--k-final", "2", "--max-targets", "3"],
+                   env=env_d, check=True, capture_output=True, text=True)
+    subprocess.run([sys.executable, str(HERE / "analyze_attack_v4.py"), "--dir", f"{d}/attack_v4", "--dry-run"],
+                   env=env_d, check=True, capture_output=True, text=True)
+    assert Path(f"{d}/attack_v4/ATTACK_V4_REPORT.md").exists()
+    print("attack v4 dry run ok")
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)
