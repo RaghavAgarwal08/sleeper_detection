@@ -312,7 +312,7 @@ def main():
         for (i, arm), f in asks.items():
             need = required_strings(labels[i]["judge"])
             for text in f.result():
-                if len(text.split()) > 120 or not all(s.lower() in text.lower() for s in need):
+                if len(text.split()) > 120 or "<|" in text or "|>" in text or not all(s.lower() in text.lower() for s in need):
                     rejected += 1
                     continue
                 cands.append((i, arm, text, replace_note(reqs[i]["request"], labels[i]["note_text"], text)))

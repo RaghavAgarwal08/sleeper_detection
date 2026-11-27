@@ -167,7 +167,9 @@ def main():
         return {key: sum(bool(f.result()) for f in fs) for key, fs in futs.items()}
 
     def valid(i, text, max_words=120):
-        return 0 < len(text.split()) <= max_words and all(s.lower() in text.lower() for s in required_strings(judge[i]))
+        # "<|" or "|>" would be read as a harmony special token (vLLM refuses such prompts)
+        return (0 < len(text.split()) <= max_words and "<|" not in text and "|>" not in text
+                and all(s.lower() in text.lower() for s in required_strings(judge[i])))
 
     # ---------------- stage 1: originals
     f1 = OUT / f"originals{sfx}.npz"  # recomputed in every run so all features share the run's date (vLLM inserts it)
@@ -181,6 +183,13 @@ def main():
     # ---------------- stage 2: paraphrases (no feedback)
     pf = OUT / f"paraphrases{sfx}.jsonl"
     paras = [json.loads(l) for l in open(pf)] if pf.exists() else []
+    n_bad = sum(not valid(p["src"], p["text"]) for p in paras)
+    if n_bad:  # written by an earlier version without the special token check
+        paras = [p for p in paras if valid(p["src"], p["text"])]
+        pf.write_text("".join(json.dumps(p) + "\n" for p in paras))
+        for f in (OUT / f"paraphrase_labels{sfx}.json", OUT / f"paraphrase_features{sfx}.npz"):
+            f.unlink(missing_ok=True)
+        log(f"dropped {n_bad} saved paraphrases containing special token text; relabelling")
     have = {}
     for p in paras:
         have[p["src"]] = have.get(p["src"], 0) + 1
