@@ -300,3 +300,8 @@ behaviour, which is a much stronger robustness statement than section 12 could m
 black box only.
 
 **Budget.** One H200, about 1.5 hours, about $8. All features (originals included) are recomputed in this run so they share its date.
+
+**Added on 27 November before any section 13 result was seen.** The first two launches stopped because vLLM refused a
+prompt containing the text `<|end|>`, which gpt-oss reads as a special token. Attacker text containing `<|` or `|>` is
+now discarded like any invalid rewrite, and an agent rollout that hits this error is retried once and otherwise counted
+as not executed; the number of such rollouts is reported with the results.
