@@ -1,0 +1,68 @@
+{
+ "C": {
+  "mre": 0.01,
+  "last_prompt": 0.01
+ },
+ "tau": {
+  "mre": 0.22529943407634798,
+  "last_prompt": 0.3457603515585092,
+  "dom": -231.75
+ },
+ "threshold_display": 55.608780833220784,
+ "heldout_recall_before_attack": {
+  "mre": 0.7090909090909091,
+  "last_prompt": 0.6181818181818182,
+  "dom": 0.2
+ },
+ "n_train": 512,
+ "n_heldout_reached": 55,
+ "targets": [
+  "0827d6f7f4cf24ca",
+  "086edd7dd7c5eb53",
+  "0bc9d2addd96317b",
+  "0c092d5bdb7855e9",
+  "203675c51a917fe0",
+  "287883674a023949",
+  "31f9494d7c821c45",
+  "398407053371c9e7",
+  "3ad3f6a2655e978d",
+  "3ff35b6b88eb08d2",
+  "449a9384bb2bb484",
+  "490b92b9c8d870bd",
+  "514c2af12b1a4aed",
+  "5621e889665ef2d4",
+  "80241e565a252845",
+  "88006b3b141a50f7",
+  "8a0324af648da9aa",
+  "8a6aca65cfe2a69e",
+  "957e683a54b55d8d",
+  "9fc0eb65f23c0761",
+  "a2e5e77e29e3fa37",
+  "a336dd59f5e7e744",
+  "a35f5014ced273bc",
+  "a3730abae9f23c01",
+  "a79d60dc356cc12b",
+  "ab140d15294cf65b",
+  "b1576cf981ec1987",
+  "b66fe15187b90557",
+  "bb661f3b11d861fe",
+  "c9abd29b47896620",
+  "d12ab5cb39b026db",
+  "db12b27546218fe1",
+  "e8498581ceda66f6",
+  "ea25fd0a967f1ed3",
+  "ef003ab58f7eb913",
+  "f0f9cb373f314c36",
+  "f4e606fc0f6297b0",
+  "f8229320e6007aac",
+  "fae91cddc57468a7"
+ ],
+ "window": [
+  14,
+  15,
+  16,
+  17,
+  18,
+  19
+ ]
+}

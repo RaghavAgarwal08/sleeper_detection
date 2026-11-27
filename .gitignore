@@ -44,3 +44,5 @@ interp/data/phase3/*/behavior.jsonl
 interp/data/phase3/*/behavior_pilot.jsonl
 interp/data/phase3/*/requests.jsonl
 interp/data/phase3/*/activations.npz
+results/phase3/attack/*.npz
+results/phase3/attack/state.json

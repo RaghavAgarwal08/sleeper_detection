@@ -6,6 +6,7 @@ Every report and figure in one place, newest work first. Corrected execution lab
 
 | Topic | Report | Key figure |
 | --- | --- | --- |
+| Adaptive attacker against the probe (A1, A2, run November 27) | [phase3/attack/ATTACK_REPORT.md](phase3/attack/ATTACK_REPORT.md) | |
 | Steering confirmed on fresh notes, with CounterSteer comparison (H6b, run 4) | [phase3/CAUSAL_REPORT.md](phase3/CAUSAL_REPORT.md#run-4-cross-fitted-confirmation-h6b-pre-registered-in-planmd-section-11) | ![](phase3/figures/causal_v4.png) |
 | Fine tuned text classifiers as the baseline (H8) | [probe_live_inert/FINETUNED_BASELINE.md](probe_live_inert/FINETUNED_BASELINE.md) | |
 | Reading position re-test, all three models (H1-LP, H7-LP) | [phase3/POSITION_RETEST.md](phase3/POSITION_RETEST.md) | ![](phase3/figures/position_retest.png) |
