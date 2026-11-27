@@ -6,6 +6,7 @@ Every report and figure in one place, newest work first. Corrected execution lab
 
 | Topic | Report | Key figure |
 | --- | --- | --- |
+| Steering confirmed on fresh notes, with CounterSteer comparison (H6b, run 4) | [phase3/CAUSAL_REPORT.md](phase3/CAUSAL_REPORT.md#run-4-cross-fitted-confirmation-h6b-pre-registered-in-planmd-section-11) | ![](phase3/figures/causal_v4.png) |
 | Fine tuned text classifiers as the baseline (H8) | [probe_live_inert/FINETUNED_BASELINE.md](probe_live_inert/FINETUNED_BASELINE.md) | |
 | Reading position re-test, all three models (H1-LP, H7-LP) | [phase3/POSITION_RETEST.md](phase3/POSITION_RETEST.md) | ![](phase3/figures/position_retest.png) |
 | Whose state predicts whose behaviour (H7) | [phase3/CROSS_MODEL.md](phase3/CROSS_MODEL.md), [last prompt token](phase3/CROSS_MODEL_last_prompt.md) | ![](phase3/figures/h1_probe_vs_text_by_model.png) |
@@ -26,6 +27,7 @@ Every report and figure in one place, newest work first. Corrected execution lab
 | [phase3/figures/position_sweep.png](phase3/figures/position_sweep.png) | Probe AUROC by reading position on gpt-oss-20b |
 | [phase3/figures/attention_baselines.png](phase3/figures/attention_baselines.png) | Attention based detectors against the probe |
 | [phase3/figures/training_free_detectors.png](phase3/figures/training_free_detectors.png) | Detectors that need no execution labels |
+| [phase3/figures/causal_v4.png](phase3/figures/causal_v4.png) | Run 4 (H6b): steering on fresh notes, random control, CounterSteer style, clean prompts |
 | [phase3/figures/causal_v2.png](phase3/figures/causal_v2.png) | Run 2: patching, probe direction, difference of means, random controls |
 | [phase3/figures/steering.png](phase3/figures/steering.png), [steering_detail.png](phase3/figures/steering_detail.png) | Run 1 steering (H5) |
 | [probe_live_inert/figures/pm_conditional_probing.png](probe_live_inert/figures/pm_conditional_probing.png) | Information in activations beyond text, in bits |

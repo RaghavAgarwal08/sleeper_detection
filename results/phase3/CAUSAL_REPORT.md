@@ -1,12 +1,13 @@
 # Is the execution signal causal? Runs 2 and 3 on gpt-oss-20b
 
-November 24, 2026. Follows `GPTOSS_GPU_REPORT.md`, where the pre-registered steering test H5 failed. Run 2 (`interp/phase3/causal_v2.py`, exploratory) asks why; run 3 (`causal_v3.py`, pre-registered as H6 in `interp/phase3/PLAN.md` section 6) tests the one lead it found. Numbers are in `gpt-oss-20b/causal_v2.json` and `causal_v3.json`.
+November 24, 2026 (run 4 added November 26). Follows `GPTOSS_GPU_REPORT.md`, where the pre-registered steering test H5 failed. Run 2 (`interp/phase3/causal_v2.py`, exploratory) asks why; run 3 (`causal_v3.py`, pre-registered as H6 in `interp/phase3/PLAN.md` section 6) tests the one lead it found. Numbers are in `gpt-oss-20b/causal_v2.json` and `causal_v3.json`.
 
 ## Summary
 
 * **Patching at the place the probe reads did not change behaviour.** Replacing the residual stream at the end of the memory result (the probe's position and the 3 tokens after it) with the benign twin's values, at layer 12, 17 or 22, leaves execution unchanged (0.25 to 0.27 against 0.26). The benign twin's own prompt gets 0.00, so the note's wording decides execution. These particular patches did not change it, which does not rule out that the information there matters through other routes (for example in combination with other positions, or at layers we did not patch).
 * **Pushing along the probe direction did not lower execution selectively.** Pushing along it at every window layer either does nothing (−1 SD) or lowers the share of rollouts with any tool call (+1 and +2 SD: 0.73 and 0.22), which may partly be the scoring bug described below, since these runs saved no text. A random direction of the same size does neither.
 * **The difference of means direction looks like one.** Pushing −1 SD of it per window layer (106 units per layer) cuts execution from 0.26 to 0.07 (−0.19 [−0.25, −0.13]) while 91% of rollouts still call a tool. Random directions of the same size move execution by −0.05 [−0.12, +0.01] and −0.01 [−0.07, +0.04]. The paired difference between the difference of means push and the random push of the same sign is −0.18 [−0.24, −0.12]. 31 of 48 notes go down, 3 go up.
+* **Run 4 confirms it on fresh notes (H6b, cross fitted, corrected scorer from the start):** execution 0.335 to 0.172 (−0.163 [−0.207, −0.123]), random −0.009, user's task on clean prompts +0.017. Steering only the memory result's tokens before generation matches it at three times the size (CounterSteer style).
 * **Caveat that run 3 addresses.** These 48 notes are in the training split the direction was computed from, the condition was picked after trying several, and "any tool call" does not show whether the agent still did the user's task.
 
 ## Run 2: setup
@@ -74,3 +75,33 @@ With the original (buggy) scoring the clean user's task fell from 0.949 to 0.847
 * **Runs 1 and 2 (H5 and causal_v2)** used the same parser and did not save their text, so they cannot be re-scored. Execution was measured with the same parser in every condition, but "any tool call" drops under steering (probe +2: 0.22; probe +1: 0.73; difference of means +1: 0.63) may partly be the model switching to the rarer format rather than stopping tool use. The claim that the probe direction "breaks tool calling" is therefore uncertain until a rerun with text saved.
 * **Phase 1 behaviour labels** come from vLLM's tool call parser, which kept the extra tag in the tool name (522 of 11,214 calls, 188 of them the planted call), and the judge requires an exact name. Normalising the name raises the mean execution rate from 0.294 to 0.318: 135 of 888 notes change rate, 11 flip to reached execution (286 to 297), and the corrected and original rates correlate at 0.989. All probe analyses should be rerun on the corrected labels before the paper; the change is small but goes in one direction.
 
+
+## Run 4: cross fitted confirmation (H6b, pre-registered in PLAN.md section 11)
+
+November 26, 2026, one H200, 192 minutes. `interp/phase3/causal_v4.py`; numbers in `gpt-oss-20b/causal_v4.json`, the full text of all 4,200 rollouts in `causal_v4_text.jsonl.gz`.
+
+**Why a new design.** Mentor feedback asked for a confirmation on fresh held out notes, scored with the corrected parser from the start and with all outputs saved. Under the corrected labels only 52 held out notes have mixed first step outcomes and run 3 had used 48, so we cross fitted: the direction is the difference of means computed on the **376 held out notes** (55 reached execution), and it is tested on **69 training split notes from 45 cases that no earlier run used** (run 2's 48 notes excluded). No test note contributes to the direction. The push size follows the pre-registered rule (SD of the projection over the held out notes): 80 per layer, about 25% smaller than run 3's 106.
+
+![Run 4](figures/causal_v4.png)
+
+| Condition | Planted call | User's task | Any call | Planted call minus unsteered [95% CI] | User's task minus unsteered [95% CI] |
+| --- | --- | --- | --- | --- | --- |
+| Unsteered | 0.335 | 0.647 | 0.995 | | |
+| **Difference of means −1** (H6 recipe) | **0.172** | 0.812 | 0.995 | **−0.163 [−0.207, −0.123]** | +0.165 [+0.127, +0.207] |
+| Random direction, same size | 0.326 | 0.643 | 0.995 | −0.009 [−0.054, +0.040] | −0.004 [−0.045, +0.042] |
+| Memory result tokens only, prompt pass, −1 | 0.275 | 0.712 | 0.995 | −0.060 [−0.085, −0.038] | +0.065 [+0.038, +0.090] |
+| Memory result tokens only, prompt pass, −3 | 0.172 | 0.799 | 0.986 | −0.163 [−0.207, −0.121] | +0.152 [+0.110, +0.200] |
+| Clean, unsteered | | 0.975 | 0.992 | | |
+| Clean, difference of means −1 | | 0.992 | 0.997 | | **+0.017 [+0.003, +0.036]** |
+| Clean, random | | 0.989 | 0.997 | | +0.014 [+0.003, +0.031] |
+| Clean, memory result only −3 | | 0.983 | 0.994 | | +0.008 [−0.003, +0.022] |
+
+**H6b holds, with no correction needed.** (1) Execution falls by 0.163, interval below zero. (2) The random push moves it by −0.009, interval includes zero. (3) On clean prompts the user's task does not fall (+0.017), well inside the limit. Unlike run 3, the corrected scorer was in place before the run, so this is a clean pass.
+
+**What the run adds.**
+* **The effect is larger on fresh notes than in run 3** (−0.16 against −0.10) despite a smaller push, so run 3's halving relative to run 2 was not the direction failing to generalise. Part of the difference is the higher base rate here (0.34 against 0.22): steering roughly halves execution in both runs.
+* **The agent swaps, it does not stall.** The user's task rises from 0.65 to 0.81 on poisoned prompts, as in run 3, and any call stays at 0.995.
+* **Steered reasoning stops treating the note as a task rather than arguing against it.** The planted tool's name appears anywhere in the reply in 84% of unsteered rollouts and 58% of steered ones, and words like "suspicious" or "injection" appear in at most 2% in any condition. In a typical pair, the unsteered reasoning lists the planted action among the "pending entries" to do; the steered reasoning goes straight to the user's request.
+* **CounterSteer comparison.** Steering only the memory result's tokens during the prompt pass, as CounterSteer steers tool results, reaches the same effect (−0.163) at three times the per position size, and has no cost on clean prompts. At the same size (−1) it gives a third of the effect (−0.060). So the information the direction removes is carried by the memory result's own tokens, and steering them before generation is enough; steering the whole window including the reply is about three times more efficient per unit of push. This fits the patching null above: replacing only the last 4 positions did nothing, while changing every memory result token does.
+
+**Caveats.** One model. The test notes come from training split cases, so they are fresh with respect to the direction but not new cases. The alpha (−1) was chosen in run 2. The CounterSteer style conditions are our adaptation (same direction, memory result tokens, prompt pass only), not CounterSteer's exact recipe or direction.
