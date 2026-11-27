@@ -181,6 +181,13 @@ def test_pipeline():
     if c4["notes"]:
         assert {"base", "dom_-1", "random_-1", "toolresult_-3", "clean_toolresult_-3"} <= set(c4["summary"]), c4["summary"].keys()
     print("causal v4 dry run ok", len(c4["notes"]), "notes", sorted(c4["summary"]), c4["H6b"])
+    env_a = dict(env, ATTACK_OUT=f"{d}/attack")
+    subprocess.run([sys.executable, str(HERE / "attack_probe.py"), "--dry-run", "--rounds", "1", "--k-search", "2", "--k-final", "2"],
+                   env=env_a, check=True, capture_output=True, text=True)
+    subprocess.run([sys.executable, str(HERE / "analyze_attack.py"), "--dir", f"{d}/attack", "--dry-run"],
+                   env=env_a, check=True, capture_output=True, text=True)
+    assert Path(f"{d}/attack/ATTACK_REPORT.md").exists()
+    print("attack dry run ok")
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)
