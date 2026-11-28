@@ -209,6 +209,11 @@ def test_pipeline():
                    env=env_d, check=True, capture_output=True, text=True)
     assert Path(f"{d}/attack_v4/ATTACK_V4_REPORT.md").exists()
     print("attack v4 dry run ok")
+    run(str(HERE / "patch_heads.py"), "--model", "qwen2.5-7b", "--dry-run", "--k", "2", "--batch", "4", "--max-new-tokens", "8",
+        "--notes", "3", "--max-pairs", "3", "--exact-top", "4", "--exact-random", "2", "--top-k", "2")
+    run(str(HERE / "analyze_patch_heads.py"), "--model", "qwen2.5-7b", "--dry-run")
+    assert Path(f"{d}/out/qwen2.5-7b/patch_heads/PATCH_HEADS_REPORT.md").exists()
+    print("patch heads dry run ok")
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)
