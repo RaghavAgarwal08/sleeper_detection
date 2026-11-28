@@ -6,6 +6,7 @@ Every report and figure in one place, newest work first. Corrected execution lab
 
 | Topic | Report | Key figure |
 | --- | --- | --- |
+| Combined monitor under direct attack, 150 notes (U1) | [phase3/attack_v4/ATTACK_V4_REPORT.md](phase3/attack_v4/ATTACK_V4_REPORT.md) | |
 | Pooled probes as a defence (D1, D2) | [phase3/attack_v3/ATTACK_V3_REPORT.md](phase3/attack_v3/ATTACK_V3_REPORT.md) | |
 | Varied wording probe and small edit attacker (W1, A1v2, A3v2) | [phase3/attack_v2/ATTACK_V2_REPORT.md](phase3/attack_v2/ATTACK_V2_REPORT.md) | |
 | Adaptive attacker against the probe (A1, A2, run November 27) | [phase3/attack/ATTACK_REPORT.md](phase3/attack/ATTACK_REPORT.md) | |

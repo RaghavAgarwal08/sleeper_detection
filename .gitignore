@@ -50,3 +50,5 @@ results/phase3/attack_v2/*.npz
 results/phase3/attack_v2/state.json
 results/phase3/attack_v3/*.npz
 results/phase3/attack_v3/state.json
+results/phase3/attack_v4/*.npz
+results/phase3/attack_v4/state.json
