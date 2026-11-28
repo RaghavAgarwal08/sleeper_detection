@@ -429,3 +429,34 @@ usable notes: in gpt-oss's tokenizer the forced prefix and a tool name do not sp
 "compare the first name tokens, drop pairs that tokenize differently in context" kept nothing. The decision score is
 now taken where the planted and the user's tool names first differ in context: the forced suffix is the shared tokens
 (the prefix plus any shared start of the two names) and LD compares the next token of each name. Nothing else changes.
+
+## 17. In which layers does the reply read the planted note? Written before the run (27 November 2026)
+
+**Why.** Section 16's gate failed: gpt-oss decides while it reasons, so a head level account must be measured on free
+generation. Here the note is cut out of attention in bands of layers during real generation, and execution is
+measured directly.
+
+**Intervention (fixed): value zeroing.** In the chosen layers, the value vectors at every token of the planted note
+(all of its occurrences in the memory result) are set to zero during the prompt pass, so no later position (the rest of
+the memory result, the prompt's end, the reasoning, the tool call) can read the note's tokens through attention in
+those layers; the note's own residual stream is untouched. **Control:** the same number of memory result tokens that are
+not part of the note, drawn at random per prompt (seed 0), zeroed the same way.
+
+**Notes (fixed).** 64 poisoned notes drawn at random (seed 0) from those with at least 2 of 8 phase 1 first step
+executions (corrected labels) and a known user tool. k = 8 first responses, T = 1, up to 1,536 new tokens, the corrected
+parser, all text saved.
+
+**Conditions.** base; note_all and control_all (all 24 layers); note_L0_5, note_L6_11, note_L12_17, note_L18_23.
+
+**K1 (primary).** Removing the note from attention lowers execution beyond removing other memory tokens: note_all
+minus control_all, 95% case bootstrap interval below zero.
+**K2 (primary).** For each band, note_band minus base with a Bonferroni corrected interval (98.75%, four bands); a band
+"matters" if its interval is below zero. Reported for all four bands whatever the outcome, with the user's task and any
+call per condition.
+
+**Interpretation fixed now.** K1 holds: the reply reads the planted instruction from the note's tokens through
+attention. K2 then says where: if only late bands matter, the instruction is read near the decision; if early or middle
+bands matter, the note is first absorbed into other positions (for example the end of the memory result, where the probe
+reads) and carried forward. If no single band matters but all layers do, the reading is spread across depth.
+
+**Budget.** One H200 (an H100 80GB should fit), no vLLM, about 3 hours, about $12.

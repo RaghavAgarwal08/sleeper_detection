@@ -214,6 +214,11 @@ def test_pipeline():
     run(str(HERE / "analyze_patch_heads.py"), "--model", "qwen2.5-7b", "--dry-run")
     assert Path(f"{d}/out/qwen2.5-7b/patch_heads/PATCH_HEADS_REPORT.md").exists()
     print("patch heads dry run ok")
+    run(str(HERE / "note_knockout.py"), "--model", "qwen2.5-7b", "--dry-run", "--notes", "3", "--k", "2", "--batch", "4",
+        "--max-new-tokens", "8")
+    run(str(HERE / "analyze_note_knockout.py"), "--model", "qwen2.5-7b", "--dry-run")
+    assert Path(f"{d}/out/qwen2.5-7b/NOTE_KNOCKOUT_REPORT.md").exists()
+    print("note knockout dry run ok")
     # report on fake multi model results
     for k, shift in [("qwen2.5-7b", 0.0), ("llama3.1-8b", 0.05)]:
         o = Path(f"{d}/out/{k}"); o.mkdir(parents=True, exist_ok=True)
