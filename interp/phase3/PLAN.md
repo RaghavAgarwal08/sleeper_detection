@@ -423,3 +423,9 @@ obedience. P2 holds but P1 fails: the heads carry the note for the forced decisi
 first) has other routes. G1 fails: the forced decision is not a good stand in for behaviour on this model.
 
 **Budget.** One H200 or H100 80GB, no vLLM, about 2 hours, about $8.
+
+**Added on 27 November before any section 16 result existed.** The first launch stopped after one minute with no
+usable notes: in gpt-oss's tokenizer the forced prefix and a tool name do not split cleanly at the name, so the rule
+"compare the first name tokens, drop pairs that tokenize differently in context" kept nothing. The decision score is
+now taken where the planted and the user's tool names first differ in context: the forced suffix is the shared tokens
+(the prefix plus any shared start of the two names) and LD compares the next token of each name. Nothing else changes.

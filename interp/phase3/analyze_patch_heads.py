@@ -35,8 +35,8 @@ def boot(ids, fn):
 
 
 L = ["# Attention heads from the planted note to the action (PLAN.md section 16)", "",
-     f"**G1** (forced decision tracks behaviour): mean within wording Spearman {s0['mean_within_wording_spearman']:.3f}, "
-     f"overall {s0['overall_spearman']:.3f}, over {s0['n']} notes: **{'passes' if s0['G1'] else 'fails'}**."]
+     f"**G1** (forced decision tracks behaviour): mean within wording Spearman {s0['mean_within_wording_spearman']}, "
+     f"overall {s0['overall_spearman']}, over {s0['n']} notes: **{'passes' if s0['G1'] else 'fails'}**."]
 f1 = o / f"stage1{sfx}.json"
 if f1.exists():
     s1 = json.load(open(f1))

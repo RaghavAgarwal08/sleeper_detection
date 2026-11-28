@@ -134,23 +134,30 @@ def main():
     dev = model.device
     H = Heads(model)
     nL, nH = len(H.layers), H.H
-    pre = tok.encode(PREFIX if not args.dry_run else "to=functions.", add_special_tokens=False)
-
-    def first_tok(name):
-        full = tok.encode((PREFIX if not args.dry_run else "to=functions.") + name, add_special_tokens=False)
-        return full[len(pre)] if full[:len(pre)] == pre and len(full) > len(pre) else None
+    prefix_text = PREFIX if not args.dry_run else "to=functions."
+    enc = lambda t: tok.encode(t, add_special_tokens=False)  # noqa: E731
 
     poisoned = sorted(i for i in beh if (l := lab.get(i)) and l["framing"] == "live" and i in built and l["case_id"] in utool
                       and (l["case_id"], l["template_id"]) in twin)
     if args.dry_run:
         poisoned = poisoned[:40]
-    ptok = {i: (first_tok(lab[i]["judge"]["target_tool"]), first_tok(utool[lab[i]["case_id"]])) for i in poisoned}
-    poisoned = [i for i in poisoned if ptok[i][0] is not None and ptok[i][1] is not None and ptok[i][0] != ptok[i][1]]
+    # The tool name is compared where the planted and the user's tool first differ in context: the forced suffix is
+    # the shared tokens (prefix plus any shared start of the names), and LD compares the next token of each name.
+    suffix, ptok = {}, {}
+    for i in poisoned:
+        pl, us = enc(prefix_text + lab[i]["judge"]["target_tool"]), enc(prefix_text + utool[lab[i]["case_id"]])
+        j = next((k for k, (a, b) in enumerate(zip(pl, us)) if a != b), None)
+        if j is not None and j > 0:
+            suffix[i], ptok[i] = pl[:j], (pl[j], us[j])
+    poisoned = [i for i in poisoned if i in ptok]
+    print(f"{len(poisoned)} poisoned notes with a twin, a known user tool and distinct tool names", flush=True)
+    if not poisoned:
+        raise SystemExit("no usable notes: check the user tools and the tool name tokenization")
     rate = {i: beh[i]["fired_any"] / beh[i]["k"] for i in poisoned}
-    ids_of = lambda i: built[i]["input_ids"] + pre  # noqa: E731
+    ids_of = lambda i_prompt, i_note: built[i_prompt]["input_ids"] + suffix[i_note]  # noqa: E731
 
     def LD(i_prompt, i_note, grad=False):
-        x = torch.tensor([ids_of(i_prompt)], device=dev)
+        x = torch.tensor([ids_of(i_prompt, i_note)], device=dev)
         with torch.set_grad_enabled(grad):
             if grad:
                 emb = model.get_input_embeddings()(x).detach().requires_grad_(True)
@@ -162,9 +169,10 @@ def main():
 
     # ---------------- stage 0: gate
     f0 = o / f"stage0{sfx}.json"
-    if args.resume and f0.exists():
-        s0 = json.load(open(f0))
-    else:
+    s0 = json.load(open(f0)) if args.resume and f0.exists() else None
+    if s0 is None or s0.get("n") != len(poisoned) or set(s0.get("LD", {})) != set(poisoned):
+        s0 = None  # recompute when the saved stage 0 came from a different set of notes
+    if s0 is None:
         log(f"stage 0: decision score for {len(poisoned)} notes and their twins")
         s0 = {"LD": {}, "LD_twin": {}}
         for n, i in enumerate(poisoned):
@@ -206,7 +214,7 @@ def main():
             tw = twin[(lab[i]["case_id"], lab[i]["template_id"])]
             H.mode, H.cap = "capture", {}
             with torch.no_grad():
-                model(torch.tensor([ids_of(tw)], device=dev))
+                model(torch.tensor([ids_of(tw, i)], device=dev))
             H.mode = None
             return {li: x[0, -M_POS:].detach().clone() for li, x in H.cap.items()}
 
@@ -261,7 +269,7 @@ def main():
                 occ = src[i]["entry_spans"][0]["occurrences"] if src[i].get("entry_spans") else []
                 note_pos = sorted({p for a, b in occ for p in range(a, b)})
                 with torch.no_grad():
-                    att = model(torch.tensor([ids_of(i)], device=dev), output_attentions=True).attentions
+                    att = model(torch.tensor([ids_of(i, i)], device=dev), output_attentions=True).attentions
                 ms, me = built[i]["positions"]["memory_result_start"], built[i]["positions"]["memory_result_end"]
                 for l, h in top:
                     w = att[l][0, h, -1].float()
